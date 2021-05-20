@@ -1,0 +1,175 @@
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background-color: #ffffff;
+  font-family: "Open Sans", sans-serif;
+}
+
+
+#header {
+  height: 85px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+#footer {
+  height: 64px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+iframe {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+#col1,
+#col2,
+#col3 {
+  position: relative;
+}
+
+#col1 iframe,
+#col2 iframe,
+#col3 iframe {
+  height: 100%;
+}
+
+#col1,
+#col1 iframe {
+  width: 20rem;
+}
+
+#col2,
+#col2 iframe {
+  width: 30rem;
+}
+
+
+#col1 form {
+  width: 100%;
+  height: 28px;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+}
+#col1 input {
+  width: 100%;
+}
+
+#col1 iframe {
+  padding-top: 28px;
+}
+
+
+#col4 {
+  position: relative;
+  width: 800px;
+}
+#col4 iframe {
+  padding-top: 28px;
+  height: 100%;
+  width: 800px;
+}
+#col4 .prevnext {
+  width: 100%;
+  position: absolute;
+}
+main {
+  height: 100%;
+  position: relative;
+  padding-top: 85px;
+  padding-bottom: 64px;
+}
+
+#medict {
+  display: flex;
+  height: 100%;
+  position: relative;
+}
+
+body.orth {
+  padding: 1rem 0.5rem 2rem 0.5rem;
+}
+
+body.refs {
+  padding: 1rem 0.5rem 2rem 0.5rem;
+}
+
+body.facs h1 {
+  margin: 0;
+}
+
+
+a.facs,
+a.orth {
+  text-decoration: none;
+  color: #666;
+}
+a.facs.active,
+a.orth.active {
+  color: #8b1538;
+  font-weight: bold;
+}
+
+a.facs:hover,
+a.orth:hover {
+  background-color: #eee;
+}
+a.orth {
+  display: block;
+  white-space: nowrap;
+}
+
+div.volume {
+  white-space: nowrap;
+  background: #ccc;
+  color: #ffffff;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+a.facs {
+  display: block;
+}
+
+img.facs {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.facsprev,
+.facsnext {
+  position: fixed;
+  height: 50%;
+  padding-top: 22%;
+  top: 25%;
+  text-align: center;
+  width: 2rem;
+  font-size: 2rem;
+  text-decoration: none;
+  color: #8b1538;
+}
+
+.facsprev:hover,
+.facsnext:hover {
+  background: #eeeeee;
+}
+.facsprev {
+  left: 0;
+}
+.facsnext {
+  right: 0;
+}
