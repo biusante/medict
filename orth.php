@@ -18,7 +18,7 @@ $pdo = Medict::pdo();
   </head>
   <body class="orth">
     <?php
-
+$starttime = microtime(true);
 $sql = "SELECT key, small FROM orth WHERE key LIKE ? GROUP BY key ORDER BY sort, label LIMIT 1000";
 $query = $pdo->prepare($sql);
 $q = Medict::sortable($q).'%';
@@ -26,6 +26,7 @@ $query->execute( array($q));
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
   echo '<a class="orth" target="refs" href="refs.php?q='.$row['key'].'">'.$row['small'].'</a>',"\n";
 }
+echo '<small>',number_format(microtime(true) - $starttime, 3),' s.</small>';
     ?>
         <script>
 let matches = document.querySelectorAll("a.orth");

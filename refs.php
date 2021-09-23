@@ -27,14 +27,17 @@ if ($q) {
   while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
     $volume = $row['volume'];
     if ($volume != $volumeLast) {
+      if ($volumeLast != -1) echo '</section>',"\n";
       $volumeLast = $volume;
       $volumeQuery->execute(array($volume));
       $volumeRow = $volumeQuery->fetch();
+      echo '<section class="volume">', "\n";
       echo '<div class="volume">'.$volumeRow['year'].', '.$volumeRow['label'].'</div>',"\n";
     }
     if (is_numeric($row['n'])) $row['n'] = 0 + $row['n'];
     echo '<a class="facs" target="facs" href="facs.php?pb='.$row['pb'].'">p. '.$row['n'].', '.$row['label'].'</a>',"\n";
   }
+  if ($volumeLast != -1) echo '</section>',"\n";
 }
     ?>
     <script>

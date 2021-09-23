@@ -80,7 +80,7 @@ iframe {
 #col4 iframe {
   padding-top: 28px;
   height: 100%;
-  width: 800px;
+  width: 1000px;
 }
 #col4 .prevnext {
   width: 100%;
@@ -132,17 +132,24 @@ a.orth {
   white-space: nowrap;
 }
 
+section.volume {
+  border: 1px solid #ccc;
+  margin-top: 15px;
+  padding: 0 0 5px 0;
+}
+
 div.volume {
+  margin-bottom: 5px;
+  padding: 0 5px;
   white-space: nowrap;
   background: #ccc;
   color: #ffffff;
   font-weight: bold;
-  margin-top: 10px;
-  margin-bottom: 5px;
 }
 
 a.facs {
   display: block;
+  padding: 0 5px;
 }
 
 img.facs {
