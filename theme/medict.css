@@ -8,7 +8,7 @@ body {
   padding: 0;
 }
 body {
-  background-color: #ffffff;
+  background-color: #fff;
   font-family: "Open Sans", sans-serif;
 }
 
@@ -34,102 +34,205 @@ iframe {
   margin: 0;
 }
 
+main {
+  height: 100%;
+}
+
+#medict {
+  display: flex;
+  height: 99.5%;
+  position: relative;
+}
+
 #col1,
 #col2,
 #col3 {
   position: relative;
+  height: 100%;
 }
 
-#col1 iframe,
 #col2 iframe,
 #col3 iframe {
   height: 100%;
 }
 
 #col1,
+#col2 {
+  flex: 0 0 auto;
+  width: 25rem;
+}
+
+#col1 {
+  display: flex;
+  flex-direction: column;
+}
+
+
+#col1 > div.index {
+  height: 100%;
+}
+
 #col1 iframe {
-  width: 20rem;
+  width: 100%;
+  height: 100%;
 }
-
-#col2,
-#col2 iframe {
-  width: 30rem;
-}
-
 
 #col1 form {
   width: 100%;
-  height: 28px;
-  position: absolute;
   margin: 0;
-  padding: 0;
+  padding: 1rem 2.5rem 1rem 1rem;
 }
-#col1 input {
+#col1 input.sugg {
   width: 100%;
+  font-size: 150%;
+  color: #8b1538;
+  font-weight: bold;
+}
+input:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+input[type=range] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  width: 100%; /* Specific width is required for Firefox. */
+  background: transparent; /* Otherwise white in Chrome */
+}
+/* range thumb */
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  cursor: pointer;
+
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+
+}
+input[type=range]::-moz-range-thumb {
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
 }
 
-#col1 iframe {
-  padding-top: 28px;
+input[type=range]::-ms-thumb  {
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
 }
 
+
+/* range track */
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2px;
+  background: #ccc;
+  border-radius: 1.3px;
+  border: none;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 2px;
+  background: #ccc;
+  border-radius: 1.3px;
+  border: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #cccccc;
+}
+input[type=range]::-ms-track {
+  width: 100%;  cursor: pointer;
+  /* Hides the slider so custom styles can be added */
+  background: transparent; 
+  border-color: transparent;
+  color: transparent;
+}
+
+
+
+
+div.an_minmax {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+input.an {
+  width: 3.5em;
+  text-align: center;
+}
 
 #col4 {
   position: relative;
   width: 800px;
 }
 #col4 iframe {
-  padding-top: 28px;
+  padding: 0;
   height: 100%;
-  width: 1000px;
+  min-width: 1064px;
 }
 #col4 .prevnext {
   width: 100%;
   position: absolute;
 }
+/*
 main {
   height: 100%;
   position: relative;
   padding-top: 85px;
   padding-bottom: 64px;
 }
+*/
 
-#medict {
-  display: flex;
-  height: 100%;
-  position: relative;
-}
 
 body.orth {
-  padding: 1rem 0.5rem 2rem 0.5rem;
+  margin: 0;
+  padding: 0;
 }
 
 body.refs {
-  padding: 1rem 0.5rem 2rem 0.5rem;
+  padding: 1rem 0 2rem 0;
 }
 
 body.facs h1 {
   margin: 0;
 }
 
+a.entree mark {
+  background: transparent;
+  color: #8b1538;
+}
 
-a.facs,
-a.orth {
+a.entree,
+body.orth a {
   text-decoration: none;
   color: #666;
 }
-a.facs.active,
-a.orth.active {
+a.entree.active,
+body.orth a.active {
   color: #8b1538;
   font-weight: bold;
 }
 
-a.facs:hover,
-a.orth:hover {
+div.entree:hover,
+body.orth a:hover {
   background-color: #eee;
 }
-a.orth {
+
+a.terme {
   display: block;
+  margin-left: 5px; /* pour copier coller */
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 90%;
+}
+
+a.terme small {
+  position: absolute;
+  right: 1rem;
+  background-color: rgba(255, 255, 255, .7);
+  color: #000;
 }
 
 section.volume {
@@ -147,9 +250,14 @@ div.volume {
   font-weight: bold;
 }
 
-a.facs {
+div.entree {
+  border-bottom: 1px #ccc solid;
+  padding: 0.3rem 1rem 0.3rem 1rem;
+}
+
+a.entree {
   display: block;
-  padding: 0 5px;
+  margin-left: 5px; /* pour copier coller */
 }
 
 img.facs {
