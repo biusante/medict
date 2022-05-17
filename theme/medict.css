@@ -1,4 +1,8 @@
-/** biusante.css overloading */
+/** biusante.css overloading, assurer une vue de type desktop */
+
+* {
+    box-sizing: border-box;
+}
 
 html,
 body {
@@ -6,19 +10,26 @@ body {
 }
 
 #page {
-    position: relative;
+    position: absolute;
+    top: 0;
+    bottom: 0;
     width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     box-shadow: unset;
     -moz-box-shadow: unset;
     -webkit-box-shadow: unset;
 }
 
 #tete {
+    flex: 0 0 auto;
     position: relative;
     width: 100%;
 }
 
 #pied {
+    flex: 0 0 auto;
     height: auto;
 }
 
@@ -46,17 +57,17 @@ body {
 }
 
 #conteneur-ventre {
+    flex: 1 0 auto;
     padding-bottom: 0px;
-    position: relative;
     padding: 1em 1em 0 1em;
-    display: flex;
-    align-items: stretch;
+    overflow: hidden;
 }
 
 #medict {
-    display: flex;
-    flex-grow: 1;
+    height: 100%;
+    width: 100%;
     position: relative;
+    display: flex;
 }
 
 
@@ -82,10 +93,6 @@ mark {
     --form_color: #7e8b49;
     --button_bg: #464d28;
     --button_color: #c8d0a6;
-}
-
-* {
-    box-sizing: border-box;
 }
 
 
@@ -171,7 +178,7 @@ form.recherche input[type="text"],
 .bislide input[type="range"]:first-of-type {
     /* hide the first range, except button */
     position: absolute;
-    background-color: #fff;
+    background-color: var(--bg);
 }
 
 .bislide input[type=range]::-webkit-slider-thumb {
@@ -259,7 +266,8 @@ input.an {
 
 #entrees {
     flex: 1 1 auto;
-    height: 100%;
+    height: 0px;
+    overflow-y: auto;
 }
 
 #index {
@@ -271,23 +279,27 @@ input.an {
     border-left: 5px solid var(--form_bg);
 }
 
+#entrees,
 #index {
     /* Foreground, Background */
-    scrollbar-color: var(--form_color) var(--form_bg);
+    scrollbar-color: var(--button_color) var(--form_bg);
 }
 
+#entrees::-webkit-scrollbar,
 #index::-webkit-scrollbar {
+    /*
     width: 10px;
-    /* Mostly for vertical scrollbars */
     height: 10px;
-    /* Mostly for horizontal scrollbars */
+    */
 }
 
+#entrees::-webkit-scrollbar-thumb,
 #index::-webkit-scrollbar-thumb {
     /* Foreground */
-    background: var(--form_color);
+    background: var(--button_color);
 }
 
+#entrees::-webkit-scrollbar-track,
 #index::-webkit-scrollbar-track {
     /* Background */
     background: var(--form_bg);
@@ -300,12 +312,16 @@ input.an {
     text-decoration: none;
     color: var(--gray);
     cursor: pointer;
+    text-decoration: none;
+    margin: 0;
 }
 
+div.entree:hover,
 #index a:hover {
     background-color: var(--form_bg);
 }
 
+#entrees a.active,
 #index a.active {
     background-color: var(--form_bg);
     font-weight: bold;
@@ -324,19 +340,11 @@ input:focus {
 }
 
 #col4 {
-    position: relative;
-    width: 800px;
+    flex: 1 1 auto;
 }
 
-#col4 iframe {
-    padding: 0;
-    height: 100%;
-    min-width: 1064px;
-}
-
-#col4 .prevnext {
-    width: 100%;
-    position: absolute;
+#viewcont>img {
+    width: 50px;
 }
 
 
@@ -367,9 +375,8 @@ a.entree {
     color: var(--gray);
 }
 
-div.entree:hover,
-body.orth a:hover {
-    background-color: var(--bghi);
+a.entree b {
+    color: var(--button_bg);
 }
 
 a.terme {
@@ -405,14 +412,12 @@ div.volume {
 }
 
 div.entree {
-    border-bottom: 1px #ccc solid;
-    padding: 0.3rem 1rem 0.3rem 1rem;
+    border-bottom: 1px solid var(--form_bg);
 }
 
 a.entree {
+    padding: 0.3rem 1rem 0.3rem 1rem;
     display: block;
-    margin-left: 5px;
-    /* pour copier coller */
 }
 
 img.facs {

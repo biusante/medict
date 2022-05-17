@@ -1,18 +1,19 @@
 <?php
-
 /**
  * This file is part of Medict https://github.com/biusante/medict
  * Copyright (c) 2021 Université Paris Cité / Bibliothèques / Histoire de la santé
  */
 require_once(dirname(__DIR__) . "/Medict.php");
+
 use Oeuvres\Kit\{Web};
+
 /** Search form  */
 
 list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee_titre), MAX(annee_titre) FROM dico_entree")->fetch();
-$an1 = $an_min;
-if (isset($_REQUEST['an1'])) $an1 = $_REQUEST['an1'];
-$an2 = $an_max;
-if (isset($_REQUEST['an2'])) $an2 = $_REQUEST['an2'];
+$an1 = Web::par('an1', $an_min);
+$an2 = Web::par('an2', $an_max);
+$q = Web::par('q', 'a')
+
 ?>
 <div id="medict">
     <div id="col1">
@@ -27,7 +28,7 @@ if (isset($_REQUEST['an2'])) $an2 = $_REQUEST['an2'];
             <button type="submit">Go</button>
             <div>
                 <div>Rechercher un terme dans les vedettes</div>
-                <input name="q" value="" type="text"  autocomplete="off"/>
+                <input name="q" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
             </div>
         </form>
         <nav id="index"  data-url="data/index">
@@ -35,11 +36,13 @@ if (isset($_REQUEST['an2'])) $an2 = $_REQUEST['an2'];
         </nav>
     </div>
     <div id="col2">
-        <nav id="index"  data-url="data/index">
-            Termes
+        <nav id="entrees"  data-url="data/entrees">
+            
         </nav>
     </div>
     <div id="col4">
-        Image
+        <div id="viewcont">
+            <img id="image"/>
+        </div>
     </div>
 </div>

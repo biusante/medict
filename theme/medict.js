@@ -436,7 +436,16 @@ const Formajax = function() {
     }();
     // bottom script
     Bislide.init();
+
+    /**
+     * Pilot of Medit app
+     */
     const Medict = function() {
+        /* the viewer */
+        var pageViewer;
+        /* the image in the viewer */
+        var viewmage;
+
         function init() {
             // init the form
             const form = document.forms['medict'];
@@ -455,21 +464,114 @@ const Formajax = function() {
             }, true);
             // for efficiency, put a click event on the terme container (not all termes)
             const index = document.getElementById('index');
-            index.addEventListener('click', indexClick);
+            if (index) index.addEventListener('click', indexClick);
+            const entrees = document.getElementById('entrees');
+            if (entrees) entrees.addEventListener('click', entreesClick);
+            setViewer('viewcont');
         }
+
+        function setViewer(id) {
+            const div = document.getElementById(id);
+            if (!div) return;
+            let els = div.getElementsByTagName('img');
+            if (!els || els.length < 1) return;
+            viewmage = els[0];
+
+            pageViewer = new Viewer(div, {
+                transition: false,
+                inline: true,
+                navbar: 0,
+                // minWidth: '100%', 
+                toolbar: {
+                    zoomIn: 4,
+                    zoomOut: 4,
+                    oneToOne: 4,
+                    reset: 4,
+                    prev: 0,
+                    play: 0,
+                    next: 0,
+                    rotateLeft: 0,
+                    rotateRight: 0,
+                    flipHorizontal: 0,
+                    flipVertical: 0,
+                },
+                title: function(image) {
+                    return image.alt;
+                },
+                viewed() {
+                    // default zoom on load, image width
+                    let cwidth = div.offsetWidth;
+                    let iwidth = pageViewer.imageData.naturalWidth;
+                    let zoom = cwidth / iwidth;
+                    pageViewer.zoomTo(zoom);
+                    pageViewer.moveTo(0, 0);
+                },
+            });
+        }
+        /**
+         * Behavior of entries
+         * @param {*} e 
+         * @returns 
+         */
+        function entreesClick(e) {
+            let a = selfOrAncestor(e.target, 'a');
+            if (!a) return;
+            // https://www.biusante.parisdescartes.fr/iiif/2/bibnum:45674x04:%%/full/full/0/default.jpg
+            // https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=pharma_019428x01&amp;p=444"
+            // https://www.biusante.parisdescartes.fr/iiif/2/bibnum:47661x59:0122/0,512,512,512/512,/0/default.jpg
+            let found = a.search.match(/cote=([^&]*)/);
+            if (!found) return; // url error ?
+            // seems we can prevent default now
+            e.preventDefault();
+            const cote = found[1];
+            found = a.search.match(/p=([^&]*)/);
+            if (!found) return; // url error ?
+            const page = pad(found[1], 4);
+            const url = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ':' + page + '/full/full/0/default.jpg';
+            image.src = url;
+
+
+            pageViewer.update();
+            // change class
+            if (document.lastEntree) document.lastEntree.classList.remove('active');
+            if (a.classList.contains("active")) {
+                a.classList.remove('active');
+            } else {
+                document.lastEntree = a;
+                a.classList.add('active');
+            }
+        }
+
+        function pad(num, width) {
+            var s = "000000000" + num;
+            return s.substring(s.length - width);
+        }
+
+        function selfOrAncestor(el, name) {
+            while (el.tagName.toLowerCase() != name) {
+                el = el.parentNode;
+                if (!el) return false;
+                let tag = el.tagName.toLowerCase();
+                if (tag == 'div' || tag == 'nav' || tag == 'body') return false;
+            }
+            return el;
+        }
+
         /**
          * Hilite selected terms in nomenclatura column
          */
         function indexClick(e) {
             e.preventDefault();
             // catch a link inside column of terms
-            const a = e.target;
-            if (a.tagName.toLowerCase() != 'a') return;
-
+            let a = selfOrAncestor(e.target, 'a');
+            if (!a) return;
             if (!a.hash) return;
             const div = document.getElementById('entrees');
+            if (!div) return;
+            /*
             if (div.loading) return; // still loading
             div.loading = true;
+            */
 
 
             let entry = a.hash.substr(1);
@@ -482,11 +584,11 @@ const Formajax = function() {
             }, Formajax.LF);
 
             // change class
-            if (document.lastA) document.lastA.classList.remove('active');
+            if (document.lastIndex) document.lastIndex.classList.remove('active');
             if (a.classList.contains("active")) {
                 a.classList.remove('active');
             } else {
-                document.lastA = a;
+                document.lastIndex = a;
                 a.classList.add('active');
             }
         }

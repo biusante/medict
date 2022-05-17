@@ -1,24 +1,19 @@
 <?php
-
-
+/**
+ * This file is part of Medict https://github.com/biusante/medict
+ * Copyright (c) 2021 Université Paris Cité / Bibliothèques / Histoire de la santé
+ */
 include_once(dirname(__DIR__) . "/Medict.php");
 
-$t = false;
-if (isset($_REQUEST['t'])) $t = $_REQUEST['t'];
-if (!$t) {
-    return;
-}
+use Oeuvres\Kit\{Web};
 
+// une veddette à chercher
+$t = Web::par('t', null);
+if (!$t) return; // rien à chercher
 list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee_titre), MAX(annee_titre) FROM dico_entree")->fetch();
-$an1 = null;
-if (isset($_REQUEST['an1'])) $an1 = $_REQUEST['an1'];
-if ($an1 < $an_min) $an1 = null;
-else if ($an1 >= $an_max) $an1 = null;
-$an2 = null;
-if (isset($_REQUEST['an2'])) $an2 = $_REQUEST['an2'];
-if ($an2 > $an_max) $an2 = null;
-else if ($an2 < $an1) $an2 = $an1;
-
+$an1 = Web::par('an1', $an_min);
+$an2 = Web::par('an2', $an_max);
+if ($an2 < $an1) $an2 = $an1;
 
 $sql = "SELECT dico_entree FROM dico_index WHERE terme_sort = ? ";
 $pars = array($t);
