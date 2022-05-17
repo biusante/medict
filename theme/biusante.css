@@ -1,0 +1,3366 @@
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* Filename:     style.css
+* Version:      x.x.x
+* Website:      //www.biusante.parisdescartes.fr/
+* Author:       BIU Santé
+* Description:  Feuille de style BIU Santé unique
+== STRUCTURE: ==============================
+* Page width:  > 990px, > 800px, > 550px, <= 550px
+============================================
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+
+
+/* ========================================================
+   Redéfinition du HTML, resets de balises
+=========================================================== */
+
+html {
+    font-size: 13px;
+}
+
+html,
+body {
+    /* background-image: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-arriere3.jpg');
+    background-repeat: repeat;
+    background-attachment: fixed;
+    background-position: center top; */
+    height: 100%;
+    font-family: "Open Sans", sans-serif;
+    /* line-height: 1em; */
+    margin: 0;
+}
+
+img,
+iframe {
+    border: none;
+}
+
+table,
+td {
+    border: none;
+    border-spacing: 0;
+    border-collapse: collapse;
+    font-family: "Open Sans", sans-serif;
+    margin-top: 0;
+    margin-bottom: 0;
+    /* line-height: 13px; */
+}
+
+th {
+    word-break: normal;
+}
+
+p,
+blockquote {
+    font-family: "Open Sans", sans-serif;
+    /* line-height: 130%; */
+    text-align: justify;
+}
+
+a:link,
+a:visited {
+    text-decoration: none;
+    color: #8A1538;
+}
+
+a:hover,
+a:active,
+a:focus {
+    color: #8A1538;
+    text-decoration: underline
+}
+
+ul {
+    padding: 0;
+}
+
+li {
+    list-style-type: square;
+    list-style-image: url('imutil-puce-carre.gif');
+    margin-left: 1em;
+    /* line-height: 130%; */
+}
+
+
+/* ========================================================
+   Titres HTML : h1, h2...
+=========================================================== */
+
+h1,
+h2,
+h3,
+h4,
+.comme-h1,
+.comme-h2,
+.comme-h3,
+.comme-h4 {
+    line-height: 1.2em;
+    margin-right: 25%;
+    margin-top: 14px
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.comme-h1,
+.comme-h2,
+.comme-h3,
+.comme-h4,
+.comme-h5,
+.DarbySansWeb {
+    font-family: 'Darby Sans Web', sans-serif !important;
+    font-weight: 400;
+    color: #292929
+}
+
+h1,
+.comme-h1 {
+    font-size: 2.8em !important;
+    font-weight: 300 !important;
+    margin-bottom: 86px;
+    margin-right: 64px
+}
+
+h1:after,
+.comme-h1:after {
+    content: '';
+    position: absolute;
+    margin-top: 101px;
+    width: 120px;
+    height: 1px;
+    background: #969696;
+    left: 0
+}
+
+h2,
+.comme-h2 {
+    font-size: 1.7em !important;
+    font-weight: 900
+}
+
+h3,
+.comme-h3 {
+    font-size: 1.3em !important;
+    font-weight: 500
+}
+
+h4,
+.comme-h4 {
+    font-size: 1em !important;
+    font-weight: 900;
+    color: #424242
+}
+
+.pave-accueil h4,
+.pave-accueil .comme-h4 {
+    font-weight: normal;
+    margin-bottom: 3px;
+}
+
+h5,
+h6,
+.comme-h5 {
+    font-size: 0.8em !important;
+    line-height: 1.5em;
+    color: #424242
+}
+
+
+/* ========================================================
+   Typographie, gestion des icones
+=========================================================== */
+
+
+/**
+*  Code généré par Fontello
+*/
+
+@font-face {
+    font-family: 'biusante-icons';
+    src: url('https://www.biusante.parisdescartes.fr/ressources/fonts/biusante-icons.eot?49241335');
+    src: url('https://www.biusante.parisdescartes.fr/ressources/fonts/biusante-icons.eot?49241335#iefix') format('embedded-opentype'), url('https://www.biusante.parisdescartes.fr/ressources/fonts/biusante-icons.woff2?49241335') format('woff2'), url('https://www.biusante.parisdescartes.fr/ressources/fonts/biusante-icons.woff?49241335') format('woff'), url('https://www.biusante.parisdescartes.fr/ressources/fonts/biusante-icons.ttf?49241335') format('truetype'), url('https://www.biusante.parisdescartes.fr/ressources/fonts/biusante-icons.svg?49241335#biusante-icons') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+
+
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+
+
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'biusante-icons';
+    src: url('../font/biusante-icons.svg?49241335#biusante-icons') format('svg');
+  }
+}
+*/
+
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+    font-family: "biusante-icons";
+    font-style: normal;
+    font-weight: normal;
+    speak: never;
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: .2em;
+    text-align: center;
+    /* opacity: .8; */
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+    /* fix buttons height, for twitter bootstrap */
+    line-height: 1em;
+    /* Animation center compensation - margins should be symmetric */
+    /* remove if not needed */
+    margin-left: .2em;
+    /* you can be more comfortable with increased icons size */
+    /* font-size: 120%; */
+    /* Font smoothing. That was taken from TWBS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Uncomment for 3D effect */
+    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.icon-search:before {
+    content: '\e800';
+}
+
+
+/* '' */
+
+.icon-lock:before {
+    content: '\e801';
+}
+
+
+/* '' */
+
+.icon-unlock:before {
+    content: '\e802';
+}
+
+
+/* '' */
+
+.icon-link-ext:before {
+    content: '\e803';
+}
+
+
+/* '' */
+
+.icon-chevron-right:before {
+    content: '\e804';
+}
+
+
+/* '' */
+
+.icon-circled-chevron-right:before {
+    content: '\e805';
+}
+
+
+/* '' */
+
+.icon-newspaper:before {
+    content: '\e806';
+}
+
+
+/* '' */
+
+.icon-mobile:before {
+    content: '\e807';
+}
+
+
+/* '' */
+
+.icon-home:before {
+    content: '\e808';
+}
+
+
+/* '' */
+
+.icon-phone:before {
+    content: '\e809';
+}
+
+
+/* '' */
+
+.icon-cd:before {
+    content: '\e80a';
+}
+
+
+/* '' */
+
+.icon-copy:before {
+    content: '\e80b';
+}
+
+
+/* '' */
+
+.icon-medicine:before {
+    content: '\e80c';
+}
+
+
+/* '' */
+
+.icon-pharmacy:before {
+    content: '\e80d';
+}
+
+
+/* '' */
+
+.icon-book:before {
+    content: '\e80e';
+}
+
+
+/* '' */
+
+.icon-mail:before {
+    content: '\e80f';
+}
+
+
+/* '' */
+
+.icon-cancel:before {
+    content: '\e810';
+}
+
+
+/* '' */
+
+.icon-right:before {
+    content: '\e811';
+}
+
+
+/* '' */
+
+.icon-attention:before {
+    content: '\e812';
+}
+
+
+/* '' */
+
+.icon-circle:before {
+    content: '\e813';
+}
+
+
+/* '' */
+
+.icon-desktop:before {
+    content: '\e814';
+}
+
+
+/* '' */
+
+.icon-squared-arrow:before {
+    content: '\e815';
+}
+
+
+/* '' */
+
+.icon-wifi:before {
+    content: '\e816';
+}
+
+
+/* '' */
+
+.icon-plug:before {
+    content: '\e817';
+}
+
+
+/* '' */
+
+.icon-circled-chevron-left:before {
+    content: '\e818';
+}
+
+
+/* '' */
+
+.icon-print:before {
+    content: '\e819';
+}
+
+
+/* '' */
+
+.icon-file-excel:before {
+    content: '\e81a';
+}
+
+
+/* '' */
+
+.icon-plus:before {
+    content: '\e81b';
+}
+
+
+/* '' */
+
+.icon-minus:before {
+    content: '\e81c';
+}
+
+
+/* '' */
+
+.icon-file-word:before {
+    content: '\e81d';
+}
+
+
+/* '' */
+
+.icon-file-pdf:before {
+    content: '\e81e';
+}
+
+
+/* '' */
+
+.icon-mental-disability:before {
+    content: '\e81f';
+}
+
+
+/* '' */
+
+.icon-zoom-in:before {
+    content: '\e820';
+}
+
+
+/* '' */
+
+.icon-menu:before {
+    content: '\f0c9';
+}
+
+
+/* '' */
+
+.icon-wheelchair:before {
+    content: '\f193';
+}
+
+
+/* '' */
+
+.icon-hard-of-hearing:before {
+    content: '\f2a4';
+}
+
+
+/* '' */
+
+.icon-low-vision:before {
+    content: '\f2a8';
+}
+
+
+/* '' */
+
+
+/**
+* Classes d'icones spécifiques, non générées par Fontello
+*/
+
+.ressource-enligne-payante,
+.ressource-enligne-gratuite,
+.ressource-livre,
+.ressource-periodique,
+.ressource-cederom {
+    /* position: relative; */
+    /* font-weight: bold; */
+}
+
+.ressource-enligne-payante::before {
+    content: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-icone-cadenas-rouge.png');
+}
+
+.ressource-enligne-gratuite::before {
+    content: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-icone-cadenas-vert.png');
+}
+
+.ressource-livre::before {
+    content: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-icone-livre.png');
+    padding-right: 0.25em;
+}
+
+.ressource-periodique::before {
+    content: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-icone-revue.png');
+    padding-right: 0.25em;
+}
+
+.ressource-cederom::before {
+    content: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-icone-cdrom.png');
+    padding-right: 0.25em;
+}
+
+.ressource-enligne-payante::after,
+.ressource-enligne-gratuite::after,
+.ressource-livre::after,
+.ressource-periodique::after,
+.ressource-cederom::after {
+    margin: 0;
+    display: none;
+    position: absolute;
+    top: -4em;
+    left: 2em;
+    width: 10em;
+    border: 1px solid #ffffff;
+    background-color: #746145;
+    text-align: left;
+    border-radius: 8px 8px 8px 8px;
+    padding: 5px;
+    font-family: "Open Sans", sans-serif;
+    font-size: .92rem;
+    word-spacing: 0;
+    line-height: 110%;
+    color: #FFFFFF;
+}
+
+.ressource-enligne-payante::after {
+    content: "Ressource Paris Descartes";
+}
+
+.ressource-enligne-gratuite::after {
+    content: "Ressource accessible à tous";
+}
+
+.ressource-livre::after {
+    content: "Livre imprimé";
+}
+
+.ressource-periodique::after {
+    content: "Revue imprimée";
+}
+
+.ressource-cederom::after {
+    content: "Cédérom";
+}
+
+.ressource-enligne-payante:hover::after,
+.ressource-enligne-gratuite:hover::after,
+.ressource-livre:hover::after,
+.ressource-periodique:hover::after,
+.ressource-cederom:hover::after {
+    display: block;
+}
+
+a.externe::after {
+    font-family: "biusante-icons";
+    content: '\e803';
+    margin-left: 0.2em;
+}
+
+.icone-langue.en-ligne {
+    width: 1em;
+    height: 1em;
+    vertical-align: sub;
+}
+
+
+/** Classes utilisées pour placer des indicateurs vert-orange-rouge dans les tableaux de formations */
+
+[class^="feu-"]:before,
+[class*=" feu-"]:before {
+    font-family: "biusante-icons";
+    content: '\e813';
+    text-shadow: 1px 1px 2px #656565;
+    font-size: 0.85em;
+    margin-right: 0.8em;
+}
+
+.feu-vert {
+    color: #009933;
+}
+
+.feu-orange {
+    color: #ff6600;
+}
+
+.feu-rouge {
+    color: #cc0000;
+}
+
+
+/* ========================================================
+   Structure de la page :
+
+   #page, #tete, #conteneur-ventre, #bandeau-actualites,
+   #section-centrale, #contenu-principal, #contenu-annexe,
+   #pied, #centre0, #centre1...
+=========================================================== */
+
+#page {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    box-sizing: border-box;
+    width: 990px;
+    margin: 0 auto;
+    min-height: 100%;
+    background-color: rgba(255, 255, 255, 1.0);
+    box-shadow: 0 0 2px 2px rgba(68, 68, 68, 0.3);
+    -moz-box-shadow: 0 0 2px 2px rgba(68, 68, 68, 0.3);
+    -webkit-box-shadow: 0 0 2px 2px rgba(68, 68, 68, 0.3);
+}
+
+#tete {
+    position: sticky;
+    top: 0;
+    width: 990px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    background-color: white;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .1);
+    z-index: 500;
+}
+
+#header-main-content {
+    height: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#menu-icon,
+#close-menu-icon {
+    display: none;
+}
+
+#conteneur-ventre {
+    padding: 0 0 84px 0;
+    flex-grow: 1;
+}
+
+#bandeau-actualites {
+    width: 990px;
+    height: 150px;
+}
+
+#section-centrale {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#contenu-principal {
+    display: table-cell;
+    vertical-align: top;
+    padding: 2em 1em 0 1em;
+    font-family: "Open Sans", sans-serif;
+    /* line-height: 120%; */
+}
+
+#contenu-annexe {
+    display: table-cell;
+    vertical-align: top;
+    background-color: #f2f2f2;
+    text-align: center;
+    width: 35%;
+    padding: 5px;
+    margin: 0;
+}
+
+#contenu-annexe .tuile {
+    vertical-align: bottom;
+    margin: 0.05em;
+}
+
+#contenu-annexe table {
+    width: 100%;
+}
+
+#infos-acces {
+    padding: 0 1em;
+}
+
+
+/* Pied de page, footer */
+
+.up-default-button,
+a.up-default-button,
+.up-footer-button,
+a.up-footer-button {
+    display: inline-block;
+    padding: 0 0.8em;
+    border-radius: 26px;
+    line-height: 2.7em;
+    white-space: nowrap;
+    transition: all .2s ease 0s;
+}
+
+.up-default-button,
+a.up-default-button {
+    color: #ffffff;
+    background-color: #8a1538;
+    border: 1px #8a1538 solid;
+}
+
+.up-default-button:hover,
+a.up-default-button:hover {
+    color: #aa004f;
+    background: #ffffff;
+    text-decoration: none;
+}
+
+.up-footer-button:after,
+a.up-footer-button:after {
+    content: ">";
+    font-size: 1.3em;
+    /* position: absolute; */
+    padding-left: 0.25em;
+    vertical-align: bottom;
+}
+
+.up-footer-button,
+a.up-footer-button {
+    border: 1px #000000 solid;
+    color: black;
+}
+
+.up-footer-button:hover,
+a.up-footer-button:hover {
+    color: #ffffff;
+    background: #000000;
+    text-decoration: none;
+}
+
+#pied {
+    /* position: absolute; */
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    box-sizing: border-box;
+    height: 64px;
+    padding: 0 1em;
+    font-family: "Open Sans", sans-serif;
+}
+
+#liens-utilitaires {
+    display: inline-block;
+    float: right;
+    text-align: right;
+    font-size: 0.9em;
+}
+
+a.bouton-dons {
+    background-color: #dd3879;
+    color: white;
+    padding: 0 0.5em;
+}
+
+a:hover.bouton-dons {
+    background-color: #c6326c;
+    text-decoration: none;
+}
+
+#upper-footer {}
+
+#lower-footer {
+    margin-top: 15px;
+}
+
+#logos-institutionnels {
+    display: inline-block;
+    float: left;
+}
+
+.liens-reseaux-sociaux {
+    /* width:100%; */
+    /* float: right; */
+    clear: both;
+    border-top: thin solid black;
+    border-bottom: thin solid black;
+    text-align: right;
+    padding: 0.5em 0;
+    font-size: .92rem;
+    line-height: 1;
+}
+
+.liens-reseaux-sociaux span,
+#logos-institutionnels span {
+    display: inline-block;
+    margin: 0.2em;
+}
+
+#bandeau-rubrique,
+#bandeau-rubrique a {
+    font-family: "Darby Sans Web", sans-serif;
+    color: #006666;
+    font-weight: normal;
+    font-size: 1.8rem;
+    line-height: 110%;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    text-decoration: none;
+}
+
+#bandeau-rubrique {
+    border-bottom: thin solid #006666;
+    font-size: 1.5rem;
+}
+
+#centre {
+    padding: 0 20px;
+}
+
+#centre0 {
+    padding: 0;
+}
+
+#centre2 {
+    padding: 0 0 90px 20px;
+}
+
+#centre3 {
+    padding-right: 20px;
+    position: relative;
+    /* overflow: auto; */
+    top: 0;
+    bottom: 0;
+    min-height: 100%;
+}
+
+body.iframeLayout #centre0 {
+    width: auto;
+}
+
+html.iframeLayout,
+body.iframeLayout {
+    background: transparent;
+    overflow: hidden;
+    margin: 0;
+}
+
+
+/* Retraits (cumulatifs) */
+
+.retrait {
+    margin-left: 20px;
+}
+
+
+/* Colonnage */
+
+[class*=grid-] {
+    margin-left: -1em;
+}
+
+[class*=grid-]::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+[class*=grid-]>div {
+    float: left;
+    word-break: break-word;
+    margin-left: 1em;
+}
+
+.grid-2>div {
+    width: calc(50% - 1em - 0.01px);
+}
+
+.grid-3>div {
+    width: calc(100% * 1 / 3 - 1em - 0.01px);
+}
+
+.grid-4>div {
+    width: calc(100% * 1 / 4 - 1em - 0.01px);
+}
+
+.grid-3-1>:nth-child(odd),
+.grid-1-3>:nth-child(even) {
+    width: calc(75% - 1em - 0.01px);
+}
+
+.grid-3-1>:nth-child(even),
+.grid-1-3>:nth-child(odd) {
+    width: calc(25% - 1em - 0.01px);
+}
+
+.grid-2-1>:nth-child(odd),
+.grid-1-2>:nth-child(even) {
+    width: calc(100% * 2 / 3 - 1em - 0.01px);
+}
+
+.grid-2-1>:nth-child(even),
+.grid-1-2>:nth-child(odd) {
+    width: calc(100% * 1 / 3 - 1em - 0.01px);
+}
+
+
+/* ========================================================
+   Eléments des pages de type "Accueil" :
+
+   .pave-accueil
+=========================================================== */
+
+td.accueil {
+    vertical-align: top;
+}
+
+.pave-accueil {
+    margin-bottom: 2em;
+}
+
+.pave-accueil:last-of-type {
+    margin-bottom: 0;
+}
+
+.pave-accueil div {
+    border-color: #eae7df;
+    border-width: 1px 0 0 0;
+    border-style: solid;
+    line-height: normal;
+    padding: 2px;
+    font-family: "Open Sans", sans-serif;
+    /* font-size: 1rem; */
+    clear: both;
+}
+
+.pave-accueil div:last-of-type {
+    border-width: 1px 0;
+}
+
+.pave-accueil table {
+    width: 100%;
+}
+
+.pave-accueil td {
+    border-color: #eae7df;
+    border-width: 1px 0;
+    border-style: solid;
+    line-height: normal;
+    padding: 2px;
+    /* font-family: "PT Sans Narrow", sans-serif;
+    font-size: 1.08rem; */
+    word-break: initial;
+}
+
+.vignettes-sites-connexes img,
+.vignette-site-connexe {
+    margin: 0.1em;
+    width: 70px;
+    height: 100px;
+}
+
+
+/* ========================================================
+   Fil d'Ariane : #fil
+=========================================================== */
+
+#fil {
+    font-size: .7rem;
+    /* color: #663300; */
+    text-transform: uppercase;
+    padding: 6px 0 0 0;
+    position: relative;
+    z-index: 4;
+    /* background-color: #F9F7F0; */
+    vertical-align: middle;
+    /*
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #DBCEA4;
+    */
+}
+
+#fil a {
+    color: black;
+    text-decoration: none;
+}
+
+#fil a:hover {
+    opacity: 0.7;
+}
+
+#fil ol {
+    margin: 0;
+    padding: 0;
+}
+
+.breadcrumbs-item {
+    display: inline;
+    margin: 0;
+}
+
+.breadcrumbs-item+.breadcrumbs-item:before {
+    margin: -1px 4px;
+    content: '>';
+    font-size: .92rem;
+}
+
+.breadcrumbs-root:before {
+    position: relative;
+    /* bottom: 1px;
+  margin: -1px 0; */
+    font-family: "biusante-icons";
+    content: '\e808';
+    /* font-size: .92rem; */
+}
+
+
+/* ========================================================
+   Fil d'actualités : #actu
+=========================================================== */
+
+#actu a:link,
+#actu a:visited {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+#actu a:hover,
+#actu a:active,
+#actu a:focus {
+    color: #cfdfef;
+    text-decoration: none
+}
+
+#actu .fondcel,
+#actu .fondcelimp {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #FFFFFF;
+    font-family: "Darby Sans Web", sans-serif;
+    font-weight: 500;
+    font-size: 1.1rem;
+    line-height: 110%;
+    text-shadow: 2px 2px 3px #000000
+}
+
+
+/* ========================================================
+   Revues en Histoire de la santé
+=========================================================== */
+
+.ligne-perio {
+    width: 100%;
+    border-style: solid;
+    border-color: #aca699;
+    border-width: thin 0 0 0;
+    padding: 0.5em 0;
+}
+
+.etat-collection {
+    color: #808080;
+    font-size: 1em;
+}
+
+
+/* ========================================================
+   Tableau des prochaines formations
+=========================================================== */
+
+#prochaines-formations {
+    width: 100%;
+    color: #808080;
+}
+
+#prochaines-formations a {
+    text-decoration: none;
+}
+
+#prochaines-formations a:hover {
+    opacity: 0.7;
+}
+
+#prochaines-formations caption {
+    text-align: center;
+    padding: 2px 2px 8px 2px;
+    /* background-color:#DDDAD0; */
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+#prochaines-formations th {
+    text-align: center;
+}
+
+#prochaines-formations td,
+#prochaines-formations th {
+    padding: 1px;
+}
+
+
+/* ========================================================
+   Navigation latérale facultative : #navigation-laterale
+=========================================================== */
+
+#navigation-laterale {
+    display: table-cell;
+    width: 15%;
+    table-layout: fixed;
+    background-color: #eee3bf;
+    padding-left: 1em;
+}
+
+#navigation-laterale li {
+    margin: 0 0 0.2em 0;
+    padding: 0;
+    font-family: "Darby Sans Web", sans-serif;
+    font-size: 1rem;
+    text-decoration: none;
+    list-style-type: none;
+    list-style-image: none;
+    line-height: 100%;
+}
+
+#navigation-laterale a:active {
+    text-decoration: none;
+}
+
+#navigation-laterale .actif {
+    border-radius: 8px 0 0 8px;
+    padding: 5px 0 5px 5px;
+    border: 1px solid;
+    border-color: #D3D3BE #ffffff #D3D3BE #D3D3BE;
+    background-color: #ffffff;
+}
+
+#navigation-laterale ol {
+    margin: 0;
+    padding: 0;
+}
+
+#navigation-laterale>ol>li {
+    margin-top: 0.5em;
+    font-size: 1.85rem;
+    font-family: "Darby Sans Web", sans-serif;
+    /* color: #336699; */
+}
+
+#navigation-laterale>ol>li>ol>li {
+    margin: 10px 0 10px 0;
+    padding-right: 5px;
+}
+
+#navigation-laterale>ol>li>ol>li>ol {
+    margin: 10px 10px 10px 25px;
+}
+
+#navigation-laterale>ol>li>ol>li>ol>li {
+    list-style-image: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-pucemenug.png');
+}
+
+
+/* Fin des styles liés aux menus latéraux */
+
+
+/* ========================================================
+   Messages
+=========================================================== */
+
+[class^="message-"],
+[class*=" message-"] {
+    padding: 1em 1.5em;
+    transition: opacity .2s ease, color .2s ease, background .2s ease, box-shadow .2s ease;
+    border-radius: .2857em;
+    margin: 1em 0;
+}
+
+[class^="message-"]>.icon,
+[class*=" message-"]>.icon {
+    font-size: 2.5em;
+    float: left;
+    margin: 0 0.5em 0 0;
+}
+
+[class^="message-"]>.content,
+[class*=" message-"]>.content {}
+
+[class^="message-"]:after,
+[class*=" message-"]:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.message-annonce {
+    background-color: #F8FFFF;
+    color: #276F86;
+    box-shadow: 0 0 0 1px #A9D5DE inset, 0 0 0 0 transparent;
+}
+
+.message-erreur {
+    background-color: #fff0f0;
+    color: #a94442;
+    box-shadow: 0 0 0 1px #dbb1b1 inset, 0 1px 2px 0 rgba(0, 0, 0, .05);
+}
+
+
+/* ========================================================
+   Vue "Item"
+=========================================================== */
+
+.item {
+    box-sizing: border-box;
+    margin: 0 0 2em 0;
+    padding: 1em 0 0 0;
+    border-top: #dddad0 solid thin;
+}
+
+.item * {
+    box-sizing: inherit;
+}
+
+.item:first-child {
+    margin: 1em 0 2em 0;
+    border: none;
+    padding: 0;
+}
+
+.item>.image {
+    display: table-cell;
+    width: 10em;
+}
+
+.item>.image img {
+    width: 100%;
+}
+
+.item>.content {
+    display: table-cell;
+    vertical-align: top;
+    padding-left: 0;
+}
+
+.item>.image+.content {
+    padding-left: 1em;
+}
+
+.item>.content>.header {
+    margin-top: -0.15em;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.item>.content>.description {
+    margin-top: 0.5em;
+}
+
+.item>.content>.description p {
+    margin-top: 0;
+}
+
+.item>.content>.description ul {
+    margin-top: 0.1em;
+}
+
+.item>.content>.extra {
+    margin: .5em 0 0;
+    -webkit-transition: color .1s ease;
+    transition: color .1s ease;
+}
+
+
+/* ========================================================
+   Vue "Statistic"
+=========================================================== */
+
+.valeur-mise-en-avant {
+    box-sizing: border-box;
+    margin: 0 0.25em 0 0;
+    display: inline-block;
+    font-size: 1.5em;
+    color: #1b1c1d;
+    text-transform: uppercase;
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+/* ========================================================
+   Classes utilitaires :
+
+   .vignette-a-gauche, .ombre, .liste-liens-chevrons,
+   styles de texte, classes d'alignement...
+=========================================================== */
+
+.conteneur-vignettes {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.025);
+    padding: 0.5em;
+    margin: 0.5em 0;
+    clear: both;
+}
+
+.vignette-resultat,
+.vignette-en-ligne {
+    display: inline-table;
+    min-width: 160px;
+    /* max-width:20%; */
+    vertical-align: baseline;
+    margin: 2px;
+}
+
+.vignette-a-gauche {
+    display: table;
+    float: left;
+    margin: 0 1em 0.5em 0;
+}
+
+.vignette-a-droite {
+    display: table;
+    float: right;
+    margin: 0 0 0.5em 1em;
+}
+
+#contenu-principal>.vignette-a-droite,
+#contenu-principal>.vignette-a-gauche {
+    margin: 1em;
+}
+
+.vignette-a-droite img,
+.vignette-a-gauche img {
+    max-width: 100%;
+}
+
+.vignette-a-droite figcaption,
+.vignette-a-gauche figcaption {
+    display: table-caption;
+    caption-side: bottom;
+    font-size: 0.8em;
+    text-align: right;
+    opacity: 0.3;
+}
+
+.vignette-a-droite figcaption .image-licence,
+.vignette-a-gauche figcaption .image-licence {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+
+.vignette-resultat .legende,
+.vignette-en-ligne .legende,
+.vignette-a-droite .legende,
+.vignette-a-gauche .legende {
+    display: table-caption;
+    caption-side: bottom;
+    word-wrap: break-word;
+    font-size: 0.8em;
+    text-align: inherit;
+    opacity: 1;
+}
+
+.adaptable-au-conteneur {
+    max-width: 100%;
+}
+
+
+/* Ombrage pour images */
+
+.ombre2 {
+    box-shadow: 2px 2px 6px 2px rgba(68, 68, 68, 0.5);
+}
+
+
+/* Styles d'alignement */
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.leftAligned {
+    text-align: left;
+}
+
+.centerAligned {
+    text-align: center;
+}
+
+.rightAligned {
+    text-align: right;
+}
+
+.bottomVerticalAligned {
+    vertical-align: bottom;
+}
+
+.middleVerticalAligned {
+    vertical-align: middle;
+}
+
+.topVerticalAligned {
+    vertical-align: top;
+}
+
+.noBr {
+    white-space: nowrap;
+}
+
+.breakAll {
+    word-break: break-all;
+}
+
+.breakWord {
+    word-wrap: break-word;
+}
+
+
+/* Décoration du texte */
+
+.texteBarre {
+    text-decoration: line-through;
+}
+
+.texteSouligne {
+    text-decoration: underline;
+}
+
+
+/* Couleur du texte */
+
+.texte-couleur-medecine {
+    color: #cc3300;
+}
+
+.texte-couleur-pharmacie {
+    color: #339933;
+}
+
+
+/* Taille du texte */
+
+.small {
+    font-size: 0.8em;
+}
+
+.big {
+    font-size: larger;
+}
+
+
+/* Liste de liens à chevrons */
+
+td .liste-liens-chevrons {
+    margin: 0;
+}
+
+.liste-liens-chevrons li {
+    list-style-image: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-flechept.gif');
+    list-style-position: inside;
+    margin: 0;
+    padding: 3px;
+    padding-left: 1.15em;
+    text-indent: -1.15em;
+}
+
+.liste-liens-chevrons.filetee li:first-child {
+    border-top: 1px solid #aca699;
+}
+
+.liste-liens-chevrons.filetee li {
+    border-bottom: 1px solid #aca699;
+    color: #666666;
+}
+
+.liste-liens-chevrons.filetee a {
+    font-weight: bold;
+}
+
+
+/* Style à utiliser à la place des listes à puces suivi d'un interlignage à 50% */
+
+.liste {
+    display: list-item;
+    list-style-image: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-puce-carre.gif');
+    margin-left: 13px;
+    line-height: 110%;
+    margin-bottom: 0;
+}
+
+
+/* Badges et étiquettes */
+
+.badge {
+    font-family: Arial, sans-serif;
+    /* color: white; */
+    line-height: 1.4;
+    border-radius: 0.3em;
+    display: inline-block;
+    font-weight: bold;
+    padding: 0.05em 0.15em;
+    text-align: center;
+}
+
+.medecine {
+    color: white;
+    background-color: #cc3300;
+}
+
+.pharmacie {
+    color: white;
+    background-color: #339933;
+}
+
+.etiquette {
+    display: inline-block;
+    white-space: nowrap;
+    line-height: 1;
+    vertical-align: baseline;
+    margin: .2em .15em;
+    background-color: #dddad0;
+    border-color: #dddad0;
+    background-image: none;
+    padding: .5833em .833em;
+    /*        color: rgba(0,0,0,.6); */
+    text-transform: none;
+    font-weight: 700;
+    border-radius: .28571429rem;
+    -webkit-transition: background .1s ease;
+    transition: .1s ease;
+}
+
+.etiquette [class^="icon-"]:before,
+.etiquette [class*=" icon-"]:before {
+    margin: 0 0.75em 0 0;
+}
+
+a.etiquette,
+a.badge,
+a>.badge {
+    text-decoration: none;
+    opacity: 0.8;
+    transition: .1s ease;
+}
+
+a.etiquette:hover,
+a.badge:hover,
+a:hover>.badge {
+    opacity: 1;
+    transition: .1s ease;
+}
+
+
+/* ========================================================
+   Formulaires
+=========================================================== */
+
+.formucadre1 {
+    font-size: 0.85rem;
+    font-family: "Open Sans", sans-serif;
+    border: 1px solid #7e8b49;
+    background-color: #e0e4cd;
+    color: #7e8b49;
+}
+
+.formucadre1 td {
+    padding: 2px;
+}
+
+.formucadre1 input,
+.formucadre1 select {
+    box-sizing: border-box;
+    border: 1px solid #7e8b49;
+    font-family: "Open Sans", sans-serif;
+    font-size: 0.92rem;
+    color: #52493a;
+    text-align: left;
+    background-color: #ffffff;
+    padding: 1px;
+}
+
+.formucadre1 input[type="submit"],
+.formucadre1 input[type="reset"] {
+    background-color: #464d28;
+    color: #c8d0a6;
+}
+
+.formusaispt {
+    box-sizing: border-box;
+    border: 1px solid #7E8B49;
+    font-family: "Open Sans", sans-serif;
+    font-size: .85rem;
+    color: #52493a;
+    text-align: left;
+    background-color: #FFFFFF;
+    padding: 1px;
+}
+
+
+/**
+*  Recherche rapide
+*/
+
+.recherche-avancee {
+    text-align: right;
+}
+
+.recherche-avancee a {
+    font-family: inherit;
+    color: #292929;
+    text-decoration: none;
+}
+
+.recherche-avancee a:hover {
+    opacity: 0.7;
+}
+
+#tabs-labels-container,
+.tabs-labels-container {
+    list-style: none;
+    display: table;
+    margin: 0;
+    font-family: "Darby Sans Web", sans-serif;
+    line-height: 100%;
+    text-align: center;
+}
+
+#tabs-labels-container li,
+.tabs-labels-container li {
+    float: left;
+    margin: 0;
+    list-style: inherit;
+    line-height: 1;
+    /* background: #eef3f9; */
+    border-right: 2px solid white;
+    border-bottom: 1px solid white;
+    padding: 3px 10px;
+    color: #666;
+    opacity: 0.8;
+    transition: all 0.2s 0s;
+}
+
+#tabs-labels-container li.selected,
+.tabs-labels-container li.selected {
+    color: #292929;
+    background: #cfdfef;
+    border-bottom: 1px solid #cfdfef;
+    opacity: 1;
+}
+
+#tabs-labels-container li a,
+.tabs-labels-container li a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.tab-content {
+    background: #cfdfef;
+    padding: 0.5em 0.5em 0.75em 0.5em;
+    display: none;
+}
+
+.tab-content .input-group {
+    background-color: white;
+    /* position: relative; */
+}
+
+.tab-content .input-group>input[type="text"] {
+    box-sizing: border-box;
+    border: 1px solid #ffffff;
+    font-family: "Open Sans", sans-serif;
+    width: calc(100% - 25px);
+}
+
+.tab-content .input-group>input[type="image"] {
+    box-sizing: border-box;
+    vertical-align: bottom;
+    width: 20px;
+}
+
+
+/**
+*  Formulaire d'envoi de question  au service Biuminfo
+*/
+
+#biuminfo-form {
+    width: 80%;
+}
+
+#biuminfo-form td:first-of-type {
+    width: 20%;
+    padding-left: 2em;
+}
+
+#biuminfo-form input[type="text"] {
+    width: 80%;
+}
+
+#biuminfo-form select {
+    width: 80%;
+}
+
+#biuminfo-form textarea {
+    width: 80%;
+    height: 3em;
+}
+
+#biuminfo-form #question {
+    height: 12em;
+}
+
+
+/**
+*  Box recherche
+*/
+
+.box-recherche {
+    display: table-cell;
+}
+
+.box-recherche * {
+    box-sizing: border-box;
+}
+
+.box-recherche label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 0.5em;
+    font-weight: 700;
+}
+
+.box-recherche .input-group {
+    /* position: relative; */
+    display: table;
+    /* border-collapse: separate; */
+}
+
+.box-recherche .input-group>* {
+    display: table-cell;
+}
+
+.box-recherche .input-group>*:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.box-recherche .input-group-btn>*:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+}
+
+.box-recherche .form-control,
+.box-recherche .btn {
+    height: 2.5em;
+    padding: 0.5em 0.75em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.box-recherche .form-control {
+    display: block;
+    width: 100%;
+    /* line-height: 1.42857143; */
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+.box-recherche .form-control:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+}
+
+.box-recherche .form-control:focus+span {
+    color: #66afe9;
+}
+
+.box-recherche .input-group-btn {
+    vertical-align: middle;
+    color: #333;
+    -webkit-transition: color ease-in-out .15s;
+    -o-transition: color ease-in-out .15s;
+    transition: color ease-in-out .15s;
+}
+
+.box-recherche .btn {
+    cursor: pointer;
+    color: inherit;
+    background-color: #fff;
+}
+
+.box-recherche .btn:active,
+.box-recherche .btn:focus,
+.box-recherche .btn:hover {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
+.box-recherche .help-block {
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+    color: #737373;
+    text-align: right;
+}
+
+
+/* ========================================================
+   Tableaux
+=========================================================== */
+
+
+/* Les styles suivants sont destinés à garantir une compatibilité avec le code de l'ancien site de la BIU Santé. Ils s'appliquent à des balises "td". */
+
+.tableau0 {
+    /* Style utilisé essentiellement dans quelques anciens modules Lasso */
+    border-top: 1px solid #aca699;
+    border-bottom: 1px solid #aca699;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    color: #666666;
+}
+
+.tableau0bis {
+    /* Style utilisé uniquement dans le code Lasso de Medicina */
+    color: #666666;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    line-height: 12px;
+}
+
+.tableau1 {
+    border-top: 1px solid #aca699;
+    border-bottom: 1px solid #aca699;
+    color: #666666;
+    padding: 3px;
+    background-color: #ffffff;
+}
+
+.tableau1bis {
+    /* Style inutilisé */
+    border-bottom: 1px solid #aca699;
+    color: #666666;
+    padding: 3px;
+    background-color: #ffffff;
+}
+
+.tableau2,
+.legende2 {
+    border-top: 1px solid #aca699;
+    border-bottom: 1px solid #aca699;
+    color: #666666;
+    padding: 3px;
+    background-color: #f2f2f2;
+}
+
+td.tableau3 {
+    border-top: 1px solid #aca699;
+    border-bottom: 1px solid #aca699;
+    color: #666666;
+    padding: 3px;
+    background-color: #EEE7D0;
+    /* text-align: center; */
+    width: 110px;
+}
+
+.tableau4_medica_oai {
+    /* Style utilisé uniquement dans le code Lasso de Medica */
+    border-top: 1px solid #aca699;
+    border-bottom: 1px solid #aca699;
+    color: #666666;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-color: #FFFFE8;
+}
+
+.tableau5_medica_ext {
+    /* Style utilisé uniquement dans le code Lasso de Medica */
+    border-top: 1px solid #aca699;
+    border-bottom: 1px solid #aca699;
+    color: #666666;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-color: #FFF0E1;
+}
+
+.legende {
+    border-top: 1px solid #aca699;
+    border-bottom: 1px solid #aca699;
+    font-size: 0.8rem;
+    color: #666666;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-family: "arial", sans-serif;
+    line-height: 110%;
+}
+
+
+/* Les styles suivants s'appliquent à des balises "table" définissant des tableaux de données. */
+
+table.table-statistiques {
+    /* Style utilisé sur très peu de pages */
+    width: 390px;
+    margin: 1px;
+    vertical-align: top;
+    display: inline-table;
+}
+
+table.table-statistiques>thead {
+    background-color: #EEE7D0;
+}
+
+table.table-statistiques>thead th:first-child {
+    width: 150px;
+}
+
+table.table-statistiques>tbody th {
+    text-align: left;
+}
+
+table.table-statistiques>tbody td {
+    text-align: center;
+}
+
+table.table-statistiques td,
+table.table-statistiques th {
+    border-top: 1px solid #aca699;
+    border-bottom: 1px solid #aca699;
+    color: #666666;
+    font-weight: normal;
+    padding: 3px;
+}
+
+table.tableau3 th {
+    border-top: 1px solid #aca699;
+    border-bottom: 1px solid #aca699;
+    color: #666666;
+    padding: 3px;
+    background-color: #EEE7D0;
+    text-align: center;
+    font-weight: bold;
+}
+
+table.tableau3 td {
+    border-top: 1px solid #aca699;
+    border-bottom: 1px solid #aca699;
+    color: #666666;
+    padding: 3px;
+    background-color: #ffffff;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+/* Tableau "zébré" (= à rayures verticales) */
+
+.zebre td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.75em;
+    width: auto !important;
+    border-top: 1px solid #aca699;
+    border-bottom: 1px solid #aca699;
+    color: #666666;
+}
+
+.zebre tr td:nth-child(odd) {
+    background-color: white;
+}
+
+.zebre tr td:nth-child(even) {
+    background-color: #F7F3EA;
+}
+
+
+/* Encadré sur fond teinté */
+
+.encadre {
+    border: 1px solid #d9d9d9;
+    padding: .85rem;
+    background-color: #f2f2f2;
+}
+
+table.table-resultats-periodiques .ligne-titre {
+    border-top: 1px solid #aca699;
+}
+
+.ligne-titre td {
+    padding-top: 0.5em;
+    vertical-align: top;
+}
+
+.ligne-titre .meta {
+    float: right;
+    font-size: .85rem;
+}
+
+.ligne-titre .meta span+span:before {
+    content: " ● ";
+}
+
+.ligne-titre .titre {
+    font-weight: bold;
+}
+
+.ligne-titre .editeur {
+    display: block;
+    margin-left: 1em;
+    font-size: .85rem;
+}
+
+
+/* ========================================================
+   En-tête, "banner" :
+
+   #logo, #searchBar, menu de navigation horizontal...
+=========================================================== */
+
+#main-logo-container {
+    display: inline;
+    height: 100%;
+    /* width: 100%; */
+    min-width: 120px;
+}
+
+#main-logo-container .logo-img-helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+#main-logo-container img {
+    max-height: 54%;
+    vertical-align: middle;
+}
+
+
+/***
+ * Styles liés au formulaire de recherche Google
+ ***/
+
+#searchBar {
+    text-align: right;
+    height: 45px;
+    background-color: #f9f7f0;
+}
+
+#searchBar>div {
+    text-align: left;
+    display: inline-block;
+    width: 350px;
+    padding-right: 5px;
+    padding-top: 5px;
+}
+
+.gsc-control-cse {
+    padding: 0 !important;
+    background-color: #f9f7f0 !important;
+    border: 0 !important;
+}
+
+
+/***
+ * Styles liés aux menus de navigation de l'en-tête
+ ***/
+
+#menu-container {
+    /* padding: 40px 0 0 0; */
+    font-family: "Darby Sans Web", sans-serif;
+    /* font-weight: bold; */
+    text-decoration: none;
+    color: black;
+    /* font-size: 1.15rem; */
+    text-align: right;
+    /* float: right; */
+}
+
+#site-name {
+    height: 40px;
+    padding-top: 15px;
+    box-sizing: border-box;
+    /* text-transform: uppercase; */
+}
+
+#site-name a {
+    font-size: 1.5rem;
+}
+
+#site-name>*+*:before {
+    content: ' | ';
+}
+
+#menu-niveau1-conteneur {
+    /* padding-left: 185px; */
+    padding-top: 10px;
+    border-top: thin solid black;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+#menu-container a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+#menu-niveau1-conteneur a:hover {
+    /* color: white; */
+    opacity: 0.7;
+}
+
+#menu-container a:hover {
+    opacity: 0.7;
+}
+
+#menu-niveau1-conteneur>ol {
+    margin: 0;
+    padding: 0;
+}
+
+.menu-item-niveau1 {
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    min-height: 27px;
+    max-width: 160px;
+    margin: 0;
+    transition: all .2s ease 0s;
+}
+
+.menu-item-niveau1>a {
+    /* color: #796a4d; */
+}
+
+#menu-niveau1-conteneur .actif>a {
+    color: #8a1538;
+}
+
+[class^="section-"].inactif,
+[class*=" section-"].inactif {
+    /* background-color: #f2ede1; */
+    transition: background-color 0.25s ease;
+}
+
+
+/* Définition des couleurs liées aux items de menu de niveau 1. */
+
+.section-intranet:hover,
+.section-intranet.actif {
+    background-color: #DDDAD0;
+}
+
+#menu-niveau1-conteneur .section-intranet>a {
+    color: #c6326c;
+}
+
+.menu-item-niveau1>a,
+.menu-item-niveau1>span {
+    display: block;
+    padding: 0 0 0 10px;
+    cursor: pointer;
+}
+
+.menu-item-niveau1>a:after,
+.menu-item-niveau1>span:after {
+    right: 0;
+    font-size: 12px;
+    content: "▾";
+    padding-right: 0;
+    padding-top: 0;
+}
+
+.menu-item-niveau1>ol {
+    text-align: left;
+    display: none;
+    position: absolute;
+    background-color: white;
+    /* border-radius: 0 8px 8px 8px; */
+    padding: 6px;
+    z-index: 10;
+    min-width: 10%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+    /* margin-top: 6px; */
+}
+
+.menu-item-niveau2 {
+    display: block;
+    margin: 0;
+    padding: 6px 0;
+    text-transform: none;
+    font-weight: normal;
+    transition: all .2s ease 0s;
+}
+
+.menu-item-niveau2+.menu-item-niveau2 {
+    border-top: thin solid black;
+}
+
+.menu-item-niveau2:hover {
+    background-color: rgba(0, 0, 0, .03);
+}
+
+
+/* ========================================================
+   Medica
+=========================================================== */
+
+
+/*
+img.page-numerisee {
+    max-width: 95%;
+}
+*/
+
+.spinner {
+    float: left;
+    margin: -1px 0 0 5px;
+    width: 16px;
+    height: 16px;
+    background: url('https://www.biusante.parisdescartes.fr/ressources/images/spinner.gif') no-repeat 0 0;
+}
+
+.txtptcom,
+.txtpt {
+    font-size: 0.85em;
+    line-height: 1em;
+}
+
+.highlight {
+    background-color: #fff34d;
+}
+
+a:hover .highlight {
+    text-decoration: underline;
+}
+
+.search-highlight-area .highlight {
+    display: inline-block;
+}
+
+ul.listLivancFilles {
+    padding: 0 0 10px;
+    margin: 0;
+    background: #F8F8F1;
+}
+
+ul.listLivancFilles li {
+    border-top: 1px solid #BBB;
+    padding: 4px 5px 10px 50px;
+    margin: 0;
+    list-style: none !important
+}
+
+ul.listLivancFilles li.hideNotice {
+    display: none
+}
+
+ul.listLivancFilles li a {}
+
+ul.listLivancFilles li.moreNoticesLink a {
+    float: left
+}
+
+ul.listPages {
+    padding: 10px 5px 10px 80px;
+    margin: 0
+}
+
+ul.listPages li {
+    border: 0;
+    padding: 2px 0;
+    margin: 0;
+    list-style-image: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-puce-carre.gif') !important
+}
+
+ul.listPages li a {
+    font-size: .85rem;
+    color: #666
+}
+
+ul.listPages li.hidePage {
+    display: none
+}
+
+ul.listLivancFilles li.moreNoticesLink,
+ul.listLivancFilles li.lessNoticesLink,
+ul.listPages li.morePagesLink,
+ul.listPages li.lessPagesLink {
+    list-style-image: none !important;
+    list-style: none !important
+}
+
+ul.listPages li.morePagesLink a,
+ul.listPages li.lessPagesLink a {
+    float: left;
+    font-style: italic;
+    color: #AA8246
+}
+
+.medica-accueil #contenu-annexe {
+    width: 20%;
+    text-align: left;
+    padding-left: 12px;
+}
+
+.pave-accueil .lien-presentation {
+    /* float: right; */
+}
+
+.pave-accueil .lien-presentation a {
+    background-image: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-med-pref.gif');
+    display: block;
+    width: 12px;
+    height: 12px;
+    margin-left: 0.25em;
+}
+
+.liste-collections .pave-accueil div {
+    display: flex;
+    align-items: center;
+}
+
+.liste-collections .pave-accueil div *:first-child {
+    flex: 1;
+}
+
+.letter-icon-link a:hover {
+    opacity: 0.5;
+}
+
+
+/*
+Dans cette feuille de style sont définis des règles CSS spécifique à l'application Medica.
+ */
+
+.notice-compacte .notice-action-link {
+    display: inline-block;
+}
+
+.notice-compacte .notice-action-link+.notice-action-link:before {
+    content: ' | ';
+}
+
+.notice .notice-action-link {
+    display: flex;
+    padding-bottom: 2px;
+}
+
+.notice .notice-action-link:before {
+    content: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-arrow2.gif');
+    margin-right: 2px;
+}
+
+.url-canonique {
+    word-break: break-all;
+}
+
+.acces-bibliographiques-principaux .auteurs {
+    font-weight: bold;
+}
+
+.acces-bibliographiques-principaux .informations-editoriales {
+    font-style: italic;
+}
+
+.liste-pages-resultats {
+    padding: 0 106px 1em 56px;
+}
+
+.liste-pages-resultats li {
+    /* border-top: 1px solid #BBB; */
+    padding: 4px 5px 10px 50px;
+    margin: 0;
+    list-style: none !important;
+}
+
+.page-resultat {
+    /* margin-left:50px; */
+    padding: 0.25em;
+    display: block;
+}
+
+.page-cle {
+    font-weight: bold;
+}
+
+.page-gap {
+    margin: 0.5em;
+    border-top: thin solid lightgrey;
+}
+
+.page-range {
+    margin: 0 0 1em 0;
+    padding: 0;
+    border-color: #aca699;
+    border-style: solid;
+    border-width: 0 0 0 thin;
+}
+
+.page-range>.page-resultat+.page-resultat {
+    display: none;
+}
+
+.page-range>.page-resultat:last-of-type {
+    display: block;
+}
+
+.page-range>.page-resultat+.page-resultat:last-of-type::before {
+    content: '...';
+    display: block;
+    font-weight: bold;
+}
+
+.page-range>.page-resultat:first-of-type+.page-resultat:last-of-type::before {
+    display: none;
+}
+
+.numero-page {
+    display: table-cell;
+    padding-right: 1em;
+}
+
+.titraille {
+    display: table-cell;
+}
+
+.recherche-standard-tool-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+.medica-accueil .recherche-standard-tool-bar {
+    margin: 3em 0;
+    align-items: end;
+}
+
+.recherche-standard-sort-links-container,
+.recherche-standard-chapeau-container {
+    flex: 1;
+    padding: 0 1em;
+}
+
+.recherche-standard-form-container {
+    flex: 1;
+    text-align: right;
+}
+
+#standard-search-form {
+    margin-left: auto;
+    text-align: right;
+    display: inline-block;
+}
+
+.standard-search-form-line {
+    padding: 0.1em;
+    display: flex;
+    align-items: center;
+}
+
+.standard-search-form-line>span {
+    padding: 0.1em;
+    flex: 2;
+}
+
+.standard-search-form-line>span:last-of-type {
+    flex: 1;
+}
+
+.standard-search-form-line.other-searches-links {
+    margin-top: 0.5em;
+    border-top: thin grey solid
+}
+
+.standard-search-form-line.other-searches-links a+a:before {
+    content: ' | '
+}
+
+.pagination-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pagination-bar span:first-of-type {
+    flex: 1;
+}
+
+.pagination-bar span:last-of-type {
+    flex: 1;
+    text-align: right;
+}
+
+@media only screen and (max-width: 550px) {
+    .standard-search-form-line {
+        flex-wrap: wrap;
+        flex-direction: column;
+    }
+    .recherche-standard-tool-bar {
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+    .medica-accueil .recherche-standard-tool-bar {
+        flex-direction: column;
+        align-items: center;
+        margin: 3em 0 0 0;
+    }
+    .standard-search-form-line.other-searches-links {}
+    .recherche-standard-sort-links-container {
+        padding-top: 1em;
+    }
+    .recherche-standard-chapeau-container {
+        padding: 0 0 1em 0;
+    }
+    .standard-search-form-line.other-searches-links a {
+        display: block;
+    }
+    .standard-search-form-line.other-searches-links a+a:before {
+        content: none
+    }
+    .pagination-bar {
+        flex-direction: column;
+    }
+}
+
+
+/* ========================================================
+   Banque d'images
+=========================================================== */
+
+.onglets-formulaire {
+    width: 100%;
+}
+
+.onglets-formulaire td {
+    border: none;
+    border-bottom: 1px solid #7e8b49;
+}
+
+.onglets-formulaire td.actif {
+    border: 1px solid #7e8b49;
+    border-bottom-color: #E0E4CD;
+}
+
+.presentation-collection {
+    border-bottom: 1px solid rgba(0, 0, 0, .03);
+    padding: 1em 0;
+}
+
+.vignettes-collection {
+    text-align: right;
+}
+
+.entete-presentation-collection {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.entete-presentation-collection:hover {
+    opacity: 0.7;
+}
+
+.detail-collection {
+    background-color: #f2f2f2;
+    padding: 0.5em;
+}
+
+
+/** Surcharge d'un style défini dans la CSS de Magnific Popup. */
+
+.mfp-content {
+    text-align: center !important;
+}
+
+.mfp-close-btn-in .mfp-close {
+    color: #fff !important;
+}
+
+.popup-main-container {
+    margin: 20px;
+    display: inline-flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    text-align: left;
+}
+
+.single-image-container {
+    background: rgba(255, 255, 255, 0.9);
+    margin: 1px;
+    border-radius: 2px;
+}
+
+.single-image-container img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    border-radius: 2px;
+}
+
+.popup-main-container .notice-iconographique {
+    margin: 1px;
+    padding: 1em;
+    max-width: 600px;
+}
+
+.notice-iconographique {
+    background: rgba(255, 255, 255, 0.9);
+    margin: 1em 0;
+    line-height: 1.2;
+    border-radius: 2px;
+}
+
+.references-image-line {
+    text-align: right;
+}
+
+.metadata-lines {
+    margin-bottom: 1em;
+}
+
+.metadata-line {
+    padding: 0.25em 0;
+    display: flex;
+    border-top: thin solid grey;
+}
+
+.metadata-label {
+    margin: 0 1em 0 0;
+    width: 30%;
+    flex: none;
+}
+
+.metadata-label::after {
+    content: ' :';
+}
+
+.notice-iconographique .title {
+    color: #0F5582;
+    /* font-weight: bold; */
+    margin: 1em 0;
+    /* font-size: 1.2em; */
+}
+
+.notice-iconographique .info-complementaire {
+    border-top: thin solid grey;
+    padding: 0.5em 0;
+}
+
+.notice-iconographique .info-complementaire-etiquette {
+    display: block;
+    font-weight: bold;
+    line-height: 1.5;
+}
+
+.notice-iconographique-credits {
+    font-size: 0.85em;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.notice-iconographique-credits>div:first-child {
+    margin-right: 1em;
+}
+
+.thumbnail-set-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    align-items: baseline;
+    margin: 1em 0;
+}
+
+.image-detail .thumbnail-set-container {
+    justify-content: center;
+    margin: 2em 0;
+}
+
+.thumbnail-set-item {
+    margin: 0 1em 1em 0;
+    width: 160px;
+    min-height: 185px;
+    box-sizing: border-box;
+    transition: border .2s, opacity .2s;
+    border: thin solid transparent;
+    text-align: center;
+}
+
+.thumbnail-set-item.single-image-container {
+    max-width: 100%;
+}
+
+.thumbnail-set-item:hover {
+    border: thin solid rgba(204, 188, 143, 1);
+    opacity: 0.8;
+}
+
+.thumbnail-set-item img {
+    display: block;
+    margin: 0 auto;
+}
+
+.content-popup-container {
+    max-width: 600px;
+    margin: 1em auto;
+    background: rgba(255, 255, 255, 1);
+    padding: 1em;
+    border-radius: 2px;
+}
+
+.separateur-de-section {
+    margin: 2em;
+    border-top: thin #aca699 solid;
+}
+
+.lien-vers-collection {
+    text-align: right;
+    padding: 0 2em;
+    margin: 1em 0;
+}
+
+
+/* Formulaire Banque d'images */
+
+.recherche-banque-images-form {}
+
+.fieldset {
+    padding: 0 .75rem;
+}
+
+.fieldset-content {
+    display: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s ease-out;
+}
+
+.fieldset.open .fieldset-content {
+    display: block;
+    max-height: none;
+}
+
+.fieldset-toggle-bar {
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: all .2s ease 0s;
+}
+
+.fieldset-toggle-bar:hover {
+    opacity: 0.7;
+}
+
+.fieldset-label {
+    position: relative;
+    padding: 0 0 .6rem 0;
+    color: #666;
+    border-bottom: 1px solid #666;
+    text-align: left;
+}
+
+.fieldset-label:before {
+    position: absolute;
+    border: none;
+    top: -.25rem;
+    right: .25rem;
+    content: '+';
+    font-size: large;
+    color: #666;
+    font-weight: bold;
+}
+
+.fieldset.open .fieldset-toggle-bar {
+    opacity: 0.7;
+}
+
+.fieldset.open .fieldset-toggle-bar .fieldset-label {
+    border-bottom-style: dotted;
+}
+
+.fieldset.open .fieldset-toggle-bar .fieldset-label:before {
+    content: '-';
+}
+
+.input-row {
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.input-field {
+    position: relative;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.input-field.checkbox-field {
+    display: flex;
+    align-items: center;
+}
+
+.input-field.search-field [class^="icon-"] {
+    position: absolute;
+    top: .35rem;
+    right: .25rem;
+    color: #666;
+    font-weight: bold;
+}
+
+.input-field.search-field+button {
+    background: #666;
+    color: white;
+    border: none;
+    margin-top: 1rem;
+    margin-bottom: calc(1rem + 8px);
+    cursor: pointer;
+    -webkit-transition: border .2s, -webkit-box-shadow .2s;
+    transition: box-shadow .2s, border .2s, -webkit-box-shadow .2s;
+    outline: none;
+}
+
+.input-field.search-field+button:focus {
+    background: #8a1538;
+}
+
+.input-field.active.search-field+button {
+    background: #8a1538;
+    border-bottom: 1px solid #8a1538;
+    -webkit-box-shadow: 0 1px 0 0 #8a1538;
+    box-shadow: 0 1px 0 0 #8a1538;
+}
+
+.input-field input[type=text],
+.input-field select {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #666;
+    border-radius: 0;
+    outline: none;
+    height: 2rem;
+    width: 100%;
+    font-family: "Open Sans", sans-serif;
+    font-size: 1em;
+    margin: 0 0 8px 0;
+    padding: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    -webkit-transition: border .2s, -webkit-box-shadow .2s;
+    transition: box-shadow .2s, border .2s, -webkit-box-shadow .2s;
+}
+
+.input-field input[type=text]:focus,
+.input-field select:focus {
+    border-bottom: 1px solid #8a1538;
+    -webkit-box-shadow: 0 1px 0 0 #8a1538;
+    box-shadow: 0 1px 0 0 #8a1538;
+}
+
+.input-field input[type=text]:focus+label,
+.input-field select:focus+label {
+    color: #8a1538;
+}
+
+.input-field input[type=checkbox] {
+    height: 1.5em;
+    width: 1.5em;
+}
+
+.input-field label {
+    color: #666;
+    position: absolute;
+    top: -.5rem;
+    left: 0;
+    font-size: 1rem;
+    cursor: text;
+    -webkit-transition: color .2s ease-out, -webkit-transform .2s ease-out;
+    transition: transform .2s ease-out, color .2s ease-out, -webkit-transform .2s ease-out;
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    text-align: initial;
+    -webkit-transform: translateY(12px);
+    transform: translateY(12px);
+}
+
+.input-field label:after {
+    display: block;
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    opacity: 0;
+    -webkit-transition: .2s opacity ease-out, .2s color ease-out;
+    transition: .2s opacity ease-out, .2s color ease-out;
+}
+
+.input-field label.active {
+    -webkit-transform: translateY(-14px) scale(0.8);
+    transform: translateY(-8px) scale(0.8);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+
+.input-field.checkbox-field label {
+    position: static;
+    transform: none;
+}
+
+.input-row .up-default-button {
+    padding: 0 .75rem;
+}
+
+.input-row .up-default-button:focus {
+    outline: none;
+}
+
+
+/* ========================================================
+   Collection de vignettes (Histoire de la santé)
+=========================================================== */
+
+.vignette-anatomie {
+    background-color: #A05050;
+    vertical-align: top;
+    text-align: center;
+}
+
+.traduction-commentaire {
+    color: rgb(201, 148, 95);
+}
+
+
+/* ========================================================
+   Ressources documentaires
+=========================================================== */
+
+.ressource {
+    margin-bottom: 1.25em;
+}
+
+.ressource .note {
+    text-align: justify;
+    padding-top: 0.25em;
+}
+
+
+/* ========================================================
+   Adresses, coordonnées personnelles
+=========================================================== */
+
+.transports-en-commun {
+    line-height: 1.5em;
+}
+
+.transports-en-commun img {
+    vertical-align: sub;
+}
+
+
+/* ========================================================
+   Gestion des fonctions de pliage et dépliage
+=========================================================== */
+
+.collapse {
+    display: none;
+}
+
+.collapse.in {
+    display: block;
+}
+
+tr.collapse.in {
+    display: table-row;
+}
+
+tbody.collapse.in {
+    display: table-row-group;
+}
+
+.collapsing {
+    position: relative;
+    height: 0;
+    overflow: hidden;
+    -webkit-transition-timing-function: ease;
+    -o-transition-timing-function: ease;
+    transition-timing-function: ease;
+    -webkit-transition-duration: 0.35s;
+    -o-transition-duration: 0.35s;
+    transition-duration: 0.35s;
+    -webkit-transition-property: height, visibility;
+    -o-transition-property: height, visibility;
+    transition-property: height, visibility;
+}
+
+.collapse-icon {
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    vertical-align: bottom;
+}
+
+.collapse-icon.collapse {
+    display: inline-block;
+    transform: rotate(0deg);
+    -webkit-transition-timing-function: ease;
+    -o-transition-timing-function: ease;
+    transition-timing-function: ease;
+    -webkit-transition-duration: 0.35s;
+    -o-transition-duration: 0.35s;
+    transition-duration: 0.35s;
+    -webkit-transition-property: transform;
+    -o-transition-property: transform;
+    transition-property: transform;
+}
+
+.collapse-icon.collapse.in {
+    display: inline-block;
+    transform: rotate(90deg);
+    -webkit-transition-timing-function: ease;
+    -o-transition-timing-function: ease;
+    transition-timing-function: ease;
+    -webkit-transition-duration: 0.35s;
+    -o-transition-duration: 0.35s;
+    transition-duration: 0.35s;
+    -webkit-transition-property: transform;
+    -o-transition-property: transform;
+    transition-property: transform;
+}
+
+
+/* ========================================================
+   Documentation
+=========================================================== */
+
+body.documentation {
+    margin: 2em 5em;
+}
+
+body.documentation table.exemples td {
+    border: thin gray solid;
+    padding: 0.5em;
+}
+
+
+/* ========================================================
+   Media queries : Adaptation à la taille d'écran
+=========================================================== */
+
+@media only screen and (max-width: 990px) {
+    #page {
+        width: auto;
+    }
+    #tete {
+        width: 100%;
+    }
+    #bandeau-actualites {
+        width: 100%;
+    }
+    #menu-container {
+        display: flex;
+        align-items: center;
+        font-size: 1rem;
+    }
+    #site-name {
+        display: inline-block;
+        height: auto;
+        padding: 0;
+    }
+    #site-name a {
+        font-size: inherit;
+    }
+    #site-name>* {
+        display: block;
+        margin-bottom: 5px;
+    }
+    #site-name>*+*:before {
+        content: none;
+    }
+    #menu-icon {
+        display: inline-block;
+    }
+    #menu-icon,
+    #close-menu-icon {
+        cursor: pointer;
+        padding-left: 0.7em;
+        padding-bottom: 5px;
+        font-size: x-large;
+        /* vertical-align: super; */
+    }
+    #menu-icon:hover,
+    #close-menu-icon:hover {
+        opacity: 0.7;
+    }
+    #menu-niveau1-conteneur {
+        display: block;
+        position: fixed;
+        box-sizing: border-box;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        padding: 107px 15px 15px 15px;
+        background-color: rgba(255, 255, 255, 0.95);
+        width: 250px;
+        /* transform: translateX(450px); */
+        border: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+        z-index: 999;
+        transform: translateX(250px);
+        transition: all .2s ease 0s;
+    }
+    .responsive-menu-open #menu-niveau1-conteneur {
+        transition: all .2s ease 0s;
+        transform: translateX(0);
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+    .responsive-menu-open #close-menu-icon {
+        display: block;
+        position: absolute;
+        top: 37px;
+        right: 15px;
+    }
+    .responsive-menu-open .menu-item-niveau1 {
+        display: block;
+        vertical-align: auto;
+        text-align: left;
+        min-height: auto;
+        max-width: 160px;
+        margin: 0;
+        padding: 5px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, .03);
+    }
+    .responsive-menu-open .menu-item-niveau1>ol {
+        display: none;
+        position: static;
+        background-color: inherit;
+        border-radius: unset;
+        padding: initial;
+        box-shadow: none;
+        margin: initial;
+        max-width: none;
+    }
+    .responsive-menu-open .menu-item-niveau1>a:after,
+    .responsive-menu-open .menu-item-niveau1>span:after {
+        float: right;
+        content: '+';
+    }
+    .responsive-menu-open .menu-item-niveau1.submenu-open>a:after,
+    .responsive-menu-open .menu-item-niveau1.submenu-open>span:after {
+        float: right;
+        content: '-';
+    }
+    .responsive-menu-open .menu-item-niveau2 {
+        display: block;
+        margin: 0;
+        padding: 5px 0 5px 30px;
+        text-transform: none;
+        font-weight: normal;
+        transition: all .2s ease 0s;
+        /* border-bottom: 1px solid rgba(0,0,0,.03); */
+    }
+    .responsive-menu-open .menu-item-niveau2+.menu-item-niveau2 {
+        border-top: none;
+        border-bottom: 1px solid rgba(0, 0, 0, .03);
+    }
+    .responsive-menu-open .menu-item-niveau2>a,
+    .responsive-menu-open .menu-item-niveau2>span {
+        /* padding: 0 0 0 30px; */
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .medica-accueil #contenu-annexe {
+        width: auto;
+        padding: 1em;
+    }
+    .hide-on-medium-screens {
+        display: none !important;
+    }
+    #section-centrale {
+        display: block;
+    }
+    #contenu-principal {
+        display: block;
+    }
+    #contenu-annexe {
+        display: block;
+        width: auto;
+        clear: both;
+        padding: 0 1em;
+    }
+    #infos-acces {
+        padding: 0;
+        max-width: 500px;
+        margin: auto;
+    }
+    /* Banque d'images */
+    .titre-collection {
+        padding-bottom: 0.5em;
+    }
+    .vignettes-collection {
+        text-align: left;
+    }
+    .entete-presentation-collection {
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .hide-on-small-screens {
+        display: none !important;
+    }
+    .item {
+        margin: 2em 0;
+    }
+    .item>.image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: auto;
+    }
+    .item>.content {
+        display: block;
+        padding: 0;
+    }
+    .item>.image+.content {
+        display: block;
+        padding: 1.5em 0 0 0;
+    }
+    .vignette-a-droite,
+    .vignette-a-gauche,
+    section>.vignette-a-droite,
+    section>.vignette-a-gauche {
+        float: none;
+        margin: 1em auto;
+    }
+    #main-logo-container {
+        position: static;
+        height: 5em;
+    }
+    #header-main-content {
+        height: 64px;
+    }
+    #main-logo-container img {
+        height: 5em;
+    }
+    #menu-niveau1-conteneur {
+        padding: 80px 15px 15px 15px;
+    }
+    .responsive-menu-open #close-menu-icon {
+        display: block;
+        position: absolute;
+        top: 24px;
+        right: 15px;
+    }
+    .menu-item-niveau1 {
+        display: block;
+        max-width: 100%;
+    }
+    #searchBar {
+        display: none;
+    }
+    #fil {
+        padding: 0 3px 3px 3px;
+    }
+    [class*=grid-] {
+        margin: 0;
+    }
+    [class*=grid-]>div:nth-child(n) {
+        float: none;
+        width: 100%;
+        margin: 0 0 1em 0;
+    }
+    #conteneur-ventre {
+        padding: 0 0 180px 0;
+    }
+    #pied {
+        height: 160px;
+    }
+    #upper-footer>* {
+        float: none;
+        display: block;
+    }
+    #liens-utilitaires {
+        padding: 2em 0 1em 0;
+        text-align: left;
+    }
+    .liens-reseaux-sociaux {
+        text-align: left;
+    }
+}
+
+
+/* ========================================================
+       Media queries : Impression
+    =========================================================== */
+
+@media print {
+    html,
+    body {
+        background: none;
+    }
+    #page {
+        background: none;
+        border: none;
+        box-shadow: none;
+        -moz-box-shadow: none;
+        -webkit-box-shadow: none;
+    }
+    #tete {
+        background: none;
+    }
+    #menu-container,
+    #pied,
+    #searchBar,
+    #fil {
+        display: none;
+    }
+    #main-logo-container {
+        position: relative;
+    }
+    #conteneur-ventre {
+        padding-bottom: 1em;
+    }
+    .fiche-catalogue-ancien {
+        width: 90%;
+    }
+    .non-imprimable {
+        display: none;
+    }
+}

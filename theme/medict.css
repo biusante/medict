@@ -1,180 +1,345 @@
-* {
-  box-sizing: border-box;
-}
+/** biusante.css overloading */
+
 html,
 body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-body {
-  background-color: #fff;
-  font-family: "Open Sans", sans-serif;
+    height: 100%;
 }
 
-
-#header {
-  height: 85px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-}
-#footer {
-  height: 64px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+#page {
+    position: relative;
+    width: 100%;
+    box-shadow: unset;
+    -moz-box-shadow: unset;
+    -webkit-box-shadow: unset;
 }
 
-iframe {
-  border: none;
-  padding: 0;
-  margin: 0;
+#tete {
+    position: relative;
+    width: 100%;
 }
 
-main {
-  height: 100%;
+#pied {
+    height: auto;
+}
+
+#upper-footer>span.clearfix {
+    display: none;
+}
+
+#upper-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#upper-footer>* {
+    display: block;
+    float: none;
+}
+
+#logos-institutionnels {
+    padding-top: 2px;
+}
+
+#liens-utilitaires {
+    text-align: right;
+}
+
+#conteneur-ventre {
+    padding-bottom: 0px;
+    position: relative;
+    padding: 1em 1em 0 1em;
+    display: flex;
+    align-items: stretch;
 }
 
 #medict {
-  display: flex;
-  height: 99.5%;
-  position: relative;
+    display: flex;
+    flex-grow: 1;
+    position: relative;
 }
+
+
+/** default html */
+
+mark {
+    font-weight: bold;
+    color: var(--text);
+    background-color: var(--form_bg);
+}
+
+
+/** specific medict */
+
+:root {
+    --bg: #fff;
+    --tonic: #8a1538;
+    --text: #000;
+    --gray: #666;
+    --bghi: rgba(192, 192, 192, .9);
+    --form_bg: #e0e4cd;
+    --form_border: #7e8b49;
+    --form_color: #7e8b49;
+    --button_bg: #464d28;
+    --button_color: #c8d0a6;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* Search form  */
+
+form.recherche {
+    font-size: 0.85rem;
+    color: var(--form_color);
+    padding: 1rem 1rem 1rem 1rem;
+    background: var(--form_bg);
+    margin: 0;
+    width: 100%;
+}
+
+form.recherche button,
+form.recherche input {
+    border: 1px solid var(--form_color);
+    border-radius: 3px;
+}
+
+form.recherche .topmarg {
+    margin-top: 1rem;
+}
+
+form.recherche .bislide .values {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: #000;
+    line-height: 100%;
+}
+
+form.recherche button {
+    background: var(--button_bg);
+    color: var(--button_color);
+}
+
+form.recherche button[type="submit"] {
+    /* hide the submit button */
+    margin: 0;
+    padding: 0;
+    height: 1px;
+    line-height: 1px;
+    visibility: hidden;
+}
+
+.bislide {
+    width: 100%;
+    display: inline-block;
+    text-align: left;
+}
+
+form.recherche input[type="text"],
+.bislide input[type="range"] {
+    /* Specific width is required */
+    width: 100%;
+    height: 2rem;
+    background-color: #fff;
+}
+
+
+/* Bislide styling (for date) */
+
+.bislide {
+    /* required */
+    position: relative;
+}
+
+.bislide input[type="range"] {
+    /* Hides the slider */
+    -webkit-appearance: none;
+    /* Otherwise white in Chrome */
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    /* no global pointer events */
+    pointer-events: none;
+    overflow: hidden;
+    outline: none;
+    position: relative;
+}
+
+.bislide input[type="range"]:first-of-type {
+    /* hide the first range, except button */
+    position: absolute;
+    background-color: #fff;
+}
+
+.bislide input[type=range]::-webkit-slider-thumb {
+    /* Specific WebKit/chrome */
+    pointer-events: all;
+    -webkit-appearance: none;
+    border: 1px solid var(--textlo);
+    height: 2rem;
+    width: 16px;
+    border-radius: 3px;
+    background: var(--form_border);
+    cursor: pointer;
+}
+
+.bislide input[type=range]::-moz-range-thumb {
+    /* specific Firefox */
+    pointer-events: all;
+    border: 1px solid var(--textlo);
+    height: 100%;
+    width: 16px;
+    border-radius: 3px;
+    background: var(--form_border);
+    cursor: pointer;
+    position: absolute;
+    z-index: 10;
+}
+
+.bislide input[type=range]::-ms-thumb {
+    /* specific IE */
+    pointer-events: all;
+    border: 1px solid var(--form_border);
+    width: 16px;
+    border-radius: 3px;
+    background: var(--borderlo);
+    cursor: pointer;
+}
+
+.bislide input[type=range]::-ms-track {
+    /* specific IE */
+    /* Hides the slider so custom styles can be added */
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+
+input.an {
+    width: 3.5em;
+    text-align: center;
+}
+
+
+/*
+#header {
+    height: 85px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+#footer {
+    height: 64px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+*/
 
 #col1,
 #col2,
 #col3 {
-  position: relative;
-  height: 100%;
-}
-
-#col2 iframe,
-#col3 iframe {
-  height: 100%;
+    position: relative;
+    height: 100%;
 }
 
 #col1,
 #col2 {
-  flex: 0 0 auto;
-  width: 25rem;
+    flex: 0 0 auto;
+    width: 25rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
-#col1 {
-  display: flex;
-  flex-direction: column;
+#entrees {
+    flex: 1 1 auto;
+    height: 100%;
 }
 
-
-#col1 > div.index {
-  height: 100%;
+#index {
+    flex: 1 1 auto;
+    overflow-y: scroll;
+    height: 0px;
+    padding: 1rem 0;
+    border-bottom: 5px solid var(--form_bg);
+    border-left: 5px solid var(--form_bg);
 }
 
-#col1 iframe {
-  width: 100%;
-  height: 100%;
+#index {
+    /* Foreground, Background */
+    scrollbar-color: var(--form_color) var(--form_bg);
 }
 
-#col1 form {
-  width: 100%;
-  margin: 0;
-  padding: 1rem 2.5rem 1rem 1rem;
+#index::-webkit-scrollbar {
+    width: 10px;
+    /* Mostly for vertical scrollbars */
+    height: 10px;
+    /* Mostly for horizontal scrollbars */
 }
+
+#index::-webkit-scrollbar-thumb {
+    /* Foreground */
+    background: var(--form_color);
+}
+
+#index::-webkit-scrollbar-track {
+    /* Background */
+    background: var(--form_bg);
+}
+
+#index a {
+    display: block;
+    padding: 3px 1rem;
+    line-height: 100%;
+    text-decoration: none;
+    color: var(--gray);
+    cursor: pointer;
+}
+
+#index a:hover {
+    background-color: var(--form_bg);
+}
+
+#index a.active {
+    background-color: var(--form_bg);
+    font-weight: bold;
+    color: var(--text);
+}
+
 #col1 input.sugg {
-  width: 100%;
-  font-size: 150%;
-  color: #8b1538;
-  font-weight: bold;
+    width: 100%;
+    font-size: 150%;
+    color: var(--tonic);
+    font-weight: bold;
 }
+
 input:focus {
-  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
-}
-input[type=range] {
-  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
-  width: 100%; /* Specific width is required for Firefox. */
-  background: transparent; /* Otherwise white in Chrome */
-}
-/* range thumb */
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  cursor: pointer;
-
-  border: 1px solid #000000;
-  height: 36px;
-  width: 16px;
-  border-radius: 50%;
-  background: #ffffff;
-  margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
-
-}
-input[type=range]::-moz-range-thumb {
-  cursor: pointer;
-  position: relative;
-  z-index: 10;
-}
-
-input[type=range]::-ms-thumb  {
-  cursor: pointer;
-  position: relative;
-  z-index: 10;
-}
-
-
-/* range track */
-input[type=range]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 2px;
-  background: #ccc;
-  border-radius: 1.3px;
-  border: none;
-}
-input[type=range]::-moz-range-track {
-  width: 100%;
-  height: 2px;
-  background: #ccc;
-  border-radius: 1.3px;
-  border: none;
-}
-input[type=range]:focus::-webkit-slider-runnable-track {
-  background: #cccccc;
-}
-input[type=range]::-ms-track {
-  width: 100%;  cursor: pointer;
-  /* Hides the slider so custom styles can be added */
-  background: transparent; 
-  border-color: transparent;
-  color: transparent;
-}
-
-
-
-
-div.an_minmax {
-  text-align: center;
-  position: relative;
-  z-index: 2;
-}
-
-input.an {
-  width: 3.5em;
-  text-align: center;
+    outline: none;
 }
 
 #col4 {
-  position: relative;
-  width: 800px;
+    position: relative;
+    width: 800px;
 }
+
 #col4 iframe {
-  padding: 0;
-  height: 100%;
-  min-width: 1064px;
+    padding: 0;
+    height: 100%;
+    min-width: 1064px;
 }
+
 #col4 .prevnext {
-  width: 100%;
-  position: absolute;
+    width: 100%;
+    position: absolute;
 }
+
+
 /*
 main {
   height: 100%;
@@ -184,107 +349,137 @@ main {
 }
 */
 
-
-body.orth {
-  margin: 0;
-  padding: 0;
-}
-
 body.refs {
-  padding: 1rem 0 2rem 0;
+    padding: 1rem 0 2rem 0;
 }
 
 body.facs h1 {
-  margin: 0;
+    margin: 0;
 }
 
 a.entree mark {
-  background: transparent;
-  color: #8b1538;
+    background: transparent;
+    color: var(--tonic);
 }
 
-a.entree,
-body.orth a {
-  text-decoration: none;
-  color: #666;
-}
-a.entree.active,
-body.orth a.active {
-  color: #8b1538;
-  font-weight: bold;
+a.entree {
+    text-decoration: none;
+    color: var(--gray);
 }
 
 div.entree:hover,
 body.orth a:hover {
-  background-color: #eee;
+    background-color: var(--bghi);
 }
 
 a.terme {
-  display: block;
-  margin-left: 5px; /* pour copier coller */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 90%;
+    display: block;
+    margin-left: 5px;
+    /* pour copier coller */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 90%;
 }
 
 a.terme small {
-  position: absolute;
-  right: 1rem;
-  background-color: rgba(255, 255, 255, .7);
-  color: #000;
+    position: absolute;
+    right: 1rem;
+    background-color: var(--bghi);
+    color: #000;
 }
 
 section.volume {
-  border: 1px solid #ccc;
-  margin-top: 15px;
-  padding: 0 0 5px 0;
+    border: 1px solid #ccc;
+    margin-top: 15px;
+    padding: 0 0 5px 0;
 }
 
 div.volume {
-  margin-bottom: 5px;
-  padding: 0 5px;
-  white-space: nowrap;
-  background: #ccc;
-  color: #ffffff;
-  font-weight: bold;
+    margin-bottom: 5px;
+    padding: 0 5px;
+    white-space: nowrap;
+    background: #ccc;
+    color: #ffffff;
+    font-weight: bold;
 }
 
 div.entree {
-  border-bottom: 1px #ccc solid;
-  padding: 0.3rem 1rem 0.3rem 1rem;
+    border-bottom: 1px #ccc solid;
+    padding: 0.3rem 1rem 0.3rem 1rem;
 }
 
 a.entree {
-  display: block;
-  margin-left: 5px; /* pour copier coller */
+    display: block;
+    margin-left: 5px;
+    /* pour copier coller */
 }
 
 img.facs {
-  margin-left: 2rem;
-  margin-right: 2rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
 }
 
 .facsprev,
 .facsnext {
-  position: fixed;
-  height: 50%;
-  padding-top: 22%;
-  top: 25%;
-  text-align: center;
-  width: 2rem;
-  font-size: 2rem;
-  text-decoration: none;
-  color: #8b1538;
+    position: fixed;
+    height: 50%;
+    padding-top: 22%;
+    top: 25%;
+    text-align: center;
+    width: 2rem;
+    font-size: 2rem;
+    text-decoration: none;
+    color: var(--tonic);
 }
 
 .facsprev:hover,
 .facsnext:hover {
-  background: #eeeeee;
+    background: #eeeeee;
 }
+
 .facsprev {
-  left: 0;
+    left: 0;
 }
+
 .facsnext {
-  right: 0;
+    right: 0;
+}
+
+
+/* biblio */
+
+#dico_titre {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 100vh;
+    max-width: 100vw;
+    padding: 1rem;
+}
+
+#dico_titre .dico_label {
+    display: block;
+    width: 45%;
+    padding: 5px;
+    cursor: pointer;
+    color: var(--gray);
+}
+
+#dico_titre .dico_label.checked {
+    color: #000;
+}
+
+#dico_titre .dico_label:hover {
+    background-color: var(--bghi);
+}
+
+.checkall {
+    background-color: var(--bghi);
+    font-weight: bold;
+    padding: 5px;
+}
+
+#dico_titre button.submit {
+    float: right;
 }
