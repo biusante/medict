@@ -31,6 +31,7 @@ body {
 #pied {
     flex: 0 0 auto;
     height: auto;
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, .5);
 }
 
 #upper-footer>span.clearfix {
@@ -59,7 +60,7 @@ body {
 #conteneur-ventre {
     flex: 1 0 auto;
     padding-bottom: 0px;
-    padding: 1em 1em 0 1em;
+    padding: 0;
     overflow: hidden;
 }
 
@@ -68,13 +69,17 @@ body {
     width: 100%;
     position: relative;
     display: flex;
+    border-top: 5px solid var(--form_bg);
+    border-bottom: 5px solid var(--form_bg);
+    border-left: 2rem solid var(--form_bg);
+    border-right: 2rem solid var(--form_bg);
 }
 
 
 /** default html */
 
 mark {
-    font-weight: bold;
+    font-weight: normal;
     color: var(--text);
     background-color: var(--form_bg);
 }
@@ -101,7 +106,7 @@ mark {
 form.recherche {
     font-size: 0.85rem;
     color: var(--form_color);
-    padding: 1rem 1rem 1rem 1rem;
+    padding: 1rem 16px 1rem 0;
     background: var(--form_bg);
     margin: 0;
     width: 100%;
@@ -264,10 +269,43 @@ input.an {
     position: relative;
 }
 
-#entrees {
-    flex: 1 1 auto;
-    height: 0px;
-    overflow-y: auto;
+
+/*
+#col2>* {
+    flex: 0 0 50%;
+}
+*/
+
+#col2>div.entrees {
+    flex: 5 0 80%;
+}
+
+#col2>div.sugg {
+    flex: 2 1 20%;
+}
+
+div.pannel header {
+    margin: 0;
+    text-align: center;
+    background-color: var(--form_bg);
+    font-weight: normal;
+    /* override style.css */
+    font-size: 1.3rem !important;
+    height: 1.7rem;
+}
+
+div.pannel {
+    border: 1px solid var(--form_bg);
+    position: relative;
+}
+
+div.pannel>nav.data {
+    overflow-y: scroll;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 1.7rem;
+    bottom: 0;
 }
 
 #index {
@@ -275,32 +313,25 @@ input.an {
     overflow-y: scroll;
     height: 0px;
     padding: 1rem 0;
-    border-bottom: 5px solid var(--form_bg);
-    border-left: 5px solid var(--form_bg);
 }
 
-#entrees,
-#index {
+nav.data {
     /* Foreground, Background */
     scrollbar-color: var(--button_color) var(--form_bg);
 }
 
-#entrees::-webkit-scrollbar,
-#index::-webkit-scrollbar {
-    /*
-    width: 10px;
-    height: 10px;
-    */
+nav.data::-webkit-scrollbar {
+    /* needed for colors */
+    width: 16px;
+    height: 16px;
 }
 
-#entrees::-webkit-scrollbar-thumb,
-#index::-webkit-scrollbar-thumb {
+nav.data::-webkit-scrollbar-thumb {
     /* Foreground */
     background: var(--button_color);
 }
 
-#entrees::-webkit-scrollbar-track,
-#index::-webkit-scrollbar-track {
+nav.data::-webkit-scrollbar-track {
     /* Background */
     background: var(--form_bg);
 }
@@ -316,13 +347,11 @@ input.an {
     margin: 0;
 }
 
-div.entree:hover,
-#index a:hover {
+nav.data a:hover {
     background-color: var(--form_bg);
 }
 
-#entrees a.active,
-#index a.active {
+nav.data a.active {
     background-color: var(--form_bg);
     font-weight: bold;
     color: var(--text);
@@ -339,8 +368,23 @@ input:focus {
     outline: none;
 }
 
-#col4 {
+#col3 {
     flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+#col3 header {
+    height: 1.7rem;
+    width: 100%;
+    font-size: 1.3rem;
+    background-color: var(--form_bg);
+}
+
+#col3>div {
+    flex: 5 0 auto;
+    height: 80%;
 }
 
 #viewcont>img {
@@ -412,12 +456,27 @@ div.volume {
 }
 
 div.entree {
-    border-bottom: 1px solid var(--form_bg);
+    padding-left: 1rem;
 }
 
 a.entree {
-    padding: 0.3rem 1rem 0.3rem 1rem;
+    padding: 0.3rem 1rem 0.3rem 0.5rem;
     display: block;
+    border-bottom: 1px solid var(--form_bg);
+}
+
+details.sugg summary {
+    padding: 0.3rem 0.3rem 0.3rem 0.3rem;
+    border-bottom: 1px solid var(--form_bg);
+}
+
+details.sugg summary a {
+    display: inline-block;
+    text-decoration: none;
+}
+
+details.sugg summary:hover {
+    background-color: var(--form_bg);
 }
 
 img.facs {
@@ -487,4 +546,24 @@ img.facs {
 
 #dico_titre button.submit {
     float: right;
+}
+
+
+/* viewer override */
+
+.viewer-width::before {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARgAAAAUCAYAAABWOyJDAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAQPSURBVHic7Zs/iFxVFMa/0U2UaJGksUgnIVhYxVhpjDbZCBmLdAYECxsRFBTUamcXUiSNncgKQbSxsxH8gzAP3FU2jY0kKKJNiiiIghFlccnP4p3nPCdv3p9778vsLOcHB2bfveeb7955c3jvvNkBIMdxnD64a94GHMfZu3iBcRynN7zAOI7TG15gHCeeNUkr8zaxG2lbYDYsdgMbktBsP03jdQwljSXdtBhLOmtjowC9Mg9L+knSlcD8TNKpSA9lBpK2JF2VdDSR5n5J64m0qli399hNFMUlpshQii5jbXTbHGviB0nLNeNDSd9VO4A2UdB2fp+x0eCnaXxWXGA2X0au/3HgN9P4LFCjIANOJdrLr0zzZ+BEpNYDwKbpnQMeAw4m8HjQtM6Z9qa917zPQwFr3M5KgA6J5rTJCdFZJj9/lyvGhsDvwFNVuV2MhhjrK6b9bFiE+j1r87eBl4HDwCF7/U/k+ofAX5b/EXBv5JoLMuILzf3Ap6Z3EzgdqHMCuF7hcQf4HDgeoHnccncqdK/TvSDWffFXI/exICY/xZyqc6XLWF1UFZna4gJ7q8BsRvgd2/xXpo6P+D9dfT7PpECtA3cnWPM0GXGFZh/wgWltA+cDNC7X+AP4GzjZQe+k5dRxuYPeiuXU7e1qwLpDz7dFjXKRaSwuMLvAlG8zZlG+YmiK1HoFqT7wP2z+4Q45TfEGcMt01xLoNZEBTwRqD4BLpnMLeC1A41UmVxsXgXeBayV/Wx20rpTyrpnWRft7p6O/FdqzGrDukPNtkaMoMo3FBdBSQMOnYBCReyf05s126fU9ytfX98+mY54Kxnp7S9K3kj6U9KYdG0h6UdLbkh7poFXMfUnSOyVvL0h6VtIXHbS6nOP+s/Zm9mvyXW1uuC9ohZ72E9uDmXWLJOB1GxsH+DxPftsB8B6wlGDN02TAkxG6+4D3TWsbeC5CS8CDFce+AW500LhhOW2020TRjK3b21HEmgti9m0RonxbdMZeVzV+/4tF3cBpP7E9mKHNL5q8h5g0eYsCMQz0epq8gQrwMXAgcs0FGXGFRcB9wCemF9PkbYqM/Bas7fxLwNeJPdTdpo4itQti8lPMqTpXuozVRVXPpbHI3KkNTB1NfkL81j2mvhDp91HgV9MKuRIqrykj3WPq4rHyL+axj8/qGPmTqi6F9YDlHOvJU6oYcTsh/TYSzWmTE6JT19CtLTJt32D6CmHe0eQn1O8z5AXgT4sx4Vcu0/EQecMydB8z0hUWkTd2t4CrwNEePqMBcAR4mrBbwyXLPWJa8zrXmmLEhNBmfpkuY2102xxrih+pb+ieAb6vGhuA97UcJ5KR8gZ77K+99xxeYBzH6Q3/Z0fHcXrDC4zjOL3hBcZxnN74F+zlvXFWXF9PAAAAAElFTkSuQmCC");
+    background-repeat: no-repeat;
+    background-size: 280px;
+    color: transparent;
+    display: block;
+    font-size: 0;
+    height: 20px;
+    line-height: 0;
+    width: 20px;
+}
+
+.viewer-width::before {
+    background-position: -180px 0;
+    content: "Image width";
 }

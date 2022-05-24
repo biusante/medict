@@ -48,6 +48,7 @@ class Medict
             $regs = preg_split("@[ ,]+@u", trim($query));
             $regs = preg_replace(
                 array(
+                    "@[\P{L}]+@u",
                     "@[aàâä]@ui",
                     "@[æ]@ui",
                     "@[cç]@ui",
@@ -59,6 +60,7 @@ class Medict
                     "@^.*$@ui",
                 ),
                 array(
+                    "",
                     "[aàâä]",
                     "ae",
                     "[cç]",
@@ -122,5 +124,24 @@ class Medict
         // pb avec les accents, passera pas pour le grec
         // $ascii = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $utf8);
         return $sortable;
+    }
+
+    /**
+     * Affiche une entrée de dico
+     */
+    public static function entree(&$entree)
+    {
+        $url = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=' . $entree['cote_volume'] . '&amp;p=' . $entree['url'];
+
+        $block = '';
+        $block .= '<div class="entree">';
+        $block .= '<a class="entree" target="facs" href="' . $url . '">';
+        $block .= '<b>' . $entree['vedette'] . '</b>.';
+        $block .= ' <i>' . $entree['nom_volume'] . '</i> (' . $entree['annee_volume'] . ', ';
+        if ($entree['page2'] != null) $block .= "pps. " . $entree['page'] . '-' . $entree['page2'];
+        else $block .= "p. " . $entree['page'];
+        $block .= ")</a>";
+        $block .= "</div>";
+        return $block;
     }
 }

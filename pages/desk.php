@@ -12,17 +12,19 @@ use Oeuvres\Kit\{Web};
 list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee_titre), MAX(annee_titre) FROM dico_entree")->fetch();
 $an1 = Web::par('an1', $an_min);
 $an2 = Web::par('an2', $an_max);
-$q = Web::par('q', 'a')
+$q = Web::par('q', 'a');
+$t = Web::par('t', '');
 
 ?>
 <div id="medict">
     <div id="col1">
-        <form name="medict" class="recherche">
+        <form name="medict" class="recherche" autocomplete="off">
             <div class="bislide">
                 <div>Limiter la recherche à une période </div>
 
                 <input name="an1" step="1" value="<?= $an1 ?>" min="<?= $an_min ?>" max="<?= $an_max ?>" type="range"/>
                 <input name="an2" step="1" value="<?= $an2 ?>" min="<?= $an_min ?>" max="<?= $an_max ?>" type="range"/>
+                <input type="hidden" name="t" value="<?= htmlspecialchars($t, ENT_QUOTES, 'UTF-8'); ?>"/>
                 <div class="values"></div>
             </div>
             <button type="submit">Go</button>
@@ -31,18 +33,30 @@ $q = Web::par('q', 'a')
                 <input name="q" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
             </div>
         </form>
-        <nav id="index"  data-url="data/index">
+        <nav id="index" class="data"  data-url="data/index">
             Termes
         </nav>
     </div>
     <div id="col2">
-        <nav id="entrees"  data-url="data/entrees">
+        <div class="pannel entrees">
+            <header>Entrées</header>
+            <nav id="entrees"  class="data" data-url="data/entrees">
             
-        </nav>
+            </nav>
+        </div>
+        <div class="pannel sugg">
+            <header>Suggestions</header>
+            <nav id="sugg"  class="data" data-url="data/sugg">
+            
+            </nav>
+        </div>
     </div>
-    <div id="col4">
-        <div id="viewcont">
-            <img id="image"/>
+    <div id="col3">
+        <header>Medica</header>
+        <div>
+            <div id="viewcont">
+                <img id="image"/>
+            </div>
         </div>
     </div>
 </div>

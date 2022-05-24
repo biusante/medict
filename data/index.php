@@ -6,18 +6,16 @@
  */
 
 include_once(dirname(__DIR__) . "/Medict.php");
+
+use Oeuvres\Kit\{Web};
+
 $q = null;
 if (isset($_REQUEST['q'])) $q = htmlspecialchars(trim($_REQUEST['q']));
 
 list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee_titre), MAX(annee_titre) FROM dico_entree")->fetch();
-$an1 = null;
-if (isset($_REQUEST['an1'])) $an1 = $_REQUEST['an1'];
-if ($an1 <= $an_min) $an1 = null;
-else if ($an1 >= $an_max) $an1 = null;
-$an2 = null;
-if (isset($_REQUEST['an2'])) $an2 = $_REQUEST['an2'];
-if ($an2 > $an_max) $an2 = null;
-else if ($an2 < $an1) $an2 = $an1;
+$an1 = Web::par('an1', $an_min);
+$an2 = Web::par('an2', $an_max);
+if ($an2 < $an1) $an2 = $an1;
 
 
 $limit = 100; // nombre maximal de vedettes affichées
@@ -79,9 +77,9 @@ echo "<!-- $sql
 
 $query->execute($pars);
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-    $href = urlencode(utf8_encode($row['terme_sort']));
+    $href = '?t=' . $row['terme_sort'];
     $title = htmlspecialchars($row['terme']);
     $value = Medict::hilite($q, $row['terme']);
-    echo '<a href="#' . $href .'">' . $value . ' <small>(', $row['compte'], ')</small></a>', "\n";
+    echo '<a href="' . $href .'">' . $value . ' <small>(', $row['compte'], ')</small></a>', "\n";
 }
 echo '<!--', number_format(microtime(true) - $starttime, 3), ' s. -->';

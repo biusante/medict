@@ -15,7 +15,8 @@ $an1 = Web::par('an1', $an_min);
 $an2 = Web::par('an2', $an_max);
 if ($an2 < $an1) $an2 = $an1;
 
-$sql = "SELECT dico_entree FROM dico_index WHERE terme_sort = ? ";
+$sql = "SELECT dico_entree FROM dico_index WHERE terme_sort LIKE ? ";
+
 $pars = array($t);
 if ($an1 !== null) {
     $pars[] = $an1;
@@ -41,15 +42,6 @@ $entreeQ = Medict::$pdo->prepare("SELECT * FROM dico_entree WHERE id = ?");
 while ($row = $motQ->fetch(PDO::FETCH_ASSOC)) {
     $entreeQ->execute(array($row['dico_entree']));
     $entree = $entreeQ->fetch(PDO::FETCH_ASSOC);
-    $url = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=' . $entree['cote_volume'] . '&amp;p=' . $entree['url'];
-    echo '<div class="entree">';
-    echo '<a class="entree" target="facs" href="' . $url . '">';
-    echo '<b>' . $entree['vedette'] . '</b>.';
-    echo ' <i>' . $entree['nom_volume'] . '</i> (' . $entree['annee_volume'] . ', ';
-    if ($entree['page2'] != null) echo "pps. " . $entree['page'] . '-' . $entree['page2'];
-    else echo "p. " . $entree['page'];
-    echo ")</a>\n";
-    echo "</div>\n";
-    echo "</div>\n";
+    echo Medict::entree($entree) . "\n";
     flush();
 }

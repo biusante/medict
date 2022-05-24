@@ -6,8 +6,6 @@
 const Formajax = function() {
     /** {HTMLFormElement} form with params to send for queries like conc */
     var form = false;
-    /** array of {HTMLDivElement} with html updates */
-    var divs = {};
     /** Message send to a callback loader to say en of file */
     const EOF = '\u000A';
     /** Used as a separator between mutiline <div> */
@@ -87,14 +85,6 @@ const Formajax = function() {
             }
         }
         return new URLSearchParams(formData);
-    }
-
-    /**
-     * Update interface with data
-     */
-    function update(pushState = true) {
-        for (let key in divs) upDiv(key);
-        if (pushState) urlUp();
     }
 
     /**
@@ -226,12 +216,6 @@ const Formajax = function() {
         });
     }
 
-    function urlUp() {
-        const url = new URL(window.location);
-        url.search = pars();
-        window.history.pushState({}, '', url);
-    }
-
     /**
      * Delete an hidden field
      * @param {Event} e 
@@ -304,29 +288,12 @@ const Formajax = function() {
         form = el;
     }
 
-
-    /**
-     * Record a div to be updated by an url
-     * @param {*} div 
-     * @returns 
-     */
-    function divSetup(id) {
-        const div = document.getElementById(id);
-        if (!div) { // no pb, it’s another kind of page
-            return;
-        }
-        if (!div.dataset.url) {
-            console.log('[Elicom] @data-url required <div data-url="data/conc">');
-        }
-        divs[id] = div;
-    }
-
     /**
      * Send query to populate concordance
      * @param {boolean} append 
      */
-    function upDiv(key, append = false) {
-        let div = divs[key];
+    function divLoad(id, append = false) {
+        let div = document.getElementById(id);
         if (!div) return; // disappeared ?
         if (div.loading) return; // still loading
         div.loading = true;
@@ -359,15 +326,13 @@ const Formajax = function() {
 
 
     return {
-        divSetup: divSetup,
         init: init,
         inputDel: inputDel,
         loadLines: loadLines,
         insLine: insLine,
         LF: LF,
         pars: pars,
-        urlUp: urlUp,
-        update: update,
+        divLoad: divLoad,
         suggestInit: suggestInit,
     }
 }();
@@ -441,34 +406,82 @@ const Formajax = function() {
      * Pilot of Medit app
      */
     const Medict = function() {
+        /* the form */
+        var form;
         /* the viewer */
         var pageViewer;
-        /* the image in the viewer */
+        /** image to update for viewer */
         var viewmage;
+
 
         function init() {
             // init the form
-            const form = document.forms['medict'];
+            form = document.forms['medict'];
             if (!form) return;
             Formajax.init(form);
-            Formajax.divSetup('index');
-            Formajax.update(false); // no entry in history
-            // prevent submit befor afect it as event
+            // prevent submit before afect it as event
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
-                Formajax.update(true);
+                indexLoad();
                 return false;
             }, true);
+            // send submit when suggest change
             form.q.addEventListener('input', (e) => {
                 form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
             }, true);
+
+            window.onpopstate = function(e) {
+                var state = e.state;
+                // a state produced by the app
+                if (state !== null) {
+                    winload();
+                }
+            };
+            winload();
+
             // for efficiency, put a click event on the terme container (not all termes)
             const index = document.getElementById('index');
             if (index) index.addEventListener('click', indexClick);
             const entrees = document.getElementById('entrees');
             if (entrees) entrees.addEventListener('click', entreesClick);
+            const sugg = document.getElementById('sugg');
+            if (sugg) {
+                sugg.addEventListener('click', entreesClick);
+                sugg.addEventListener('click', suggClick);
+            }
+
+
+
             setViewer('viewcont');
         }
+
+        /**
+         * update interface onload or with back history
+         */
+        function winload() {
+            // update form with 
+            (new URL(window.location.href)).searchParams.forEach(function(value, key) {
+                if (!form[key]) return;
+                form[key].value = value;
+            });
+            Formajax.divLoad('index');
+            Formajax.divLoad('entrees');
+            Formajax.divLoad('sugg');
+        }
+
+
+        /**
+         * Update interface ?
+         * @returns 
+         */
+        function indexLoad() {
+            Formajax.divLoad('index');
+            // update URL but do not add entry in history
+            const url = new URL(window.location);
+            url.search = Formajax.pars();
+            window.history.replaceState({}, '', url);
+        }
+
 
         function setViewer(id) {
             const div = document.getElementById(id);
@@ -477,26 +490,27 @@ const Formajax = function() {
             if (!els || els.length < 1) return;
             viewmage = els[0];
 
+
             pageViewer = new Viewer(div, {
                 transition: false,
                 inline: true,
                 navbar: 0,
                 // minWidth: '100%', 
                 toolbar: {
-                    zoomIn: 4,
-                    zoomOut: 4,
-                    oneToOne: 4,
-                    reset: 4,
-                    prev: 0,
-                    play: 0,
-                    next: 0,
-                    rotateLeft: 0,
-                    rotateRight: 0,
-                    flipHorizontal: 0,
-                    flipVertical: 0,
+                    width: function() {
+                        let cwidth = div.offsetWidth;
+                        let iwidth = pageViewer.imageData.naturalWidth;
+                        let zoom = cwidth / iwidth;
+                        pageViewer.zoomTo(zoom);
+                        pageViewer.moveTo(0, pageViewer.imageData.y);
+                    },
+                    zoomIn: true,
+                    zoomOut: true,
+                    oneToOne: true,
+                    reset: true,
                 },
                 title: function(image) {
-                    return image.alt;
+                    return null;
                 },
                 viewed() {
                     // default zoom on load, image width
@@ -506,7 +520,74 @@ const Formajax = function() {
                     pageViewer.zoomTo(zoom);
                     pageViewer.moveTo(0, 0);
                 },
+                zoomed() {
+                    // record last Zoom level
+                    pageViewer.lastZoomRequested = pageViewer.imageData.ratio;
+                }
             });
+            // viewer override of resize
+            pageViewer.resize = function() {
+                var _this3 = this;
+
+                if (!this.isShown || this.hiding) {
+                    return;
+                }
+
+                if (this.fulled) {
+                    this.close();
+                    this.initBody();
+                    this.open();
+                }
+
+                this.initContainer();
+                this.initViewer();
+                this.renderViewer();
+                this.renderList();
+
+                if (this.viewed) {
+                    // do not resize image
+                    /*
+                    this.initImage(function() {
+                        _this3.renderImage();
+                    });
+                    */
+                    /* _this3.options.viewed(); */
+                }
+
+                if (this.played) {
+                    if (this.options.fullscreen && this.fulled && !(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement)) {
+                        this.stop();
+                        return;
+                    }
+
+                    forEach(this.player.getElementsByTagName('img'), function(image) {
+                        addListener(image, EVENT_LOAD, _this3.loadImage.bind(_this3), {
+                            once: true
+                        });
+                        dispatchEvent(image, EVENT_LOAD);
+                    });
+                }
+            };
+
+        }
+
+        /**
+         * Behavior of suggested term
+         * @param {*} e 
+         * @returns 
+         */
+        function suggClick(e) {
+            let a = selfOrAncestor(e.target, 'a');
+            if (!a) return;
+            if (!a.classList.contains('sugg')) return;
+            e.preventDefault();
+            const pars = new URLSearchParams(a.search);
+            const q = pars.get('q');
+            if (!q) return;
+            form.q.value = q;
+            form.q.dispatchEvent(new Event('input', { "bubbles": true, "cancelable": true }));
+            window.history.pushState({}, window.title, window.location);
+
         }
         /**
          * Behavior of entries
@@ -516,6 +597,7 @@ const Formajax = function() {
         function entreesClick(e) {
             let a = selfOrAncestor(e.target, 'a');
             if (!a) return;
+            if (!a.classList.contains('entree')) return;
             // https://www.biusante.parisdescartes.fr/iiif/2/bibnum:45674x04:%%/full/full/0/default.jpg
             // https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=pharma_019428x01&amp;p=444"
             // https://www.biusante.parisdescartes.fr/iiif/2/bibnum:47661x59:0122/0,512,512,512/512,/0/default.jpg
@@ -558,31 +640,26 @@ const Formajax = function() {
         }
 
         /**
-         * Hilite selected terms in nomenclatura column
+         * When click in index, do things
          */
         function indexClick(e) {
             e.preventDefault();
             // catch a link inside column of terms
             let a = selfOrAncestor(e.target, 'a');
             if (!a) return;
-            if (!a.hash) return;
-            const div = document.getElementById('entrees');
-            if (!div) return;
-            /*
-            if (div.loading) return; // still loading
-            div.loading = true;
-            */
+            const pars = new URLSearchParams(a.search);
+            const terme = pars.get('t');
+
+            // push history
+            form['t'].value = terme;
+            const url = new URL(window.location);
+            url.search = Formajax.pars();
+            window.history.pushState({}, terme, url);
 
 
-            let entry = a.hash.substr(1);
-            const query = '?' + Formajax.pars('an1', 'an2') + "&t=" + entry;
-
-            div.innerText = '';
-            let url = div.dataset.url + query;
-            Formajax.loadLines(url, function(html) {
-                Formajax.insLine(div, html);
-            }, Formajax.LF);
-
+            // Update frames
+            Formajax.divLoad('entrees');
+            Formajax.divLoad('sugg');
             // change class
             if (document.lastIndex) document.lastIndex.classList.remove('active');
             if (a.classList.contains("active")) {
