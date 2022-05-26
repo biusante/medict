@@ -94,36 +94,26 @@ class Medict
     */
     }
 
-    public static function sortable($utf8)
+    /** Clé de simplification d’un terme */
+    public static function sortable($s)
     {
-        $utf8 = mb_strtolower($utf8, 'UTF-8');
-        $tr = array(
-            // '-' => '',
-            '« ' => '"',
-            ' »' => '"',
-            '«' => '"',
-            '»' => '"',
-            'à' => 'a',
-            'ä' => 'a',
-            'â' => 'a',
-            'ӕ' => 'ae',
-            'é' => 'e',
-            'è' => 'e',
-            'ê' => 'e',
-            'ë' => 'e',
-            'î' => 'i',
-            'ï' => 'i',
-            'ô' => 'o',
-            'ö' => 'o',
-            'œ' => 'oe',
-            'ü' => 'u',
-            'û' => 'u',
-            'ÿ' => 'y',
+        // bas de casse
+        $s = mb_convert_case($s, MB_CASE_FOLD, "UTF-8");
+        // ligatures
+        $s = strtr(
+            $s,
+            array(
+                'œ' => 'oe',
+                'æ' => 'ae',
+            )
         );
-        $sortable = strtr($utf8, $tr);
-        // pb avec les accents, passera pas pour le grec
-        // $ascii = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $utf8);
-        return $sortable;
+        // normaliser les espaces
+        $s = preg_replace('/[\s\-]+/', ' ', trim($s));
+        // decomposer lettres et accents
+        $s = Normalizer::normalize($s, Normalizer::FORM_D);
+        // ne conserver que les lettres et les espaces
+        $s = preg_replace("/[^\pL\s]/u", '', $s);
+        return $s;
     }
 
     /**

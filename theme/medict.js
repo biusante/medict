@@ -423,6 +423,7 @@ const Formajax = function() {
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 indexLoad();
+                Formajax.divLoad('entrees');
                 return false;
             }, true);
             // send submit when suggest change
@@ -526,7 +527,7 @@ const Formajax = function() {
                 }
             });
             // viewer override of resize
-            pageViewer.resize = function() {
+            Viewer.prototype.resize = function() {
                 var _this3 = this;
 
                 if (!this.isShown || this.hiding) {
@@ -550,8 +551,8 @@ const Formajax = function() {
                     this.initImage(function() {
                         _this3.renderImage();
                     });
+                    _this3.options.viewed();
                     */
-                    /* _this3.options.viewed(); */
                 }
 
                 if (this.played) {
@@ -569,6 +570,34 @@ const Formajax = function() {
                 }
             };
 
+            Viewer.prototype.wheel = function(event) {
+                var _this4 = this;
+                if (!this.viewed) {
+                    return;
+                }
+
+                event.preventDefault(); // Limit wheel speed to prevent zoom too fast
+
+                if (this.wheeling) {
+                    return;
+                }
+
+                this.wheeling = true;
+                setTimeout(function() {
+                    _this4.wheeling = false;
+                }, 50);
+                var ratio = Number(this.options.zoomRatio) || 0.1;
+                var delta = 1;
+
+                if (event.deltaY) {
+                    delta = event.deltaY;
+                } else if (event.wheelDelta) {
+                    delta = -event.wheelDelta;
+                } else if (event.detail) {
+                    delta = event.detail;
+                }
+                this.move(0, -delta);
+            };
         }
 
         /**
@@ -608,9 +637,43 @@ const Formajax = function() {
             const cote = found[1];
             found = a.search.match(/p=([^&]*)/);
             if (!found) return; // url error ?
-            const page = pad(found[1], 4);
-            const url = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ':' + page + '/full/full/0/default.jpg';
+            const page = found[1];
+            let p = pad(page, 4);
+            const url = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ':' + p + '/full/full/0/default.jpg';
             image.src = url;
+
+            let link = document.getElementById('medica-ext');
+            let html = a.html; // if prev / next link, see down
+            if (!html) html = a.innerHTML;
+            found = html.match(/p\.[  ](\d+)/);
+            let folio = null;
+            if (found) folio = parseInt(found[1]);
+            if (link) {
+                link.innerHTML = html;
+                link.href = a.href;
+            }
+            link = document.getElementById('medica-prev');
+            if (link) {
+                p = parseInt(page) - 1;
+
+                let href = a.href.replace(/p=([^&]*)/, 'p=' + p);
+                link.href = href;
+                let ht = html;
+                if (folio) ht = ht.replace(/p\.[  ]\d+/, 'p. ' + (folio - 1));
+                link.html = ht;
+                link.onclick = entreesClick;
+            }
+            link = document.getElementById('medica-next');
+            if (link) {
+                p = parseInt(page) + 1;
+                let href = a.href.replace(/p=([^&]*)/, 'p=' + p);
+                link.href = href;
+                let ht = html;
+                if (folio) ht = ht.replace(/p\.[  ]\d+/, 'p. ' + (folio + 1));
+                link.html = ht;
+                link.onclick = entreesClick;
+            }
+
 
 
             pageViewer.update();

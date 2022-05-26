@@ -19,6 +19,10 @@ $t = Web::par('t', '');
 <div id="medict">
     <div id="col1">
         <form name="medict" class="recherche" autocomplete="off">
+            <div>
+                <div>Rechercher un terme dans les vedettes</div>
+                <input name="q" id="q" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
+            </div>
             <div class="bislide">
                 <div>Limiter la recherche à une période </div>
 
@@ -28,10 +32,6 @@ $t = Web::par('t', '');
                 <div class="values"></div>
             </div>
             <button type="submit">Go</button>
-            <div>
-                <div>Rechercher un terme dans les vedettes</div>
-                <input name="q" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
-            </div>
         </form>
         <nav id="index" class="data"  data-url="data/index">
             Termes
@@ -52,7 +52,11 @@ $t = Web::par('t', '');
         </div>
     </div>
     <div id="col3">
-        <header>Medica</header>
+        <header id="medica">
+            <a id="medica-prev" class="entree"> </a>
+            <a id="medica-ext" target="_blank"></a>
+            <a id="medica-next" class="entree"> </a>
+        </header>
         <div>
             <div id="viewcont">
                 <img id="image"/>

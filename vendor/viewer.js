@@ -1759,13 +1759,11 @@
             this.renderViewer();
             this.renderList();
 
-            /*
             if (this.viewed) {
                 this.initImage(function() {
                     _this3.renderImage();
                 });
             }
-            */
 
             if (this.played) {
                 if (this.options.fullscreen && this.fulled && !(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement)) {

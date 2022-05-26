@@ -10,15 +10,18 @@ include_once(dirname(__DIR__) . "/Medict.php");
 use Oeuvres\Kit\{Web};
 
 // une veddette à chercher
-$terme1 = Web::par('t', null);
+$terme1 = preg_replace('@^1@', '', Web::par('t', null));
 if (!$terme1) return; // rien à chercher
 
 
 $starttime = microtime(true);
 
-$sql = "SELECT * FROM dico_sugg WHERE terme1 = ? ORDER BY score DESC, terme2";
+$sql = "SELECT * FROM dico_sugg WHERE terme1_sort = ? ORDER BY score DESC, terme2_sort";
 $qsugg = Medict::$pdo->prepare($sql);
 $qsugg->execute(array($terme1));
+
+echo "<!-- $sql ; $terme1 -->\n";
+
 $qentree = Medict::$pdo->prepare("SELECT * FROM dico_entree WHERE id = ?");
 $last = null;
 while ($sugg = $qsugg->fetch(PDO::FETCH_ASSOC)) {
