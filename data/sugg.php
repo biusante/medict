@@ -25,8 +25,7 @@ echo "<!-- $sql ; $terme1 -->\n";
 $qentree = Medict::$pdo->prepare("SELECT * FROM dico_entree WHERE id = ?");
 $last = null;
 while ($sugg = $qsugg->fetch(PDO::FETCH_ASSOC)) {
-    $terme2 = $sugg['terme2'];
-    if ($terme2 != $last) {
+    if ($last != $sugg['terme2_sort']) {
         if ($last !== null) {
             echo "\n</details>";
             echo "\n&#10;";
@@ -34,8 +33,10 @@ while ($sugg = $qsugg->fetch(PDO::FETCH_ASSOC)) {
         }
         echo "
 <details class=\"sugg\">
-    <summary><a class=\"sugg\" href=\"?q=" . rawurlencode($terme2) . "\">$terme2 <small>(". $sugg['score'], ")</small></a></summary>";
-        $last = $terme2;
+    <summary><a class=\"sugg\" href=\"?q=" . rawurlencode($sugg['terme2']) . "\">" . $sugg['terme2'];
+    echo " <small>(". $sugg['score'], ")</small>";
+        echo"</a></summary>";
+        $last = $sugg['terme2_sort'];
     }
     $qentree->execute(array($sugg['dico_entree']));
     $entree = $qentree->fetch();

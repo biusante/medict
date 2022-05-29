@@ -121,16 +121,16 @@ class Medict
      */
     public static function entree(&$entree)
     {
-        $url = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=' . $entree['cote_volume'] . '&amp;p=' . $entree['url'];
+        $url = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=' . $entree['cote_volume'] . '&amp;p=' . $entree['refimg'];
 
         $block = '';
         $block .= '<div class="entree">';
         $block .= '<a class="entree" target="facs" href="' . $url . '">';
         $block .= '<b>' . $entree['vedette'] . '</b>.';
-        $block .= ' <i>' . $entree['nom_volume'] . '</i> (' . $entree['annee_volume'] . ', ';
+        $block .= ' <i>' . $entree['nom_volume'] . '</i>, ' . $entree['annee_volume'] . ', ';
         if ($entree['page2'] != null) $block .= "pps. " . $entree['page'] . '-' . $entree['page2'];
-        else $block .= "p. " . $entree['page'];
-        $block .= ")</a>";
+        else $block .= "p. " . $entree['page'];
+        $block .= ".</a>";
         $block .= "</div>";
         return $block;
     }

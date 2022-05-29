@@ -10,6 +10,8 @@ use Oeuvres\Kit\{Web};
 // une veddette à chercher
 $t = Web::par('t', null);
 if (!$t) return; // rien à chercher
+$t = '1' . Medict::sortable($t);
+
 list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee_titre), MAX(annee_titre) FROM dico_entree")->fetch();
 $an1 = Web::par('an1', $an_min);
 $an2 = Web::par('an2', $an_max);

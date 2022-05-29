@@ -614,7 +614,8 @@ const Formajax = function() {
             const q = pars.get('q');
             if (!q) return;
             form.q.value = q;
-            form.q.dispatchEvent(new Event('input', { "bubbles": true, "cancelable": true }));
+            // form.t.value = q; // non juste l’index
+            Formajax.divLoad('index');
             window.history.pushState({}, window.title, window.location);
 
         }
@@ -737,6 +738,11 @@ const Formajax = function() {
         }
     }();
     Medict.init();
+    const splitV = Split(['#panentrees', '#pansugg'], {
+        sizes: [70, 30],
+        direction: 'vertical',
+        gutterSize: 3,
+    });
 })();
 
 

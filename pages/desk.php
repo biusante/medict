@@ -38,13 +38,13 @@ $t = Web::par('t', '');
         </nav>
     </div>
     <div id="col2">
-        <div class="pannel entrees">
+        <div class="pannel entrees" id="panentrees">
             <header>Entrées</header>
             <nav id="entrees"  class="data" data-url="data/entrees">
             
             </nav>
         </div>
-        <div class="pannel sugg">
+        <div class="pannel sugg" id="pansugg">
             <header>Suggestions</header>
             <nav id="sugg"  class="data" data-url="data/sugg">
             

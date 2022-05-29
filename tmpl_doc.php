@@ -34,6 +34,7 @@ $body_class = $page;
     <!-- Feuilles de styles -->
     <link rel="stylesheet" href="https://www.biusante.parisdescartes.fr/ressources/css/up-font-definitions.css?2.3.8" />
     <link rel="stylesheet" href="https://www.biusante.parisdescartes.fr/ressources/css/style.css?2.3.8" />
+    <link rel="stylesheet" href="<?= Route::app_href() ?>vendor/split.css" />
     <link rel="stylesheet" href="<?= Route::app_href() ?>theme/medict.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
     <!-- jQuery (for the Medica menu)  -->
@@ -129,7 +130,8 @@ $body_class = $page;
         </div>
     </div>
     <script src="<?= Route::app_href() ?>theme/biusante.js"></script>
-    <script src="<?= Route::app_href() ?>vendor/viewer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.10.5/viewer.min.js"></script>
+    <script src="<?= Route::app_href() ?>vendor/split.js"></script>
     <script src="<?= Route::app_href() ?>theme/medict.js"></script>
 </body>
 

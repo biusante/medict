@@ -279,8 +279,6 @@ input.an {
 #col2>* {
     flex: 0 0 50%;
 }
-*/
-
 #col2>div.entrees {
     flex: 5 0 80%;
 }
@@ -288,6 +286,7 @@ input.an {
 #col2>div.sugg {
     flex: 2 1 20%;
 }
+*/
 
 div.pannel header {
     margin: 0;
@@ -300,7 +299,6 @@ div.pannel header {
 }
 
 div.pannel {
-    border: 1px solid var(--form_bg);
     position: relative;
 }
 
@@ -551,6 +549,24 @@ div.volume {
 
 #dico_titre button.submit {
     float: right;
+}
+
+
+/* split override */
+
+.but.gutter {
+    display: none;
+}
+
+.gutter {
+    background-color: var(--form_border);
+}
+
+.gutter-vertical {
+    height: 5px;
+    border-top: 1px solid var(--button_color);
+    border-bottom: 1px solid var(--bg);
+    background-color: var(--form_border);
 }
 
 
