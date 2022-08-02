@@ -24,16 +24,20 @@ $t = Web::par('t', '');
                 <input name="q" id="q" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
             </div>
             <div class="bislide">
-                <div>Limiter la recherche à une période </div>
+                <div>Limiter la recherche à une période</div>
 
                 <input name="an1" step="1" value="<?= $an1 ?>" min="<?= $an_min ?>" max="<?= $an_max ?>" type="range"/>
                 <input name="an2" step="1" value="<?= $an2 ?>" min="<?= $an_min ?>" max="<?= $an_max ?>" type="range"/>
                 <input type="hidden" name="t" value="<?= htmlspecialchars($t, ENT_QUOTES, 'UTF-8'); ?>"/>
                 <div class="values"></div>
             </div>
+            <div>
+                <div>Limiter la recherche à un ou plusieurs titres</div>
+                <input placeholder="Expéditeur(s)" type="text" class="multiple" data-url="data/titres" id="titres" data-name="titres"/>
+            </div>
             <button type="submit">Go</button>
         </form>
-        <nav id="index" class="data"  data-url="data/index">
+        <nav id="mots" class="data"  data-url="data/mots">
             Termes
         </nav>
     </div>

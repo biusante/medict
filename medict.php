@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 include_once(__DIR__ . '/php/autoload.php');
 
+use Oeuvres\Kit\{Web};
+
 Medict::init();
 class Medict
 {
@@ -37,6 +39,23 @@ class Medict
         );
         // self::$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
         mb_internal_encoding("UTF-8");
+    }
+
+    /**
+     * Prépare des paramètres utiles pour les requêtes
+     */
+    public static function reqPars()
+    {
+        $reqPars = array();
+        list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee_titre), MAX(annee_titre) FROM dico_entree")->fetch();
+        $an1 = Web::par('an1', null);
+        if ($an1 <=  $an_min) $an1 = null;
+        $an2 = Web::par('an2', null);
+        if ($an2 >=  $an_max) $an2 = null;
+        if ($an1 !== null && $an2 !== null && $an2 < $an1) $an2 = $an1;
+        $reqPars['an1'] = $an1;
+        $reqPars['an2'] = $an2;
+        return $reqPars;
     }
 
     public static function hilite($query, $vedette)
@@ -77,7 +96,7 @@ class Medict
         }
         $regs = self::$hire[$query];
         $vedette = " " . $vedette;
-        foreach ($regs as $re) {
+    foreach ($regs as $re) {
             $vedette = preg_replace($re, "$1<mark>$2</mark>", $vedette);
         }
         return $vedette;

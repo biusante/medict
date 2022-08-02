@@ -9,14 +9,11 @@ include_once(dirname(__DIR__) . "/Medict.php");
 
 use Oeuvres\Kit\{Web};
 
+
+
 // pars
 $starttime = microtime(true);
-list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee_titre), MAX(annee_titre) FROM dico_entree")->fetch();
-$an1 = Web::par('an1', null);
-if ($an1 <=  $an_min) $an1 = null;
-$an2 = Web::par('an2', null);
-if ($an2 >=  $an_max) $an2 = null;
-if ($an1 !== null && $an2 !== null && $an2 < $an1) $an2 = $an1;
+$reqPars = Medict::reqPars();
 
 $q = Web::par('q', null);
 
@@ -26,36 +23,27 @@ if ($q) {
 
 $limit = 100; // nombre maximal de vedettes affichées
 
+// construire la requête de filtrage
 $fwhere = array();
-$fpars = array();
-// filtrage
-if ($an1 !== null) {
-    $fwhere[] = "annee_titre >= ?";
-    $fpars[] = $an1;
-}
-if ($an2 !== null) {
-    $fwhere[] = "annee_titre <= ?";
-    $fpars[] = $an2;
-}
+if ($reqPars['an1'] !== null) $fwhere["annee_titre >= ?"] = $reqPars['an1'];
+if ($reqPars['an2'] !== null) $fwhere["annee_titre <= ?"] = $reqPars['an2'];
+// base de la requête sql
 $fsql = "SELECT terme, terme_sort, COUNT(*) AS compte FROM dico_index ";
 
-/* première requête, préfixe uniquement */
+// première requête, préfixe uniquement, copier les paramètres communs
 $sql = $fsql;
 $where = $fwhere;
-$pars = $fpars;
-if ($q) {
-    $where[] = "terme_sort LIKE ?";
-    $pars[] = '1' . $q . '%';
-}
+if ($q) $where["terme_sort LIKE ?"] = '1' . $q . '%';
+
 if (count($where) > 0) {
-    $sql .= ' WHERE ' . implode(' AND ', $where);
+    $sql .= ' WHERE ' . implode(' AND ', array_keys($where));
 }
 $sql .= " GROUP BY terme_sort ORDER BY terme_sort LIMIT " . $limit;
 $query = Medict::$pdo->prepare($sql);
 echo "<!-- $sql
-" . print_r($pars, true) . "
+" . print_r($where, true) . "
 -->\n";
-$query->execute($pars);
+$query->execute(array_values($where));
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
     html($row, $q);
     $limit--;
@@ -67,25 +55,24 @@ $starttime = microtime(true);
 /* suite, dans les expressions */
 $sql = $fsql;
 $where = $fwhere;
-$pars = $fpars;
 if ($q) {
-    $where[] = "MATCH (terme_sort) AGAINST (? IN BOOLEAN MODE)";
     if (mb_strpos($q, ' ') !== false) {
-        $pars[] = '+' . preg_replace('@\s+@ui', '* +', $q) . '*';
+        $v = '+' . preg_replace('@\s+@ui', '* +', $q) . '*';
     }
     else {
-        $pars[] = $q . '*';
+        $v = $q . '*';
     }
+    $where["MATCH (terme_sort) AGAINST (? IN BOOLEAN MODE)"] = $v;
 }
 if (count($where) > 0) {
-    $sql .= ' WHERE ' . implode(' AND ', $where);
+    $sql .= ' WHERE ' . implode(' AND ', array_keys($where));
 }
 $sql .= " GROUP BY terme_sort ORDER BY terme_sort LIMIT " . $limit;
 $query = Medict::$pdo->prepare($sql);
 echo "<!-- $sql
-" . print_r($pars, true) . "
+" . print_r($where, true) . "
 -->\n";
-$query->execute($pars);
+$query->execute(array_values($where));
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
     html($row, $q);
     $limit --;

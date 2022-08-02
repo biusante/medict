@@ -4,12 +4,12 @@
  * Toolkit for ajax forms
  */
 const Formajax = function() {
-    /** {HTMLFormElement} form with params to send for queries like conc */
-    var form = false;
-    /** Message send to a callback loader to say en of file */
+    /** Message send to a callback loader to say end of file */
     const EOF = '\u000A';
     /** Used as a separator between mutiline <div> */
     const LF = '&#10;';
+    /** {HTMLFormElement} form with params to send for queries like conc */
+    var form = false;
 
     /**
      * Get URL and send line by line to a callback function.
@@ -422,7 +422,7 @@ const Formajax = function() {
             // prevent submit before afect it as event
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
-                indexLoad();
+                motsLoad();
                 Formajax.divLoad('entrees');
                 return false;
             }, true);
@@ -441,8 +441,8 @@ const Formajax = function() {
             winload();
 
             // for efficiency, put a click event on the terme container (not all termes)
-            const index = document.getElementById('index');
-            if (index) index.addEventListener('click', indexClick);
+            const mots = document.getElementById('mots');
+            if (mots) mots.addEventListener('click', motsClick);
             const entrees = document.getElementById('entrees');
             if (entrees) entrees.addEventListener('click', entreesClick);
             const sugg = document.getElementById('sugg');
@@ -460,14 +460,23 @@ const Formajax = function() {
          * update interface onload or with back history
          */
         function winload() {
+            // TODO, update title filter, mutiple
+
             // update form with 
             (new URL(window.location.href)).searchParams.forEach(function(value, key) {
                 if (!form[key]) return;
                 form[key].value = value;
             });
-            Formajax.divLoad('index');
+            Formajax.divLoad('mots');
             Formajax.divLoad('entrees');
             Formajax.divLoad('sugg');
+            // équiper les suggesteurs
+            const inputs = document.querySelectorAll("input.multiple[data-url]");
+            for (let i = 0; i < inputs.length; i++) {
+                Formajax.suggestInit(inputs[i]);
+            }
+
+
         }
 
 
@@ -475,8 +484,8 @@ const Formajax = function() {
          * Update interface ?
          * @returns 
          */
-        function indexLoad() {
-            Formajax.divLoad('index');
+        function motsLoad() {
+            Formajax.divLoad('mots');
             // update URL but do not add entry in history
             const url = new URL(window.location);
             url.search = Formajax.pars();
@@ -615,7 +624,7 @@ const Formajax = function() {
             if (!q) return;
             form.q.value = q;
             // form.t.value = q; // non juste l’index
-            Formajax.divLoad('index');
+            Formajax.divLoad('mots');
             window.history.pushState({}, window.title, window.location);
 
         }
@@ -704,9 +713,9 @@ const Formajax = function() {
         }
 
         /**
-         * When click in index, do things
+         * When click in mots, do things
          */
-        function indexClick(e) {
+        function motsClick(e) {
             e.preventDefault();
             // catch a link inside column of terms
             let a = selfOrAncestor(e.target, 'a');
@@ -738,6 +747,11 @@ const Formajax = function() {
         }
     }();
     Medict.init();
+    const splitH = Split(['#col1', '#col2', '#col3'], {
+        sizes: [20, 20, 60],
+        direction: 'horizontal',
+        gutterSize: 3,
+    });
     const splitV = Split(['#panentrees', '#pansugg'], {
         sizes: [70, 30],
         direction: 'vertical',

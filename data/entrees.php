@@ -31,6 +31,7 @@ if ($an2 !== null) {
 if (count($where) > 0) {
     $sql .= ' AND ' . implode(' AND ', $where);
 }
+$sql .= " ORDER BY annee_titre";
 
 echo "<!-- " . $_SERVER['REQUEST_URI'] . "
 $sql

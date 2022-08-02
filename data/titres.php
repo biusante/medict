@@ -1,8 +1,13 @@
 <?php 
 
-include_once(dirname(__FILE__)."/Medict.php" );
+/**
+ * This file is part of Medict https://github.com/biusante/medict
+ * Copyright (c) 2021 Université Paris Cité / Bibliothèques / Histoire de la santé
+ */
 
-use Oeuvres\Kit\Web;
+include_once(dirname(__DIR__) . "/Medict.php");
+
+use Oeuvres\Kit\{Web};
 
 /** Reception of a corpus selection */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -13,40 +18,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dico_titre = Web::pars('dico_titre');
     print_r($dico_titre);
 }
-?>
-<!DOCTYPE html>
-<html>
-  <head>
-    <?php require(dirname(__FILE__) . "/theme/head.php"); ?>
-    <title>Titres</title>
-  </head>
-  <body>
-    <form method="post">
-      <div id="dico_titre">
-        <h1>Dictionnaires sélectionnés</h1>
-        <div  class="checkall">
-          <label>
-            <input id="dico_checkall" type="checkbox" checked="checked"/>
-            <span>Tout décocher</span>
-          </label>
-      </div>
-    <?php
+
 $sql = "SELECT * FROM dico_titre ";
 $titreQ = Medict::$pdo->prepare($sql);
 $titreQ->execute(array());
 while ($row = $titreQ->fetch(PDO::FETCH_ASSOC)) {
     echo titre($row);
 }
-    ?>
-        <div>
-          <button class="submit" type="submit">Enregistrer</button>
-        </div>
-      </div>
-    </form>
-    <script src="theme/dico_titre.js">//</script>
-  </body>
-</html>
-<?php
+
 function titre($row)
 {
     $checked = true;
@@ -59,7 +38,7 @@ function titre($row)
     $div .= '/>'."\n";
     $div .= $row['nom'];
     $div .= '      (';
-    if ($row['ed']) $div .= $row['ed'] . ' ';
+    if ($row['ed']) $div .= $row['ed'] . ', ';
     $div .= $row['annee'];
     if ($row['an_max']) $div .= '-' . $row['an_max'];
     $div .=  ")\n";

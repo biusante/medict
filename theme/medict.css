@@ -1,3 +1,17 @@
+:root {
+    --bg: #fff;
+    --tonic: #8a1538;
+    --text: #000;
+    --gray: #666;
+    --bghi: rgba(192, 192, 192, .9);
+    --form_bg: #e0e4cd;
+    --form_border: #7e8b49;
+    --form_color: #7e8b49;
+    --button_bg: #464d28;
+    --button_color: #c8d0a6;
+}
+
+
 /** biusante.css overloading, assurer une vue de type desktop */
 
 * {
@@ -69,7 +83,6 @@ body {
     width: 100%;
     position: relative;
     display: flex;
-    border-top: 5px solid var(--form_bg);
     border-bottom: 5px solid var(--form_bg);
     border-left: 2rem solid var(--form_bg);
     border-right: 2rem solid var(--form_bg);
@@ -86,19 +99,6 @@ mark {
 
 
 /** specific medict */
-
-:root {
-    --bg: #fff;
-    --tonic: #8a1538;
-    --text: #000;
-    --gray: #666;
-    --bghi: rgba(192, 192, 192, .9);
-    --form_bg: #e0e4cd;
-    --form_border: #7e8b49;
-    --form_color: #7e8b49;
-    --button_bg: #464d28;
-    --button_color: #c8d0a6;
-}
 
 
 /* Search form  */
@@ -195,7 +195,7 @@ form.recherche input[type="text"],
     /* Specific WebKit/chrome */
     pointer-events: all;
     -webkit-appearance: none;
-    border: 1px solid var(--textlo);
+    border-bottom: 1px solid var(--bg);
     height: 2rem;
     width: 16px;
     border-radius: 3px;
@@ -205,8 +205,12 @@ form.recherche input[type="text"],
 
 .bislide input[type=range]::-moz-range-thumb {
     /* specific Firefox */
+    box-sizing: border-box;
     pointer-events: all;
-    border: 1px solid var(--textlo);
+    border-top: 1px solid var(--bg);
+    border-bottom: 1px solid var(--gray);
+    border-left: 1px solid var(--text);
+    border-right: 1px solid var(--bg);
     height: 100%;
     width: 16px;
     border-radius: 3px;
@@ -216,10 +220,15 @@ form.recherche input[type="text"],
     z-index: 10;
 }
 
+.bislide input[type="range"]:first-of-type::-moz-range-thumb {
+    border-left: 1px solid var(--bg);
+    border-right: 1px solid var(--text);
+}
+
 .bislide input[type=range]::-ms-thumb {
     /* specific IE */
     pointer-events: all;
-    border: 1px solid var(--form_border);
+    border-bottom: 1px solid var(--bg);
     width: 16px;
     border-radius: 3px;
     background: var(--borderlo);
@@ -288,14 +297,17 @@ input.an {
 }
 */
 
-div.pannel header {
+div.pannel header,
+#col3 header {
     margin: 0;
-    text-align: center;
-    background-color: var(--form_bg);
+    padding: 2px 0;
     font-weight: normal;
-    /* override style.css */
-    font-size: 1.3rem !important;
-    height: 1.7rem;
+    font-size: 1.3rem;
+    background-color: var(--form_bg);
+}
+
+div.pannel header {
+    text-align: center;
 }
 
 div.pannel {
@@ -311,11 +323,15 @@ div.pannel>nav.data {
     bottom: 0;
 }
 
-#index {
+#mots,
+#entrees {
+    padding: 1rem 0 1rem 0.5rem;
+}
+
+#mots {
     flex: 1 1 auto;
     overflow-y: scroll;
     height: 0px;
-    padding: 1rem 0;
 }
 
 nav.data {
@@ -339,10 +355,9 @@ nav.data::-webkit-scrollbar-track {
     background: var(--form_bg);
 }
 
-#index a {
+#mots a {
     display: block;
     padding: 0.3rem 1rem 0.3rem 0.5rem;
-    margin: 0 0 0 1rem;
     line-height: 100%;
     text-decoration: none;
     color: var(--gray);
@@ -360,9 +375,7 @@ nav.data a.active {
     color: var(--text);
 }
 
-div.entree {
-    padding-left: 1rem;
-}
+div.entree {}
 
 a.entree {
     padding: 0.3rem 1rem 0.3rem 0.5rem;
@@ -400,12 +413,6 @@ input:focus {
     display: flex;
     flex-direction: column;
     position: relative;
-}
-
-#col3 header {
-    width: 100%;
-    font-size: 1.3rem;
-    background-color: var(--form_bg);
 }
 
 #col3>div {
@@ -483,6 +490,7 @@ div.volume {
 
 #medica {
     display: flex;
+    width: 100%;
 }
 
 #medica .entree {
@@ -566,6 +574,13 @@ div.volume {
     height: 5px;
     border-top: 1px solid var(--button_color);
     border-bottom: 1px solid var(--bg);
+    background-color: var(--form_border);
+}
+
+.gutter-horizontal {
+    width: 5px;
+    border-right: 1px solid var(--button_color);
+    border-left: 1px solid var(--bg);
     background-color: var(--form_border);
 }
 
