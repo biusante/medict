@@ -15,6 +15,10 @@ use Oeuvres\Kit\{Web};
 Medict::init();
 class Medict
 {
+    /** Constantes */
+    const COTE = "cote";
+    const AN1 = "an1";
+    const AN2 = "an2";
     /** SQL link */
     static public $pdo;
     /** Les paramètres */
@@ -48,13 +52,13 @@ class Medict
     {
         $reqPars = array();
         list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee_titre), MAX(annee_titre) FROM dico_entree")->fetch();
-        $an1 = Web::par('an1', null);
+        $an1 = Web::par(self::AN1, null);
         if ($an1 <=  $an_min) $an1 = null;
-        $an2 = Web::par('an2', null);
+        $an2 = Web::par(self::AN2, null);
         if ($an2 >=  $an_max) $an2 = null;
         if ($an1 !== null && $an2 !== null && $an2 < $an1) $an2 = $an1;
-        $reqPars['an1'] = $an1;
-        $reqPars['an2'] = $an2;
+        $reqPars[self::AN1] = $an1;
+        $reqPars[self::AN2] = $an2;
         return $reqPars;
     }
 

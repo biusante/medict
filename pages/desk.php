@@ -18,7 +18,7 @@ $t = Web::par('t', '');
 ?>
 <div id="medict">
     <div id="col1">
-        <form name="medict" class="recherche" autocomplete="off">
+        <form name="medict" class="recherche scrollable" autocomplete="off">
             <div>
                 <div>Rechercher un terme dans les vedettes</div>
                 <input name="q" id="q" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
@@ -31,10 +31,27 @@ $t = Web::par('t', '');
                 <input type="hidden" name="t" value="<?= htmlspecialchars($t, ENT_QUOTES, 'UTF-8'); ?>"/>
                 <div class="values"></div>
             </div>
+            <div id="titres_open">Filtre par titres</div>
+            <div id="titres_modal" class="modal">
+                <span class="close">×</span>
+                <div id="titres_flex">
+                    <div class="titre">
+                        <input class="titre_check" id="checkAllCote" type="checkbox"/>
+                        <label class="titre_label" 
+                        data-true="Tout cocher" 
+                        data-false="Tout décocher"
+                        data-null="Tout décocher"
+                        >Tout cocher</label>
+                    </div>
+                    <?php require(__DIR__.'/titres.php') ?>
+                </div>
+            </div>
+            <!--
             <div>
                 <div>Limiter la recherche à un ou plusieurs titres</div>
                 <input placeholder="Expéditeur(s)" type="text" class="multiple" data-url="data/titres" id="titres" data-name="titres"/>
             </div>
+            -->
             <button type="submit">Go</button>
         </form>
         <nav id="mots" class="data"  data-url="data/mots">

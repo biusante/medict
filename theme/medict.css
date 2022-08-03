@@ -283,6 +283,61 @@ input.an {
     position: relative;
 }
 
+#col1>nav.data {
+    flex: 1 1 auto;
+    height: 0px;
+}
+
+
+/* checks titre */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 510;
+    padding: 5rem 2rem 2rem 25%;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal .close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.modal .close:hover,
+.modal .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#titres_flex {
+    max-height: 100%;
+    overflow: auto;
+    padding: 1rem;
+    background-color: #fff;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    color: #000;
+    font-size: 1rem;
+}
+
+#titres_flex>* {
+    width: 25rem;
+}
+
 
 /*
 #col2>* {
@@ -315,7 +370,6 @@ div.pannel {
 }
 
 div.pannel>nav.data {
-    overflow-y: scroll;
     position: absolute;
     left: 0;
     right: 0;
@@ -328,29 +382,28 @@ div.pannel>nav.data {
     padding: 1rem 0 1rem 0.5rem;
 }
 
-#mots {
-    flex: 1 1 auto;
+nav.data,
+.scrollable {
     overflow-y: scroll;
-    height: 0px;
-}
-
-nav.data {
     /* Foreground, Background */
     scrollbar-color: var(--button_color) var(--form_bg);
 }
 
-nav.data::-webkit-scrollbar {
+nav.data::-webkit-scrollbar,
+.scrollable::-webkit-scrollbar {
     /* needed for colors */
     width: 16px;
     height: 16px;
 }
 
-nav.data::-webkit-scrollbar-thumb {
+nav.data::-webkit-scrollbar-thumb,
+.scrollable::-webkit-scrollbar-thumb {
     /* Foreground */
     background: var(--button_color);
 }
 
-nav.data::-webkit-scrollbar-track {
+nav.data::-webkit-scrollbar-track,
+.scrollable::-webkit-scrollbar-track {
     /* Background */
     background: var(--form_bg);
 }

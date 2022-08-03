@@ -418,6 +418,9 @@ const Formajax = function() {
             // init the form
             form = document.forms['medict'];
             if (!form) return;
+
+            titresInit();
+
             Formajax.init(form);
             // prevent submit before afect it as event
             form.addEventListener('submit', (e) => {
@@ -450,10 +453,32 @@ const Formajax = function() {
                 sugg.addEventListener('click', entreesClick);
                 sugg.addEventListener('click', suggClick);
             }
-
-
-
             setViewer('viewcont');
+        }
+
+        function titresInit() {
+            const open = document.getElementById('titres_open');
+            if (!open) {
+                console.log('[Medict] formulaires, #titres_open introuvable');
+                return;
+            }
+            const modal = document.getElementById('titres_modal');
+            if (!modal) {
+                console.log('[Medict] formulaires, #titres_modal introuvable');
+                return;
+            }
+            const close = modal.querySelector('.close');
+            if (!close) {
+                // if no close no open
+                console.log('[Medict] formulaire, bouton fermer popup introuvable : #titres_modal .close');
+                return;
+            }
+            open.addEventListener('click', (e) => {
+                modal.style.display = "block";
+            }, true);
+            close.addEventListener('click', (e) => {
+                modal.style.display = "none";
+            }, true);
         }
 
         /**
