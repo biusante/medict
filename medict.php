@@ -16,11 +16,14 @@ Medict::init();
 class Medict
 {
     /** Constantes */
-    const COTE = "cote";
     const AN1 = "an1";
     const AN2 = "an2";
+    const COTE = "cote";
+    const DICO_TITRE = "dico_titre";
     /** SQL link */
     static public $pdo;
+    /** requêtes préparées */
+    static public $q;
     /** Les paramètres */
     static public $pars;
     /** Cache l’expression régulière de hilite */
@@ -59,6 +62,29 @@ class Medict
         if ($an1 !== null && $an2 !== null && $an2 < $an1) $an2 = $an1;
         $reqPars[self::AN1] = $an1;
         $reqPars[self::AN2] = $an2;
+        // ensure cote
+        $reqPars[self::DICO_TITRE] = null;
+        $reqPars[self::COTE] = null;
+        $cotes =  Web::pars(self::COTE);
+        if (count($cotes)) {
+            $reqPars[self::DICO_TITRE] = array();
+            $reqPars[self::COTE] = array();
+                if (!isset(self::$q['cote_id'])) {
+                self::$q['cote_id'] = self::$pdo->prepare("SELECT id FROM dico_titre WHERE cote = ?");
+            }
+            $cotes_copy = $cotes;
+            foreach($cotes as $cote) {
+                self::$q['cote_id']->execute(array($cote));
+                $row = self::$q['cote_id']->fetch(PDO::FETCH_ASSOC);
+                if (!$row) continue;
+                $reqPars[self::COTE][] = $cote;
+                $reqPars[self::DICO_TITRE][] = $row['id'];
+            }
+            if (count($reqPars[self::COTE]) < 1 || count($reqPars[self::DICO_TITRE]) < 1) {
+                $reqPars[self::COTE] = null;
+                $reqPars[self::DICO_TITRE] = null;
+            }
+        }
         return $reqPars;
     }
 

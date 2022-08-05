@@ -31,18 +31,15 @@ $t = Web::par('t', '');
                 <input type="hidden" name="t" value="<?= htmlspecialchars($t, ENT_QUOTES, 'UTF-8'); ?>"/>
                 <div class="values"></div>
             </div>
-            <div id="titres_open">Filtre par titres</div>
+            <div title="Cliquer pour accéder à la liste des titres à sélectionner" id="titres_open">Liste des titres</div>
             <div id="titres_modal" class="modal">
                 <span class="close">×</span>
                 <div id="titres_flex">
-                    <div class="titre">
-                        <input class="titre_check" id="checkAllCote" type="checkbox"/>
-                        <label class="titre_label" 
-                        data-true="Tout cocher" 
-                        data-false="Tout décocher"
-                        data-null="Tout décocher"
-                        >Tout cocher</label>
-                    </div>
+                    <header>
+                        <input class="titre_check" id="coteAll" type="checkbox"/>
+                        <label for="coteAll" id="coteAllCheck">Tout cocher</label>
+                        <label for="coteAll" id="coteAllUncheck">Tout décocher</label>
+                    </header>
                     <?php require(__DIR__.'/titres.php') ?>
                 </div>
             </div>

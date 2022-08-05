@@ -72,16 +72,35 @@ const Formajax = function() {
     /**
      * Get form values as url pars
      */
-    function pars(...include) {
+    function pars(include, exclude) {
+        // ensure array
+        if (!include);
+        else if (!Array.isArray(include)) include = [include];
+        if (!exclude);
+        else if (!Array.isArray(exclude)) exclude = [exclude];
+
+
         const formData = new FormData(form);
-        // delete empty values, be careful, deletion will modify iterator
+        // delete empty values for nice minimal url
+        // take a copy of keys, formData.keys will change
         const keys = Array.from(formData.keys());
         for (const key of keys) {
-            if (include.length > 0 && !include.find(k => k === key)) {
+            if (include && !include.find(k => k === key)) {
                 formData.delete(key);
+                continue;
             }
-            if (!formData.get(key)) {
+            if (exclude && exclude.find(k => k === key)) {
                 formData.delete(key);
+                continue;
+            }
+            // 1) delete, 2) append non empty
+            let values = formData.getAll(key);
+            formData.delete(key);
+            const len = values.length;
+            if (len < 1) continue;
+            for (let i = 0; i < len; i++) {
+                if (!values[i]) continue;
+                formData.append(key, values[i]);
             }
         }
         return new URLSearchParams(formData);
@@ -467,18 +486,82 @@ const Formajax = function() {
                 console.log('[Medict] formulaires, #titres_modal introuvable');
                 return;
             }
+
             const close = modal.querySelector('.close');
             if (!close) {
                 // if no close no open
                 console.log('[Medict] formulaire, bouton fermer popup introuvable : #titres_modal .close');
                 return;
             }
+            const modalEsc = function(e) {
+                const key = e.key; // Or const {key} = event; in ES6+
+                if (key !== "Escape") return;
+                document.removeEventListener("keydown", modalEsc);
+                modal.style.display = "none";
+            };
             open.addEventListener('click', (e) => {
                 modal.style.display = "block";
+                document.addEventListener("keydown", modalEsc);
             }, true);
             close.addEventListener('click', (e) => {
+                document.removeEventListener("keydown", modalEsc);
                 modal.style.display = "none";
             }, true);
+            // click outside modal close it
+            modal.addEventListener('click', function(e) {
+                if (e.target !== modal) return;
+                document.removeEventListener("keydown", modalEsc);
+                modal.style.display = "none";
+            }, true);
+            // count checked checkboxes
+            let checkeds = modal.querySelectorAll('input[type="checkbox"]:checked').length;
+            // Changement dans le formulaire
+            const titreChange = function(e) {
+                    if (this.checked) {
+                        this.parentNode.classList.add("checked");
+                    } else {
+                        this.parentNode.classList.remove("checked");
+                    }
+                    // update URL but do not add entry in history
+                    const url = new URL(window.location);
+                    url.search = Formajax.pars();
+                    window.history.replaceState({}, '', url);
+                    // submit form
+                    this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
+                }
+                // loop on all checkbox
+            const ticklist = modal.querySelectorAll("input[type=checkbox][name=cote]");
+            for (let i = 0; i < ticklist.length; ++i) {
+                const checkbox = ticklist[i];
+                if (checkbox.checked) {
+                    checkbox.parentNode.classList.add("checked");
+                }
+                checkbox.addEventListener('change', titreChange);
+            }
+            const coteAll = document.getElementById("coteAll");
+            coteAll.addEventListener("change", function(e) {
+                const flag = this.checked;
+                // all or none, exclude url par
+                // update URL but do not add entry in history
+                const url = new URL(window.location);
+                url.search = Formajax.pars(null, ['cote']);
+                window.history.replaceState({}, '', url);
+                if (flag) {
+                    document.getElementById('coteAllCheck').style.display = 'none';
+                    document.getElementById('coteAllUncheck').style.display = 'block';
+                } else {
+                    document.getElementById('coteAllCheck').style.display = 'block';
+                    document.getElementById('coteAllUncheck').style.display = 'none';
+                }
+                for (let i = 0; i < ticklist.length; ++i) {
+                    const checkbox = ticklist[i];
+                    checkbox.checked = flag;
+                    if (flag) checkbox.parentNode.classList.add("checked");
+                    else checkbox.parentNode.classList.remove("checked");
+                }
+                // submit form
+                this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
+            });
         }
 
         /**

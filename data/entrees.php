@@ -7,26 +7,32 @@ include_once(dirname(__DIR__) . "/Medict.php");
 
 use Oeuvres\Kit\{Web};
 
+$reqPars = Medict::reqPars();
+
 // une veddette à chercher
 $t = Web::par('t', null);
 if (!$t) return; // rien à chercher
 $t = '1' . Medict::sortable($t);
 
-list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee_titre), MAX(annee_titre) FROM dico_entree")->fetch();
-$an1 = Web::par('an1', $an_min);
-$an2 = Web::par('an2', $an_max);
-if ($an2 < $an1) $an2 = $an1;
-
+$pars = array($t);
 $sql = "SELECT dico_entree FROM dico_index WHERE terme_sort LIKE ? ";
 
-$pars = array($t);
-if ($an1 !== null) {
-    $pars[] = $an1;
-    $where[] = "annee_titre >= ?";
+
+// construire la requête de filtrage
+$where = array();
+// filtre par cote
+if ($reqPars[Medict::DICO_TITRE]) {
+    $where[] = " dico_titre IN (" . implode(", ", $reqPars[Medict::DICO_TITRE]) . ")";
 }
-if ($an2 !== null) {
-    $pars[] = $an2;
-    $where[] = "annee_titre <= ?";
+else {
+    if ($reqPars[Medict::AN1] !== null) {
+        $where[] = "annee_titre >= ?";
+        $pars[] =  $reqPars[Medict::AN1];
+    }
+    if ($reqPars[Medict::AN2] !== null) {
+        $where[] = "annee_titre <= ?";
+        $pars[] = $reqPars[Medict::AN2];
+    }
 }
 if (count($where) > 0) {
     $sql .= ' AND ' . implode(' AND ', $where);

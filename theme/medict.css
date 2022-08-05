@@ -291,6 +291,22 @@ input.an {
 
 /* checks titre */
 
+#titres_open {
+    text-align: center;
+    font-size: 1.2rem;
+    border: 1px solid var(--form_color);
+    border-radius: 3px;
+    cursor: pointer;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#titres_open:hover {
+    background-color: var(--bg);
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -302,7 +318,7 @@ input.an {
     height: 100%;
     overflow: auto;
     background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .modal .close {
@@ -332,10 +348,43 @@ input.an {
     justify-content: center;
     color: #000;
     font-size: 1rem;
+    justify-content: flex-start;
+    background-color: var(--form_bg);
+}
+
+#titres_flex header {
+    border: 1px solid var(--form_color);
+    padding: 0.2rem 0;
+    margin-bottom: 1rem;
+}
+
+#titres_flex header>* {
+    cursor: pointer;
 }
 
 #titres_flex>* {
     width: 25rem;
+    display: flex;
+}
+
+#titres_flex>* label {
+    width: 100%;
+}
+
+#titres_flex .titre {
+    border: 1px solid transparent;
+}
+
+#titres_flex .titre:hover {
+    border-color: var(--form_color);
+}
+
+#titres_flex .titre.checked {
+    background-color: var(--bg);
+}
+
+#coteAllUncheck {
+    display: none;
 }
 
 

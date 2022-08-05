@@ -20,22 +20,15 @@ function titre(&$cotes, $row)
 {
     $div = '';
     $checked = '';
-    if (isset($cotes[$row['cote']])) $checked = "\n".'      checked="checked"';
+    if ($cotes && isset($cotes[$row['cote']])) {
+        $checked = "\n".'      checked="checked"';
+    }
     $div .= '
   <div class="titre">
-    <input
-      class="titre_check" 
-      id="check_' . $row['cote'] . '" type="checkbox" 
-      name="'. Medict::COTE . '" 
-      value="' . $row['cote'] . '"' . $checked .'
-    />
-    <label 
-      class="titre_label" 
-      for="check_' . $row['cote'] . '"
-      title="' . $row['bibl'] . '"
-      >
-      
-      <span class="annee">' . $row['annee'] . ', </span><span class="nom">' . $row['nom'] . '</span></label>
+    <input name="'. Medict::COTE . '" value="' . $row['cote'] . '"' . $checked .' id="check_' . $row['cote'] . '" type="checkbox"/>
+    <label for="check_' . $row['cote'] . '" title="' . $row['bibl'] . '">
+      <span class="annee">' . $row['annee'] . ', </span><span class="nom">' . $row['nom'] . '</span>
+    </label>
   </div>';
     return $div;
 }
@@ -48,9 +41,8 @@ if (0 < count($cotes)) { // si cotes demandées, vérifier qu’elles existent
     $biblio = $coteQ->fetchAll(PDO::FETCH_COLUMN, 0);
     $cotes = array_intersect($cotes, $biblio);
 }
-$cotes = array_flip($cotes);
-
-
+if (0 < count($cotes)) $cotes = array_flip($cotes);
+else $cotes = null;
 
 $sql = "SELECT * FROM dico_titre ";
 $titreQ = Medict::$pdo->prepare($sql);
@@ -58,6 +50,7 @@ $titreQ->execute(array());
 echo '
 ';
 while ($row = $titreQ->fetch(PDO::FETCH_ASSOC)) {
+    if (!$row['cote']) continue; // buggy when a title has no cote
     echo titre($cotes, $row);
 }
 
