@@ -62,11 +62,19 @@ $t = Web::par('t', '');
             
             </nav>
         </div>
-        <div class="pannel sugg" id="pansugg">
-            <header>Suggestions</header>
-            <nav id="sugg"  class="data" data-url="data/sugg">
-            
-            </nav>
+        <div id="sugg_trad">
+            <div class="pannel sugg" id="pansugg">
+                <header>Suggestions</header>
+                <nav id="sugg"  class="data" data-url="data/sugg">
+                
+                </nav>
+            </div>
+            <div class="pannel trad" id="pantrad">
+                <header>Traductions</header>
+                <nav id="trad"  class="data" data-url="data/trad">
+                
+                </nav>
+            </div>
         </div>
     </div>
     <div id="col3">

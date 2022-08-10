@@ -472,6 +472,11 @@ const Formajax = function() {
                 sugg.addEventListener('click', entreesClick);
                 sugg.addEventListener('click', suggClick);
             }
+            const trad = document.getElementById('trad');
+            if (trad) {
+                trad.addEventListener('click', entreesClick);
+                trad.addEventListener('click', suggClick);
+            }
             setViewer('viewcont');
         }
 
@@ -578,6 +583,7 @@ const Formajax = function() {
             Formajax.divLoad('mots');
             Formajax.divLoad('entrees');
             Formajax.divLoad('sugg');
+            Formajax.divLoad('trad');
             // équiper les suggesteurs
             const inputs = document.querySelectorAll("input.multiple[data-url]");
             for (let i = 0; i < inputs.length; i++) {
@@ -841,6 +847,7 @@ const Formajax = function() {
             // Update frames
             Formajax.divLoad('entrees');
             Formajax.divLoad('sugg');
+            Formajax.divLoad('trad');
             // change class
             if (document.lastIndex) document.lastIndex.classList.remove('active');
             if (a.classList.contains("active")) {
@@ -856,11 +863,11 @@ const Formajax = function() {
     }();
     Medict.init();
     const splitH = Split(['#col1', '#col2', '#col3'], {
-        sizes: [20, 20, 60],
+        sizes: [20, 30, 50],
         direction: 'horizontal',
         gutterSize: 3,
     });
-    const splitV = Split(['#panentrees', '#pansugg'], {
+    const splitV = Split(['#panentrees', '#sugg_trad'], {
         sizes: [70, 30],
         direction: 'vertical',
         gutterSize: 3,

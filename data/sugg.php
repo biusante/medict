@@ -10,22 +10,22 @@ include_once(dirname(__DIR__) . "/Medict.php");
 use Oeuvres\Kit\{Web};
 
 // une veddette à chercher
-$terme1 = preg_replace('@^1@', '', Web::par('t', null));
-if (!$terme1) return; // rien à chercher
+$src = preg_replace('@^1@', '', Web::par('t', null));
+if (!$src) return; // rien à chercher
 
 
 $starttime = microtime(true);
 
-$sql = "SELECT * FROM dico_sugg WHERE terme1_sort = ? ORDER BY score DESC, terme2_sort";
+$sql = "SELECT * FROM dico_sugg WHERE src_sort = ? ORDER BY score DESC, dst_sort";
 $qsugg = Medict::$pdo->prepare($sql);
-$qsugg->execute(array($terme1));
+$qsugg->execute(array($src));
 
-echo "<!-- $sql ; $terme1 -->\n";
+echo "<!-- $sql ; $src -->\n";
 
 $qentree = Medict::$pdo->prepare("SELECT * FROM dico_entree WHERE id = ?");
 $last = null;
 while ($sugg = $qsugg->fetch(PDO::FETCH_ASSOC)) {
-    if ($last != $sugg['terme2_sort']) {
+    if ($last != $sugg['dst_sort']) {
         if ($last !== null) {
             echo "\n</details>";
             echo "\n&#10;";
@@ -33,10 +33,10 @@ while ($sugg = $qsugg->fetch(PDO::FETCH_ASSOC)) {
         }
         echo "
 <details class=\"sugg\">
-    <summary><a class=\"sugg\" href=\"?q=" . rawurlencode($sugg['terme2']) . "\">" . $sugg['terme2'];
+    <summary><a class=\"sugg\" href=\"?q=" . rawurlencode($sugg['dst']) . "\">" . $sugg['dst'];
     echo " <small>(". $sugg['score'], ")</small>";
         echo"</a></summary>";
-        $last = $sugg['terme2_sort'];
+        $last = $sugg['dst_sort'];
     }
     $qentree->execute(array($sugg['dico_entree']));
     $entree = $qentree->fetch();

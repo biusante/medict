@@ -401,6 +401,15 @@ input.an {
 }
 */
 
+#sugg_trad {
+    display: flex;
+    position: relative;
+}
+
+#sugg_trad>* {
+    flex: 0 0 50%;
+}
+
 div.pannel header,
 #col3 header {
     margin: 0;
