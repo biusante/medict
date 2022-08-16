@@ -130,7 +130,7 @@ $body_class = $page;
         </div>
     </div>
     <script src="<?= Route::app_href() ?>theme/biusante.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.10.5/viewer.min.js"></script>
+    <script src="<?= Route::app_href() ?>vendor/viewer.js"></script>
     <script src="<?= Route::app_href() ?>vendor/split.js"></script>
     <script src="<?= Route::app_href() ?>theme/medict.js"></script>
 </body>

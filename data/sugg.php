@@ -16,7 +16,7 @@ if (!$src) return; // rien à chercher
 
 $starttime = microtime(true);
 
-$sql = "SELECT * FROM dico_sugg WHERE src_sort = ? ORDER BY score DESC, dst_sort";
+$sql = "SELECT * FROM dico_sugg WHERE src_sort = ? AND cert = 1 ORDER BY dst_sort";
 $qsugg = Medict::$pdo->prepare($sql);
 $qsugg->execute(array($src));
 

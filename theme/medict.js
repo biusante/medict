@@ -1,5 +1,7 @@
 'use strict';
 
+
+
 /**
  * Toolkit for ajax forms
  */
@@ -20,9 +22,14 @@ const Formajax = function() {
      * @param {function} callback 
      * @returns 
      */
-    function loadLines(url, callback, sep = '\n') {
+    function loadLines(div, url, callback, sep = '\n') {
         return new Promise(function(resolve, reject) {
+            if (div.xhr) { // still loading, abort
+                div.xhr.abort();
+                delete div.xhr;
+            }
             var xhr = new XMLHttpRequest();
+            div.xhr = xhr;
             var start = 0;
             xhr.onprogress = function() {
                 // loop on separator
@@ -230,7 +237,7 @@ const Formajax = function() {
         // search form sender and receiver
         const url = input.dataset.url + "?" + pars;
         suggest.innerText = '';
-        loadLines(url, function(json) {
+        loadLines(suggest, url, function(json) {
             suggestLine(suggest, json);
         });
     }
@@ -301,7 +308,7 @@ const Formajax = function() {
      */
     function init(el) {
         if (!el) {
-            console.log('[FormAjax] A <form> is required to init FormAjax');
+            console.log('[Formajax] A <form> is required to init Formajax');
             return;
         }
         form = el;
@@ -314,13 +321,14 @@ const Formajax = function() {
     function divLoad(id, append = false) {
         let div = document.getElementById(id);
         if (!div) return; // disappeared ?
-        if (div.loading) return; // still loading
+        // if still loading, replace, 
+        // if (div.loading) return; // still loading
         div.loading = true;
         if (!append) {
             div.innerText = '';
         }
         let url = div.dataset.url + "?" + pars();
-        loadLines(url, function(html) {
+        loadLines(div, url, function(html) {
             insLine(div, html);
         }, LF);
     }
@@ -342,19 +350,491 @@ const Formajax = function() {
         div.insertAdjacentHTML('beforeend', html);
     }
 
+    function selfOrAncestor(el, name) {
+        while (el.tagName.toLowerCase() != name) {
+            el = el.parentNode;
+            if (!el) return false;
+            let tag = el.tagName.toLowerCase();
+            if (tag == 'div' || tag == 'nav' || tag == 'body') return false;
+        }
+        return el;
+    }
 
 
     return {
+        divLoad: divLoad,
         init: init,
         inputDel: inputDel,
-        loadLines: loadLines,
         insLine: insLine,
         LF: LF,
+        loadLines: loadLines,
         pars: pars,
-        divLoad: divLoad,
+        selfOrAncestor: selfOrAncestor,
         suggestInit: suggestInit,
     }
 }();
+
+/**
+ * Pilot of Medit app
+ */
+class Medict {
+    /* the form */
+    static form;
+    /* the viewer */
+    static viewer;
+    /** default image for viewer */
+    static imgLo;
+    /** Hi resolution */
+    static imgHi;
+
+    constructor() {
+        if (this instanceof Medict) {
+            throw Error('This is a static class, cannot be instantiated.');
+        }
+    };
+
+    static init() {
+        // init the form
+        Medict.form = document.forms['medict'];
+        if (!Medict.form) return;
+
+        Medict.titresInit();
+
+        Formajax.init(Medict.form);
+        // prevent submit before afect it as event
+        Medict.form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            Medict.motsLoad();
+            // Formajax.divLoad('entrees');
+            return false;
+        }, true);
+        // send submit when suggest change
+        Medict.form.q.addEventListener('input', (e) => {
+            Medict.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
+        }, true);
+
+        window.onpopstate = function(e) {
+            var state = e.state;
+            // a state produced by the app
+            if (state !== null) {
+                Medict.winload();
+            }
+        };
+
+        // for efficiency, put a click event on the terme container, so they can change without changin the event
+        const mots = document.getElementById('mots');
+        if (mots) mots.addEventListener('click', Medict.motsClick);
+        const entrees = document.getElementById('entrees');
+        if (entrees) entrees.addEventListener('click', Medict.entreesClick);
+        const sugg = document.getElementById('sugg');
+        if (sugg) {
+            sugg.addEventListener('click', Medict.entreesClick);
+            sugg.addEventListener('click', Medict.suggClick);
+        }
+        const trad = document.getElementById('trad');
+        if (trad) {
+            trad.addEventListener('click', Medict.entreesClick);
+            trad.addEventListener('click', Medict.suggClick);
+        }
+        Medict.setViewer('viewcont');
+        // Update interface onload or with back, after setting viewer
+        Medict.winload();
+
+        // events on the prev / next buttons for facs image
+        const aref = document.getElementById('medica-ext');
+        let but = document.getElementById('medica-prev');
+        if (aref && but) {
+            but.onclick = function(e) {
+                e.preventDefault();
+                if (!aref.dataset.p || !aref.dataset.cote) return;
+                Medict.facs(aref.dataset.cote, parseInt(aref.dataset.p, 10) - 1);
+                Medict.historyChange();
+                return false;
+            }
+        }
+        but = document.getElementById('medica-next');
+        if (aref && but) {
+            but.onclick = function(e) {
+                e.preventDefault();
+                if (!aref.dataset.cote || !aref.dataset.p) return;
+                console.log(aref.dataset.p + 1);
+                Medict.facs(aref.dataset.cote, parseInt(aref.dataset.p, 10) + 1);
+                Medict.historyChange();
+                return false;
+            }
+        }
+
+    }
+
+    static sanitize(html) {
+        if (!Medict.decoder) Medict.decoder = document.createElement('div');
+        Medict.decoder.innerHTML = html;
+        return Medict.decoder.textContent;
+    }
+
+    static titresInit() {
+        const open = document.getElementById('titres_open');
+        if (!open) {
+            console.log('[Medict] formulaires, #titres_open introuvable');
+            return;
+        }
+        const modal = document.getElementById('titres_modal');
+        if (!modal) {
+            console.log('[Medict] formulaires, #titres_modal introuvable');
+            return;
+        }
+
+        const close = modal.querySelector('.close');
+        if (!close) {
+            // if no close no open
+            console.log('[Medict] formulaire, bouton fermer popup introuvable : #titres_modal .close');
+            return;
+        }
+        const modalEsc = function(e) {
+            const key = e.key; // Or const {key} = event; in ES6+
+            if (key !== "Escape") return;
+            document.removeEventListener("keydown", modalEsc);
+            modal.style.display = "none";
+        };
+        open.addEventListener('click', (e) => {
+            modal.style.display = "block";
+            document.addEventListener("keydown", modalEsc);
+        }, true);
+        close.addEventListener('click', (e) => {
+            document.removeEventListener("keydown", modalEsc);
+            modal.style.display = "none";
+        }, true);
+        // click outside modal close it
+        modal.addEventListener('click', function(e) {
+            if (e.target !== modal) return;
+            document.removeEventListener("keydown", modalEsc);
+            modal.style.display = "none";
+        }, true);
+        // count checked checkboxes
+        let checkeds = modal.querySelectorAll('input[type="checkbox"]:checked').length;
+        // Changement dans le formulaire
+        const titreChange = function(e) {
+                if (this.checked) {
+                    this.parentNode.classList.add("checked");
+                } else {
+                    this.parentNode.classList.remove("checked");
+                }
+                Medict.historyChange();
+                // submit form
+                this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
+            }
+            // loop on all checkbox
+        const ticklist = modal.querySelectorAll("input[type=checkbox][name=f]");
+        for (let i = 0; i < ticklist.length; ++i) {
+            const checkbox = ticklist[i];
+            if (checkbox.checked) {
+                checkbox.parentNode.classList.add("checked");
+            }
+            checkbox.addEventListener('change', titreChange);
+        }
+        const allF = document.getElementById("allF");
+        if (allF) {
+            allF.addEventListener("change", function(e) {
+                const flag = this.checked;
+                // all or none, exclude url par
+                // update URL but do not add entry in history
+                Medict.historyChange(null, ['f']);
+
+                if (flag) {
+                    document.getElementById('allFCheck').style.display = 'none';
+                    document.getElementById('allFUncheck').style.display = 'block';
+                } else {
+                    document.getElementById('allFCheck').style.display = 'block';
+                    document.getElementById('allFUncheck').style.display = 'none';
+                }
+                for (let i = 0; i < ticklist.length; ++i) {
+                    const checkbox = ticklist[i];
+                    checkbox.checked = flag;
+                    if (flag) checkbox.parentNode.classList.add("checked");
+                    else checkbox.parentNode.classList.remove("checked");
+                }
+                // submit form
+                this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
+            });
+        }
+    }
+
+    /**
+     * update interface onload or with back history
+     */
+    static winload() {
+        // TODO, update title filter, mutiple
+
+        // update form with url values, will not work well with multiple values
+        (new URL(window.location.href)).searchParams.forEach(function(value, key) {
+            if (!Medict.form[key]) return;
+            Medict.form[key].value = value;
+        });
+        Formajax.divLoad('mots');
+        Formajax.divLoad('entrees');
+        Formajax.divLoad('sugg');
+        Formajax.divLoad('trad');
+        // équiper les suggesteurs, mais yapa
+        /*
+        const inputs = document.querySelectorAll("input.multiple[data-url]");
+        for (let i = 0; i < inputs.length; i++) {
+            Formajax.suggestInit(inputs[i]);
+        }
+        */
+        // 
+        const url = new URL(window.location);
+        Medict.facs(
+            url.searchParams.get('cote'),
+            url.searchParams.get('p'),
+            Medict.sanitize(url.searchParams.get('bibl')),
+        );
+
+    }
+
+    /**
+     * Push an entry in history
+     */
+    static historyPush(include, exclude) {
+        const url = new URL(window.location);
+        url.search = Formajax.pars(include, exclude);
+        window.history.pushState({}, '', url);
+    }
+
+    /**
+     * update URL but do not add entry in history
+     */
+    static historyChange(include, exclude) {
+        const url = new URL(window.location);
+        url.search = Formajax.pars(include, exclude);
+        window.history.replaceState({}, '', url);
+    }
+
+    /**
+     * Update interface ?
+     * @returns 
+     */
+    static motsLoad() {
+        Formajax.divLoad('mots');
+        Medict.historyChange();
+    }
+
+    static imgError(e) {
+        const img = e.currentTarget;
+        img.onerror = null;
+        console.log(this.src + " ERROR");
+        let url = img.src;
+        fetch(
+            url, { cache: 'reload', mode: 'no-cors' }
+        ).then((response) => {
+            console.log(response.status);
+            if (response.status !== 200) {
+                console.log(response.status + " fetch reload error: " + url);
+                img.onerror = Medict.imgErrorLast;
+                img.srcOld = img.src;
+                // on error with fetch, retry 3rd but last attempt
+                // this works nicely but no good for cache
+                url += "?";
+                img.src = url.substring(0, url.indexOf("?")) + "?time=" + new Date();
+                return;
+            }
+            console.log("Fetch reload OK: " + url);
+            img.src = url;
+        });
+    }
+
+    static imgErrorLast(e) {
+        const img = e.currentTarget;
+        img.onerror = null;
+        img.src = img.srcOld;
+    }
+
+    static viewerOptions = {
+        transition: false,
+        inline: true,
+        navbar: 0,
+        // inheritedAttributes: null,
+        // minWidth: '100%', 
+        toolbar: {
+            /*
+            width: function() {
+                let cwidth = Medict.viewer.parent.offsetWidth;
+                let iwidth = Medict.viewer.imageData.naturalWidth;
+                let zoom = cwidth / iwidth;
+                Medict.viewer.zoomTo(zoom);
+                Medict.viewer.moveTo(0, Medict.viewer.imageData.y);
+            },
+            */
+            zoomIn: true,
+            zoomOut: true,
+            /*
+            flipVertical: function() {
+                const img = Medict.viewerImg;
+                if (img.srcHi) img.src = img.srcHi;
+                Medict.viewer.update();
+                // Medict.viewer.resize();
+            },
+            */
+            ld: function() {
+                Medict.viewer.view(0);
+                return this;
+            },
+            hd: function() {
+                Medict.viewer.view(1);
+                return this;
+            },
+        },
+        title: function(image) {
+            return null;
+        },
+        viewed() {
+            // default zoom on load, image width
+            let cwidth = Medict.viewer.parent.offsetWidth;
+            let iwidth = Medict.viewer.imageData.naturalWidth;
+            let zoom = cwidth / iwidth;
+            Medict.viewer.zoomTo(zoom);
+            Medict.viewer.moveTo(0, 0);
+        },
+        zoomed() {
+            // record last Zoom level
+            Medict.viewer.lastZoomRequested = Medict.viewer.imageData.ratio;
+        },
+    }
+
+    static setViewer(id) {
+        const div = document.getElementById(id);
+        if (!div) return;
+        let els = div.getElementsByTagName('img');
+        if (!els || els.length < 1) return;
+        Medict.imgLo = els[0];
+        Medict.imgHi = els[1];
+        Medict.viewer = new Viewer(div, Medict.viewerOptions);
+    }
+
+    /**
+     * Behavior of suggested term
+     * @param {*} e 
+     * @returns 
+     */
+    static suggClick(e) {
+        let a = Formajax.selfOrAncestor(e.target, 'a');
+        if (!a) return;
+        if (!a.classList.contains('sugg')) return;
+        e.preventDefault();
+        const pars = new URLSearchParams(a.search);
+        const q = pars.get('q');
+        if (!q) return;
+        Medict.form.q.value = q;
+        // form.t.value = q; // non juste l’index
+        Formajax.divLoad('mots');
+    }
+
+    /**
+     * Behavior of entries
+     * @param {*} e 
+     * @returns 
+     */
+    static entreesClick(e) {
+        let a = Formajax.selfOrAncestor(e.target, 'a');
+        if (!a) return;
+        if (!a.classList.contains('entree')) return;
+        // https://www.biusante.parisdescartes.fr/iiif/2/bibnum:45674x04:%%/full/full/0/default.jpg
+        // https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=pharma_019428x01&amp;p=444"
+        // https://www.biusante.parisdescartes.fr/iiif/2/bibnum:47661x59:0122/0,512,512,512/512,/0/default.jpg
+        let found = a.search.match(/cote=([^&]*)/);
+        if (!found) return; // url error ?
+        // seems we can prevent default now
+        e.preventDefault();
+        const cote = found[1];
+        found = a.search.match(/p=([^&]*)/);
+        if (!found) return; // url error ?
+        const p = found[1];
+        Medict.facs(cote, p, a.innerHTML);
+        Medict.historyPush();
+
+
+
+        // change class
+        if (document.lastEntree) document.lastEntree.classList.remove('active');
+        if (a.classList.contains("active")) {
+            a.classList.remove('active');
+        } else {
+            document.lastEntree = a;
+            a.classList.add('active');
+        }
+    }
+
+
+
+    static facs(cote, p, bibl) {
+        if (!cote || !p) return;
+        p = Medict.pad(p, 4);
+        // Biusanté, lien page
+        const href = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&cote=' + cote + '&p=' + p;
+
+        // Biusanté, img moyenne
+        const srcLo = 'https://www.biusante.parisdescartes.fr/images/livres/' + cote + '/' + p + '.jpg';
+        /*
+        // Biusante, iiif, cassé
+        const srcHi = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ":" + p + '/full/full/0/default.jpg';
+        */
+        // Archives.org, iiif, lent
+        const srcHi = 'https://iiif.archivelab.org/iiif/BIUSante_' + cote + '$' + (p - 1) + '/full/full/0/default.jpg';
+
+        Medict.imgLo.src = srcLo;
+        Medict.imgHi.src = srcHi;
+        // Medict.viewer.ready = true; // force abort of current loading
+        Medict.viewer.update(); // let viewer show a waiting roll
+
+        const link = document.getElementById('medica-ext');
+        link.href = href;
+        // store cote and page here to help the prev / next button
+        link.dataset.cote = cote;
+        link.dataset.p = p;
+        if (bibl) link.innerHTML = bibl;
+        else bibl = link.innerHTML;
+        Medict.form['bibl'].value = Medict.sanitize(bibl);
+        Medict.form['cote'].value = cote;
+        Medict.form['p'].value = p;
+    }
+
+    static pad(num, width) {
+        var s = "000000000" + num;
+        return s.substring(s.length - width);
+    }
+
+
+
+    /**
+     * When click in mots, do things
+     */
+    static motsClick(e) {
+        e.preventDefault();
+        // catch a link inside column of terms
+        let a = Formajax.selfOrAncestor(e.target, 'a');
+        if (!a) return;
+        const pars = new URLSearchParams(a.search);
+        const terme = pars.get('t');
+
+        // push history
+        Medict.form['t'].value = terme;
+        Medict.historyPush();
+
+
+        // Update frames
+        Formajax.divLoad('entrees');
+        Formajax.divLoad('sugg');
+        Formajax.divLoad('trad');
+        // change class
+        if (document.lastIndex) document.lastIndex.classList.remove('active');
+        if (a.classList.contains("active")) {
+            a.classList.remove('active');
+        } else {
+            document.lastIndex = a;
+            a.classList.add('active');
+        }
+    }
+}
+
 
 (function() {
 
@@ -421,446 +901,6 @@ const Formajax = function() {
     // bottom script
     Bislide.init();
 
-    /**
-     * Pilot of Medit app
-     */
-    const Medict = function() {
-        /* the form */
-        var form;
-        /* the viewer */
-        var pageViewer;
-        /** image to update for viewer */
-        var viewmage;
-
-
-        function init() {
-            // init the form
-            form = document.forms['medict'];
-            if (!form) return;
-
-            titresInit();
-
-            Formajax.init(form);
-            // prevent submit before afect it as event
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                motsLoad();
-                Formajax.divLoad('entrees');
-                return false;
-            }, true);
-            // send submit when suggest change
-            form.q.addEventListener('input', (e) => {
-                form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
-            }, true);
-
-            window.onpopstate = function(e) {
-                var state = e.state;
-                // a state produced by the app
-                if (state !== null) {
-                    winload();
-                }
-            };
-            winload();
-
-            // for efficiency, put a click event on the terme container (not all termes)
-            const mots = document.getElementById('mots');
-            if (mots) mots.addEventListener('click', motsClick);
-            const entrees = document.getElementById('entrees');
-            if (entrees) entrees.addEventListener('click', entreesClick);
-            const sugg = document.getElementById('sugg');
-            if (sugg) {
-                sugg.addEventListener('click', entreesClick);
-                sugg.addEventListener('click', suggClick);
-            }
-            const trad = document.getElementById('trad');
-            if (trad) {
-                trad.addEventListener('click', entreesClick);
-                trad.addEventListener('click', suggClick);
-            }
-            setViewer('viewcont');
-        }
-
-        function titresInit() {
-            const open = document.getElementById('titres_open');
-            if (!open) {
-                console.log('[Medict] formulaires, #titres_open introuvable');
-                return;
-            }
-            const modal = document.getElementById('titres_modal');
-            if (!modal) {
-                console.log('[Medict] formulaires, #titres_modal introuvable');
-                return;
-            }
-
-            const close = modal.querySelector('.close');
-            if (!close) {
-                // if no close no open
-                console.log('[Medict] formulaire, bouton fermer popup introuvable : #titres_modal .close');
-                return;
-            }
-            const modalEsc = function(e) {
-                const key = e.key; // Or const {key} = event; in ES6+
-                if (key !== "Escape") return;
-                document.removeEventListener("keydown", modalEsc);
-                modal.style.display = "none";
-            };
-            open.addEventListener('click', (e) => {
-                modal.style.display = "block";
-                document.addEventListener("keydown", modalEsc);
-            }, true);
-            close.addEventListener('click', (e) => {
-                document.removeEventListener("keydown", modalEsc);
-                modal.style.display = "none";
-            }, true);
-            // click outside modal close it
-            modal.addEventListener('click', function(e) {
-                if (e.target !== modal) return;
-                document.removeEventListener("keydown", modalEsc);
-                modal.style.display = "none";
-            }, true);
-            // count checked checkboxes
-            let checkeds = modal.querySelectorAll('input[type="checkbox"]:checked').length;
-            // Changement dans le formulaire
-            const titreChange = function(e) {
-                    if (this.checked) {
-                        this.parentNode.classList.add("checked");
-                    } else {
-                        this.parentNode.classList.remove("checked");
-                    }
-                    // update URL but do not add entry in history
-                    const url = new URL(window.location);
-                    url.search = Formajax.pars();
-                    window.history.replaceState({}, '', url);
-                    // submit form
-                    this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
-                }
-                // loop on all checkbox
-            const ticklist = modal.querySelectorAll("input[type=checkbox][name=cote]");
-            for (let i = 0; i < ticklist.length; ++i) {
-                const checkbox = ticklist[i];
-                if (checkbox.checked) {
-                    checkbox.parentNode.classList.add("checked");
-                }
-                checkbox.addEventListener('change', titreChange);
-            }
-            const coteAll = document.getElementById("coteAll");
-            coteAll.addEventListener("change", function(e) {
-                const flag = this.checked;
-                // all or none, exclude url par
-                // update URL but do not add entry in history
-                const url = new URL(window.location);
-                url.search = Formajax.pars(null, ['cote']);
-                window.history.replaceState({}, '', url);
-                if (flag) {
-                    document.getElementById('coteAllCheck').style.display = 'none';
-                    document.getElementById('coteAllUncheck').style.display = 'block';
-                } else {
-                    document.getElementById('coteAllCheck').style.display = 'block';
-                    document.getElementById('coteAllUncheck').style.display = 'none';
-                }
-                for (let i = 0; i < ticklist.length; ++i) {
-                    const checkbox = ticklist[i];
-                    checkbox.checked = flag;
-                    if (flag) checkbox.parentNode.classList.add("checked");
-                    else checkbox.parentNode.classList.remove("checked");
-                }
-                // submit form
-                this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
-            });
-        }
-
-        /**
-         * update interface onload or with back history
-         */
-        function winload() {
-            // TODO, update title filter, mutiple
-
-            // update form with 
-            (new URL(window.location.href)).searchParams.forEach(function(value, key) {
-                if (!form[key]) return;
-                form[key].value = value;
-            });
-            Formajax.divLoad('mots');
-            Formajax.divLoad('entrees');
-            Formajax.divLoad('sugg');
-            Formajax.divLoad('trad');
-            // équiper les suggesteurs
-            const inputs = document.querySelectorAll("input.multiple[data-url]");
-            for (let i = 0; i < inputs.length; i++) {
-                Formajax.suggestInit(inputs[i]);
-            }
-
-
-        }
-
-
-        /**
-         * Update interface ?
-         * @returns 
-         */
-        function motsLoad() {
-            Formajax.divLoad('mots');
-            // update URL but do not add entry in history
-            const url = new URL(window.location);
-            url.search = Formajax.pars();
-            window.history.replaceState({}, '', url);
-        }
-
-
-        function setViewer(id) {
-            const div = document.getElementById(id);
-            if (!div) return;
-            let els = div.getElementsByTagName('img');
-            if (!els || els.length < 1) return;
-            viewmage = els[0];
-
-
-            pageViewer = new Viewer(div, {
-                transition: false,
-                inline: true,
-                navbar: 0,
-                // minWidth: '100%', 
-                toolbar: {
-                    width: function() {
-                        let cwidth = div.offsetWidth;
-                        let iwidth = pageViewer.imageData.naturalWidth;
-                        let zoom = cwidth / iwidth;
-                        pageViewer.zoomTo(zoom);
-                        pageViewer.moveTo(0, pageViewer.imageData.y);
-                    },
-                    zoomIn: true,
-                    zoomOut: true,
-                    oneToOne: true,
-                    reset: true,
-                },
-                title: function(image) {
-                    return null;
-                },
-                viewed() {
-                    // default zoom on load, image width
-                    let cwidth = div.offsetWidth;
-                    let iwidth = pageViewer.imageData.naturalWidth;
-                    let zoom = cwidth / iwidth;
-                    pageViewer.zoomTo(zoom);
-                    pageViewer.moveTo(0, 0);
-                },
-                zoomed() {
-                    // record last Zoom level
-                    pageViewer.lastZoomRequested = pageViewer.imageData.ratio;
-                }
-            });
-            // viewer override of resize
-            Viewer.prototype.resize = function() {
-                var _this3 = this;
-
-                if (!this.isShown || this.hiding) {
-                    return;
-                }
-
-                if (this.fulled) {
-                    this.close();
-                    this.initBody();
-                    this.open();
-                }
-
-                this.initContainer();
-                this.initViewer();
-                this.renderViewer();
-                this.renderList();
-
-                if (this.viewed) {
-                    // do not resize image
-                    /*
-                    this.initImage(function() {
-                        _this3.renderImage();
-                    });
-                    _this3.options.viewed();
-                    */
-                }
-
-                if (this.played) {
-                    if (this.options.fullscreen && this.fulled && !(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement)) {
-                        this.stop();
-                        return;
-                    }
-
-                    forEach(this.player.getElementsByTagName('img'), function(image) {
-                        addListener(image, EVENT_LOAD, _this3.loadImage.bind(_this3), {
-                            once: true
-                        });
-                        dispatchEvent(image, EVENT_LOAD);
-                    });
-                }
-            };
-
-            Viewer.prototype.wheel = function(event) {
-                var _this4 = this;
-                if (!this.viewed) {
-                    return;
-                }
-
-                event.preventDefault(); // Limit wheel speed to prevent zoom too fast
-
-                if (this.wheeling) {
-                    return;
-                }
-
-                this.wheeling = true;
-                setTimeout(function() {
-                    _this4.wheeling = false;
-                }, 50);
-                var ratio = Number(this.options.zoomRatio) || 0.1;
-                var delta = 1;
-
-                if (event.deltaY) {
-                    delta = event.deltaY;
-                } else if (event.wheelDelta) {
-                    delta = -event.wheelDelta;
-                } else if (event.detail) {
-                    delta = event.detail;
-                }
-                this.move(0, -delta);
-            };
-        }
-
-        /**
-         * Behavior of suggested term
-         * @param {*} e 
-         * @returns 
-         */
-        function suggClick(e) {
-            let a = selfOrAncestor(e.target, 'a');
-            if (!a) return;
-            if (!a.classList.contains('sugg')) return;
-            e.preventDefault();
-            const pars = new URLSearchParams(a.search);
-            const q = pars.get('q');
-            if (!q) return;
-            form.q.value = q;
-            // form.t.value = q; // non juste l’index
-            Formajax.divLoad('mots');
-            window.history.pushState({}, window.title, window.location);
-
-        }
-        /**
-         * Behavior of entries
-         * @param {*} e 
-         * @returns 
-         */
-        function entreesClick(e) {
-            let a = selfOrAncestor(e.target, 'a');
-            if (!a) return;
-            if (!a.classList.contains('entree')) return;
-            // https://www.biusante.parisdescartes.fr/iiif/2/bibnum:45674x04:%%/full/full/0/default.jpg
-            // https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=pharma_019428x01&amp;p=444"
-            // https://www.biusante.parisdescartes.fr/iiif/2/bibnum:47661x59:0122/0,512,512,512/512,/0/default.jpg
-            let found = a.search.match(/cote=([^&]*)/);
-            if (!found) return; // url error ?
-            // seems we can prevent default now
-            e.preventDefault();
-            const cote = found[1];
-            found = a.search.match(/p=([^&]*)/);
-            if (!found) return; // url error ?
-            const page = found[1];
-            let p = pad(page, 4);
-            const url = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ':' + p + '/full/full/0/default.jpg';
-            image.src = url;
-
-            let link = document.getElementById('medica-ext');
-            let html = a.html; // if prev / next link, see down
-            if (!html) html = a.innerHTML;
-            found = html.match(/p\.[  ](\d+)/);
-            let folio = null;
-            if (found) folio = parseInt(found[1]);
-            if (link) {
-                link.innerHTML = html;
-                link.href = a.href;
-            }
-            link = document.getElementById('medica-prev');
-            if (link) {
-                p = parseInt(page) - 1;
-
-                let href = a.href.replace(/p=([^&]*)/, 'p=' + p);
-                link.href = href;
-                let ht = html;
-                if (folio) ht = ht.replace(/p\.[  ]\d+/, 'p. ' + (folio - 1));
-                link.html = ht;
-                link.onclick = entreesClick;
-            }
-            link = document.getElementById('medica-next');
-            if (link) {
-                p = parseInt(page) + 1;
-                let href = a.href.replace(/p=([^&]*)/, 'p=' + p);
-                link.href = href;
-                let ht = html;
-                if (folio) ht = ht.replace(/p\.[  ]\d+/, 'p. ' + (folio + 1));
-                link.html = ht;
-                link.onclick = entreesClick;
-            }
-
-
-
-            pageViewer.update();
-            // change class
-            if (document.lastEntree) document.lastEntree.classList.remove('active');
-            if (a.classList.contains("active")) {
-                a.classList.remove('active');
-            } else {
-                document.lastEntree = a;
-                a.classList.add('active');
-            }
-        }
-
-        function pad(num, width) {
-            var s = "000000000" + num;
-            return s.substring(s.length - width);
-        }
-
-        function selfOrAncestor(el, name) {
-            while (el.tagName.toLowerCase() != name) {
-                el = el.parentNode;
-                if (!el) return false;
-                let tag = el.tagName.toLowerCase();
-                if (tag == 'div' || tag == 'nav' || tag == 'body') return false;
-            }
-            return el;
-        }
-
-        /**
-         * When click in mots, do things
-         */
-        function motsClick(e) {
-            e.preventDefault();
-            // catch a link inside column of terms
-            let a = selfOrAncestor(e.target, 'a');
-            if (!a) return;
-            const pars = new URLSearchParams(a.search);
-            const terme = pars.get('t');
-
-            // push history
-            form['t'].value = terme;
-            const url = new URL(window.location);
-            url.search = Formajax.pars();
-            window.history.pushState({}, terme, url);
-
-
-            // Update frames
-            Formajax.divLoad('entrees');
-            Formajax.divLoad('sugg');
-            Formajax.divLoad('trad');
-            // change class
-            if (document.lastIndex) document.lastIndex.classList.remove('active');
-            if (a.classList.contains("active")) {
-                a.classList.remove('active');
-            } else {
-                document.lastIndex = a;
-                a.classList.add('active');
-            }
-        }
-        return {
-            init: init,
-        }
-    }();
     Medict.init();
     const splitH = Split(['#col1', '#col2', '#col3'], {
         sizes: [20, 30, 50],
@@ -872,6 +912,11 @@ const Formajax = function() {
         direction: 'vertical',
         gutterSize: 3,
     });
+    // hook to update image viewer
+    Split.dragEnd = function(e) {
+        Medict.viewer.resize();
+        Medict.viewer.update();
+    };
 })();
 
 

@@ -16,7 +16,7 @@ include_once(dirname(__DIR__) . "/Medict.php");
 
 use Oeuvres\Kit\{Web};
 
-function titre(&$cotes, $row)
+function titre(&$cotes, &$row)
 {
     $div = '';
     $checked = '';
@@ -25,15 +25,34 @@ function titre(&$cotes, $row)
     }
     $div .= '
   <div class="titre">
-    <input name="'. Medict::COTE . '" value="' . $row['cote'] . '"' . $checked .' id="check_' . $row['cote'] . '" type="checkbox"/>
-    <label for="check_' . $row['cote'] . '" title="' . $row['bibl'] . '">
-      <span class="annee">' . $row['annee'] . ', </span><span class="nom">' . $row['nom'] . '</span>
+    <input name="'. Medict::F . '" value="' . $row['cote'] . '"' . $checked .' id="check_' . $row['cote'] . '" type="checkbox"/>
+    <label for="check_' . $row['cote'] . '" title="' . strip_tags($row['bibl']) . '"><span class="nom">' . $row['nom'] . '</span>
     </label>
   </div>';
     return $div;
 }
+?>
 
-$cotes = Web::pars(Medict::COTE);
+<div id="titres_body">
+    <header>
+        <div class="selector">
+            <input class="titre_check" id="allF" type="checkbox"/>
+            <label for="allF" id="allFCheck">Tout cocher</label>
+            <label for="allF" id="allFUncheck">Tout décocher</label>
+        </div>
+        <!--
+    <div class="bislide">
+    <div>Limiter la recherche à une période</div>
+    <input name="an1" step="1" value="<?= $an1 ?>" min="<?= $an_min ?>" max="<?= $an_max ?>" type="range"/>
+    <input name="an2" step="1" value="<?= $an2 ?>" min="<?= $an_min ?>" max="<?= $an_max ?>" type="range"/>
+    <div class="values"></div>
+    </div>
+    -->
+    </header>
+    <div id="titres_cols">
+
+<?php
+$cotes = Web::pars(Medict::F);
 if (0 < count($cotes)) { // si cotes demandées, vérifier qu’elles existent
     // load available dico ids from base
     $coteQ = Medict::$pdo->prepare("SELECT cote FROM dico_titre");
@@ -56,3 +75,5 @@ while ($row = $titreQ->fetch(PDO::FETCH_ASSOC)) {
 
 
 ?>
+    </div>
+</div>

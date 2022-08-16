@@ -531,7 +531,9 @@ const Split = (idsOption, options = {}) => {
 
         self.gutter.style.cursor = ''
         self.parent.style.cursor = ''
-        document.body.style.cursor = ''
+        document.body.style.cursor = '';
+        // big bad hack to have hook
+        if (Split.dragEnd) Split.dragEnd();
     }
 
     // startDragging calls `calculateSizes` to store the inital size in the pair object.

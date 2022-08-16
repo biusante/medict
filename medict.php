@@ -18,7 +18,7 @@ class Medict
     /** Constantes */
     const AN1 = "an1";
     const AN2 = "an2";
-    const COTE = "cote";
+    const F = "f";
     const DICO_TITRE = "dico_titre";
     /** SQL link */
     static public $pdo;
@@ -62,13 +62,13 @@ class Medict
         if ($an1 !== null && $an2 !== null && $an2 < $an1) $an2 = $an1;
         $reqPars[self::AN1] = $an1;
         $reqPars[self::AN2] = $an2;
-        // ensure cote
+        // load filter by cote 
         $reqPars[self::DICO_TITRE] = null;
-        $reqPars[self::COTE] = null;
-        $cotes =  Web::pars(self::COTE);
+        $reqPars[self::F] = null;
+        $cotes =  Web::pars(self::F);
         if (count($cotes)) {
             $reqPars[self::DICO_TITRE] = array();
-            $reqPars[self::COTE] = array();
+            $reqPars[self::F] = array();
                 if (!isset(self::$q['cote_id'])) {
                 self::$q['cote_id'] = self::$pdo->prepare("SELECT id FROM dico_titre WHERE cote = ?");
             }
@@ -77,11 +77,12 @@ class Medict
                 self::$q['cote_id']->execute(array($cote));
                 $row = self::$q['cote_id']->fetch(PDO::FETCH_ASSOC);
                 if (!$row) continue;
-                $reqPars[self::COTE][] = $cote;
+                $reqPars[self::F][] = $cote;
                 $reqPars[self::DICO_TITRE][] = $row['id'];
             }
-            if (count($reqPars[self::COTE]) < 1 || count($reqPars[self::DICO_TITRE]) < 1) {
-                $reqPars[self::COTE] = null;
+            // renull s’il n’y a rien 
+            if (count($reqPars[self::F]) < 1 || count($reqPars[self::DICO_TITRE]) < 1) {
+                $reqPars[self::F] = null;
                 $reqPars[self::DICO_TITRE] = null;
             }
         }
@@ -176,8 +177,10 @@ class Medict
         $block .= '<div class="entree">';
         $block .= '<a class="entree" target="facs" href="' . $url . '">';
         $block .= '<b>' . $entree['vedette'] . '</b>.';
-        $block .= ' <i>' . $entree['nom_volume'] . '</i>, ' . $entree['annee_volume'] . ', ';
-        if ($entree['page2'] != null) $block .= "pps. " . $entree['page'] . '-' . $entree['page2'];
+        $block .= ' <i>' . $entree['nom_volume'] . '</i>, ' 
+        // . $entree['annee_volume'] . ', '
+        ;
+        if ($entree['page2'] != null) $block .= "p. " . $entree['page'] . '-' . $entree['page2'];
         else $block .= "p. " . $entree['page'];
         $block .= ".</a>";
         $block .= "</div>";
