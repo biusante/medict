@@ -1833,6 +1833,7 @@
          * @returns {Viewer} this
          */
         show: function show() {
+
             var immediate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
             var element = this.element,
                 options = this.options;
@@ -2710,6 +2711,7 @@
         full: function full() {
             var _this9 = this;
 
+
             var options = this.options,
                 viewer = this.viewer,
                 image = this.image,
@@ -2930,7 +2932,7 @@
 
             // [FG] do no wait for an image to load if update requested
             if (this.viewing) {
-                console.log("viewing ? Abort");
+                // console.log("viewing ? Abort");
                 this.viewing.abort();
                 this.view();
             }

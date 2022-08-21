@@ -49,33 +49,7 @@ $body_class = $page;
                 <div id="main-logo-container">
                     <span class="logo-img-helper"></span>
                     <a href="https://u-paris.fr/"><img src="https://www.biusante.parisdescartes.fr/histoire/medica/assets/images/UniversiteParisCite_logo_horizontal_couleur_RVB.png" alt=""></a>
-                </div>
-                <div id="menu-container">
-                    <div id="site-name">
-                        <a href="https://u-paris.fr/bibliotheques">Bibliothèques d'Université Paris Cité</a>
-                    </div>
-                    <div id="menu-icon" class="toggle-responsive-menu">
-                        <span class="icon-menu"></span>
-                    </div>
-                    <div id="menu-niveau1-conteneur">
-                        <div id="close-menu-icon" class="toggle-responsive-menu"><span class="icon-cancel"></span></div>
-                        <ol>
-                            <li class="section-histoire menu-item-niveau1 actif"><a href="https://www.biusante.parisdescartes.fr/histoire/index.php">Histoire de la santé</a>
-                                <ol>
-                                    <li class="menu-item-niveau2 actif"><a href="https://www.biusante.parisdescartes.fr/histoire/medica/index.php">Bibliothèque numérique <span class="nom-medica">Medica</span></a></li>
-                                    <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/images/index.php">Images et portraits</a></li>
-                                    <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/asclepiades/index.php">Asclépiades (thèses d&rsquo;histoire)</a></li>
-                                    <li class="menu-item-niveau2"><a class="externe" href="http://www.calames.abes.fr" target="_blank">Manuscrits (Calames)</a></li>
-                                    <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/biographies/index.php">Base biographique</a></li>
-                                    <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/medicina/index.php">Medicina (bibliographie)</a></li>
-                                    <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/ebooks-on-demand.php">Numérisation à la demande (EOD)</a></li>
-                                </ol>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-            <div id="fil">
+                    <div id="fil">
                 <ol itemscope itemtype="http://schema.org/BreadcrumbList">
                     <li class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                         <a itemprop="item" href="https://www.biusante.parisdescartes.fr">
@@ -103,6 +77,33 @@ $body_class = $page;
                     </li>
                 </ol>
             </div>
+
+                </div>
+                <div id="menu-container">
+                    <div id="site-name">
+                        <a href="https://u-paris.fr/bibliotheques">Bibliothèques d'Université Paris Cité</a>
+                    </div>
+                    <div id="menu-icon" class="toggle-responsive-menu">
+                        <span class="icon-menu"></span>
+                    </div>
+                    <div id="menu-niveau1-conteneur">
+                        <div id="close-menu-icon" class="toggle-responsive-menu"><span class="icon-cancel"></span></div>
+                        <ol>
+                            <li class="section-histoire menu-item-niveau1 actif"><a href="https://www.biusante.parisdescartes.fr/histoire/index.php">Histoire de la santé</a>
+                                <ol>
+                                    <li class="menu-item-niveau2 actif"><a href="https://www.biusante.parisdescartes.fr/histoire/medica/index.php">Bibliothèque numérique <span class="nom-medica">Medica</span></a></li>
+                                    <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/images/index.php">Images et portraits</a></li>
+                                    <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/asclepiades/index.php">Asclépiades (thèses d&rsquo;histoire)</a></li>
+                                    <li class="menu-item-niveau2"><a class="externe" href="http://www.calames.abes.fr" target="_blank">Manuscrits (Calames)</a></li>
+                                    <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/biographies/index.php">Base biographique</a></li>
+                                    <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/medicina/index.php">Medicina (bibliographie)</a></li>
+                                    <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/ebooks-on-demand.php">Numérisation à la demande (EOD)</a></li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
         </header>
         <!-- Content -->
         <div id="conteneur-ventre">
@@ -114,10 +115,10 @@ $body_class = $page;
             <div id="upper-footer">
                 <div id="logos-institutionnels">
                     <span>
-                        <a href="https://u-paris.fr/bibliotheques" target="_blank"> <img src="https://www.biusante.parisdescartes.fr/histoire/medica/assets/images/MonogrammeUP_43px.jpg" alt="Monogramme Université Paris Cité"></a>
+                        <a href="https://u-paris.fr/bibliotheques" target="_blank"> <img class="logo" src="<?= Route::app_href() ?>theme/UP_monog_48px.png" alt="Monogramme Université Paris Cité"></a>
                     </span>
                     <span>
-                        <img src="https://www.biusante.parisdescartes.fr/histoire/medica/assets/images/LogoIA_43px.jpg" alt="Logo Investissements d'avenir">
+                        <img class="logo" src="<?= Route::app_href() ?>theme/IA_48px.png" alt="Logo Investissements d'avenir">
                     </span>
                 </div>
                 <div id="liens-utilitaires">

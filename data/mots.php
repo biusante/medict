@@ -20,7 +20,7 @@ if ($q) {
     $q = Medict::sortable($q);
 }
 
-$limit = 100; // nombre maximal de vedettes affichées
+$limit = 1000; // nombre maximal de vedettes affichées
 
 // construire la requête de filtrage
 $fwhere = array();

@@ -15,7 +15,7 @@ if (!$t) return; // rien à chercher
 $t = '1' . Medict::sortable($t);
 
 $pars = array($t);
-$sql = "SELECT dico_entree FROM dico_index WHERE terme_sort LIKE ? ";
+$sql = "SELECT * FROM dico_index WHERE terme_sort LIKE ? ";
 
 
 // construire la requête de filtrage
@@ -23,16 +23,6 @@ $where = array();
 // filtre par cote
 if ($reqPars[Medict::DICO_TITRE]) {
     $where[] = " dico_titre IN (" . implode(", ", $reqPars[Medict::DICO_TITRE]) . ")";
-}
-else {
-    if ($reqPars[Medict::AN1] !== null) {
-        $where[] = "annee_titre >= ?";
-        $pars[] =  $reqPars[Medict::AN1];
-    }
-    if ($reqPars[Medict::AN2] !== null) {
-        $where[] = "annee_titre <= ?";
-        $pars[] = $reqPars[Medict::AN2];
-    }
 }
 if (count($where) > 0) {
     $sql .= ' AND ' . implode(' AND ', $where);
@@ -42,7 +32,8 @@ $sql .= " ORDER BY annee_titre";
 echo "<!-- " . $_SERVER['REQUEST_URI'] . "
 $sql
 " . print_r($pars, true) . "
--->\n";
+-->
+";
         
 // $sql .= " ORDER BY mot.annee AND " 
 $motQ = Medict::$pdo->prepare($sql);

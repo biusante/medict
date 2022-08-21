@@ -404,8 +404,8 @@ class Medict {
         // prevent submit before afect it as event
         Medict.form.addEventListener('submit', (e) => {
             e.preventDefault();
-            Medict.motsLoad();
-            // Formajax.divLoad('entrees');
+            Formajax.divLoad('mots');
+            Medict.historyChange();
             return false;
         }, true);
         // send submit when suggest change
@@ -522,6 +522,8 @@ class Medict {
                 Medict.historyChange();
                 // submit form
                 this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
+                Formajax.divLoad('entrees');
+                Formajax.divLoad('sugg');
             }
             // loop on all checkbox
         const ticklist = modal.querySelectorAll("input[type=checkbox][name=f]");
@@ -555,6 +557,8 @@ class Medict {
                 }
                 // submit form
                 this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
+                Formajax.divLoad('entrees');
+                Formajax.divLoad('sugg');
             });
         }
     }
@@ -588,7 +592,10 @@ class Medict {
             url.searchParams.get('p'),
             Medict.sanitize(url.searchParams.get('bibl')),
         );
-
+        /* ?
+        Medict.viewer.resize();
+        Medict.viewer.update();
+        */
     }
 
     /**
@@ -607,15 +614,6 @@ class Medict {
         const url = new URL(window.location);
         url.search = Formajax.pars(include, exclude);
         window.history.replaceState({}, '', url);
-    }
-
-    /**
-     * Update interface ?
-     * @returns 
-     */
-    static motsLoad() {
-        Formajax.divLoad('mots');
-        Medict.historyChange();
     }
 
     static imgError(e) {
@@ -655,17 +653,16 @@ class Medict {
         // inheritedAttributes: null,
         // minWidth: '100%', 
         toolbar: {
-            /*
-            width: function() {
-                let cwidth = Medict.viewer.parent.offsetWidth;
+            width: function(e) {
+                let cwidth = Medict.viewer.viewer.offsetWidth;
                 let iwidth = Medict.viewer.imageData.naturalWidth;
                 let zoom = cwidth / iwidth;
                 Medict.viewer.zoomTo(zoom);
                 Medict.viewer.moveTo(0, Medict.viewer.imageData.y);
             },
-            */
             zoomIn: true,
             zoomOut: true,
+            oneToOne: true,
             /*
             flipVertical: function() {
                 const img = Medict.viewerImg;
@@ -686,9 +683,18 @@ class Medict {
         title: function(image) {
             return null;
         },
+        filter(image) {
+            // do not show empty images
+            return image.src;
+        },
+        show: true,
+        full() {
+            console.log(this.viewer);
+        },
         viewed() {
+
             // default zoom on load, image width
-            let cwidth = Medict.viewer.parent.offsetWidth;
+            let cwidth = Medict.viewer.viewer.offsetWidth;
             let iwidth = Medict.viewer.imageData.naturalWidth;
             let zoom = cwidth / iwidth;
             Medict.viewer.zoomTo(zoom);
@@ -769,19 +775,25 @@ class Medict {
         if (!cote || !p) return;
         p = Medict.pad(p, 4);
         // Biusanté, lien page
-        const href = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&cote=' + cote + '&p=' + p;
+        // const href = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&cote=' + cote + '&p=' + p;
+        const href = 'https://www.biusante.parisdescartes.fr/histmed/medica/page?' + cote + '&p=' + p;
 
         // Biusanté, img moyenne
         const srcLo = 'https://www.biusante.parisdescartes.fr/images/livres/' + cote + '/' + p + '.jpg';
         /*
-        // Biusante, iiif, cassé
-        const srcHi = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ":" + p + '/full/full/0/default.jpg';
-        */
         // Archives.org, iiif, lent
         const srcHi = 'https://iiif.archivelab.org/iiif/BIUSante_' + cote + '$' + (p - 1) + '/full/full/0/default.jpg';
-
-        Medict.imgLo.src = srcLo;
-        Medict.imgHi.src = srcHi;
+        */
+        // Biusante, iiif, cassé
+        const srcHi = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ":" + p + '/full/full/0/default.jpg';
+        // Castelli pas de basse def
+        if (['07399'].includes(cote)) {
+            Medict.imgLo.src = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ":" + p + '/full/pct:50/0/default.jpg';;
+            Medict.imgHi.src = srcHi;
+        } else {
+            Medict.imgLo.src = srcLo;
+            Medict.imgHi.src = srcHi;
+        }
         // Medict.viewer.ready = true; // force abort of current loading
         Medict.viewer.update(); // let viewer show a waiting roll
 
@@ -903,7 +915,7 @@ class Medict {
 
     Medict.init();
     const splitH = Split(['#col1', '#col2', '#col3'], {
-        sizes: [20, 30, 50],
+        sizes: [18, 22, 60],
         direction: 'horizontal',
         gutterSize: 3,
     });

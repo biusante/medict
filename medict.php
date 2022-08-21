@@ -157,12 +157,12 @@ class Medict
                 'æ' => 'ae',
             )
         );
-        // normaliser les espaces
-        $s = preg_replace('/[\s\-]+/', ' ', trim($s));
         // decomposer lettres et accents
         $s = Normalizer::normalize($s, Normalizer::FORM_D);
         // ne conserver que les lettres et les espaces
         $s = preg_replace("/[^\pL\s]/u", '', $s);
+        // normaliser les espaces
+        $s = preg_replace('/[\s\-]+/', ' ', trim($s));
         return $s;
     }
 
@@ -178,7 +178,7 @@ class Medict
         $block .= '<a class="entree" target="facs" href="' . $url . '">';
         $block .= '<b>' . $entree['vedette'] . '</b>.';
         $block .= ' <i>' . $entree['nom_volume'] . '</i>, ' 
-        // . $entree['annee_volume'] . ', '
+        . $entree['annee_volume'] . ', '
         ;
         if ($entree['page2'] != null) $block .= "p. " . $entree['page'] . '-' . $entree['page2'];
         else $block .= "p. " . $entree['page'];

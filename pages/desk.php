@@ -64,7 +64,7 @@ $t = Web::par('t', '');
     <div id="col3">
         <header id="medica">
             <a id="medica-prev" href="#" class="entree"> </a>
-            <a id="medica-ext" target="_blank"></a>
+            <a id="medica-ext" target="_blank" title="Lien vers l’URL pérenne de cette page"></a>
             <a id="medica-next" href="#" class="entree"> </a>
         </header>
         <div>

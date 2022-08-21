@@ -42,10 +42,72 @@ body {
     width: 100%;
 }
 
+#header-main-content {
+    height: auto;
+    width: auto;
+    align-items: flex-end;
+}
+
+#main-logo-container img {
+    height: 55px;
+    padding-bottom: 10px;
+}
+
+#fil {
+    padding: 0;
+}
+
 #pied {
     flex: 0 0 auto;
-    height: auto;
+    height: 22px;
+    background-color: var(--form_bg);
+    /*
     box-shadow: 0 -1px 0 rgba(0, 0, 0, .5);
+    */
+}
+
+#logos-institutionnels {
+    padding: 0;
+}
+
+#logos-institutionnels span {
+    margin: 0;
+}
+
+#pied img.logo {
+    height: 16px;
+}
+
+#pied .up-default-button,
+#pied a.up-default-button,
+#pied .up-footer-button,
+#pied a.up-footer-button {
+    padding: 0 0.8em;
+    border-style: none;
+    line-height: 1.5em;
+}
+
+#pied:hover {
+    padding-top: 5px;
+    transition: all .1s ease 0s;
+    height: auto;
+    background-color: var(--form_bg);
+}
+
+#pied:hover img.logo {
+    height: 48px;
+}
+
+#pied:hover .up-default-button,
+#pied:hover a.up-default-button,
+#pied:hover .up-footer-button,
+#pied:hover a.up-footer-button {
+    padding: 0 0.8em;
+    border-style: solid;
+    border-radius: 26px;
+    line-height: 2.7em;
+    white-space: nowrap;
+    transition: all .2s ease 0s;
 }
 
 #upper-footer>span.clearfix {
@@ -83,9 +145,9 @@ body {
     width: 100%;
     position: relative;
     display: flex;
-    border-bottom: 5px solid var(--form_bg);
-    border-left: 2rem solid var(--form_bg);
-    border-right: 2rem solid var(--form_bg);
+    border-bottom: 3px solid var(--form_bg);
+    border-left: 25px solid var(--form_bg);
+    border-right: 25px solid var(--form_bg);
 }
 
 
@@ -311,7 +373,7 @@ input.an {
     display: none;
     position: fixed;
     z-index: 510;
-    padding: 5rem 2rem 2rem 25%;
+    padding: 5rem 2rem 2rem 40%;
     left: 0;
     top: 0;
     width: 100%;
@@ -362,8 +424,11 @@ input.an {
     display: flex;
 }
 
-#titres_body .sc {
+#medica u,
+a.entree u,
+#titres_body u {
     font-variant: small-caps;
+    text-decoration: none;
 }
 
 #titres_cols {
