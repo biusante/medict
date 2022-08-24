@@ -64,7 +64,7 @@ $body_class = $page;
                         <meta itemprop="position" content="2" />
                     </li>
                     <li class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                        <a itemprop="item" href="/histoire/medica">
+                        <a itemprop="item" href="https://www.biusante.parisdescartes.fr/histoire/medica/">
                             <span itemprop="name">Medica</span>
                         </a>
                         <meta itemprop="position" content="3" />

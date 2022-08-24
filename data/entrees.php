@@ -15,7 +15,7 @@ if (!$t) return; // rien à chercher
 $t = '1' . Medict::sortable($t);
 
 $pars = array($t);
-$sql = "SELECT * FROM dico_index WHERE terme_sort LIKE ? ";
+$sql = "SELECT * FROM dico_index WHERE orth_sort LIKE ? ";
 
 
 // construire la requête de filtrage

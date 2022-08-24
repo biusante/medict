@@ -29,32 +29,22 @@ $fpars = array();
 if ($reqPars[Medict::DICO_TITRE]) {
     $fwhere[] = " dico_titre IN (" . implode(", ", $reqPars[Medict::DICO_TITRE]) . ")";
 }
-else {
-    if ($reqPars[Medict::AN1] !== null) {
-        $fwhere[] = "annee_titre >= ?";
-        $fpars[] =  $reqPars[Medict::AN1];
-    }
-    if ($reqPars[Medict::AN2] !== null) {
-        $fwhere[] = "annee_titre <= ?";
-        $fpars[] = $reqPars[Medict::AN2];
-    }
-}
 // base de la requête sql
-$fsql = "SELECT terme, terme_sort, COUNT(*) AS compte FROM dico_index ";
+$fsql = "SELECT orth, orth_sort, COUNT(*) AS compte FROM dico_index WHERE orth_lang IN ('fra', 'lat', 'grc')";
 
 // première requête, préfixe uniquement, copier les paramètres communs
 $sql = $fsql;
 $where = $fwhere;
 $pars = $fpars;
 if ($q) {
-    $where[] = "terme_sort LIKE ?";
+    $where[] = "orth_sort LIKE ?";
     $pars[] = '1' . $q . '%';
 }
 
 if (count($where) > 0) {
-    $sql .= ' WHERE ' . implode(' AND ', $where);
+    $sql .= ' AND ' . implode(' AND ', $where);
 }
-$sql .= " GROUP BY terme_sort ORDER BY terme_sort LIMIT " . $limit;
+$sql .= " GROUP BY orth_sort ORDER BY orth_sort LIMIT " . $limit;
 $query = Medict::$pdo->prepare($sql);
 echo "<!-- $sql
 " . print_r($where, true) . "
@@ -79,13 +69,13 @@ if ($q) {
     else {
         $v = $q . '*';
     }
-    $where[] = "MATCH (terme_sort) AGAINST (? IN BOOLEAN MODE)";
+    $where[] = "MATCH (orth_sort) AGAINST (? IN BOOLEAN MODE)";
     $pars[] = $v;
 }
 if (count($where) > 0) {
-    $sql .= ' WHERE ' . implode(' AND ', $where);
+    $sql .= ' AND ' . implode(' AND ', $where);
 }
-$sql .= " GROUP BY terme_sort ORDER BY terme_sort LIMIT " . $limit;
+$sql .= " GROUP BY orth_sort ORDER BY orth_sort LIMIT " . $limit;
 $query = Medict::$pdo->prepare($sql);
 echo "<!-- $sql
 " . print_r($where, true) . "
@@ -100,9 +90,9 @@ echo '<!--', number_format(microtime(true) - $starttime, 3), ' s. -->';
 
 
 function html(&$row, $q) {
-    $href = '?t=' . $row['terme_sort'];
-    $title = htmlspecialchars($row['terme']);
-    $value = Medict::hilite($q, $row['terme']);
+    $href = '?t=' . $row['orth_sort'];
+    $title = htmlspecialchars($row['orth']);
+    $value = Medict::hilite($q, $row['orth']);
     echo '<a href="' . $href .'">' . $value . ' <small>(', $row['compte'], ')</small></a>', "\n";
     flush();
 }

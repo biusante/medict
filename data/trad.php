@@ -24,10 +24,17 @@ $q_mot->execute(array($t));
 echo "<!-- $sql ; $t -->\n";
 
 $q_entree = Medict::$pdo->prepare("SELECT * FROM dico_entree WHERE id = ?");
-$last = null;
+$last_sort = null;
+$last_lang = null;
 while ($row = $q_mot->fetch(PDO::FETCH_ASSOC)) {
-    if ($last != $row['dst_sort']) {
-        if ($last !== null) {
+    if (
+        $last_lang != $row['dst_lang']
+        || $last_sort != $row['dst_sort']
+    ) {
+        $last_lang = $row['dst_lang'];
+        $last_sort = $row['dst_sort'];
+        // fermer le dernier
+        if ($last_sort !== null) {
             echo "\n</details>";
             echo "\n&#10;";
             flush();
@@ -35,7 +42,6 @@ while ($row = $q_mot->fetch(PDO::FETCH_ASSOC)) {
         echo '
 <details class="sugg">
     <summary>[' . $row['dst_lang'] . '] <a class="sugg" href="?q=' . rawurlencode($row['dst']) . '">' . $row['dst'] . '</a></summary>';
-        $last = $row['dst_sort'];
     }
     $q_entree->execute(array($row['dico_entree']));
     $entree = $q_entree->fetch();

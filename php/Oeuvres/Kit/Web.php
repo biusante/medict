@@ -242,7 +242,7 @@ class Web
      * $query : optional, a "query string" ?cl%C3%A9=%C3%A9%C3%A9&param=valeur1&param=&param=valeur2
      * return : Array (
      *   "clé" => array("éé"),
-     *   "param" => array("valeur1", "", "valeur2")
+     *   "param" => array("value1", "", "value2")
      *)
      */
     public static function pars(

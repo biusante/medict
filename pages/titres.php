@@ -24,11 +24,22 @@ function titre(&$cotes, &$row)
         $checked = "\n".'      checked="checked"';
     }
     $div .= '
-  <div class="titre">
-    <input name="'. Medict::F . '" value="' . $row['cote'] . '"' . $checked .' id="check_' . $row['cote'] . '" type="checkbox"/>
-    <label for="check_' . $row['cote'] . '" title="' . strip_tags($row['bibl']) . '"><span class="nom">' . $row['nom'] . '</span>
-    </label>
-  </div>';
+<div class="titre">
+  <input type="checkbox"
+    name="'. Medict::F . '" 
+    value="' . $row['cote'] . '" 
+    '. $checked .'
+    id="check_' . $row['cote'] . '"
+    data-annee="'. $row['annee'] .'" 
+    data-nom="'. strip_tags($row['nom']) .'"
+    class="' . $row['class'] . '"
+  />
+  <label for="check_' . $row['cote'] . '"
+    title="' . strip_tags($row['bibl']) . '"
+  >
+    <span class="nom">' . $row['nom'] . '</span>
+  </label>
+</div>';
     return $div;
 }
 ?>
