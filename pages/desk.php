@@ -9,9 +9,11 @@ use Oeuvres\Kit\{Web};
 
 /** Search form  */
 
-list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee_titre), MAX(annee_titre) FROM dico_entree")->fetch();
+/*
+list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(titre_annee), MAX(titre_annee) FROM dico_titre")->fetch();
 $an1 = Web::par('an1', $an_min);
 $an2 = Web::par('an2', $an_max);
+*/
 $q = Web::par('q', 'a');
 $t = Web::par('t', '');
 

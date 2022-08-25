@@ -54,7 +54,7 @@ class Medict
     public static function reqPars()
     {
         $reqPars = array();
-        list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee_titre), MAX(annee_titre) FROM dico_entree")->fetch();
+        list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee), MAX(annee) FROM dico_titre")->fetch();
         $an1 = Web::par(self::AN1, null);
         if ($an1 <=  $an_min) $an1 = null;
         $an2 = Web::par(self::AN2, null);
@@ -171,17 +171,23 @@ class Medict
      */
     public static function entree(&$entree)
     {
-        $url = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=' . $entree['cote_volume'] . '&amp;p=' . $entree['refimg'];
+        $url = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=' . $entree['volume_cote'] . '&amp;p=' . $entree['refimg'];
 
         $block = '';
         $block .= '<div class="entree">';
         $block .= '<a class="entree" target="facs" href="' . $url . '">';
-        $block .= '<b>' . $entree['vedette'] . '</b>.';
-        $block .= ' <i>' . $entree['nom_volume'] . '</i>, ' 
-        . $entree['annee_volume'] . ', '
-        ;
-        if ($entree['page2'] != null) $block .= "p. " . $entree['page'] . '-' . $entree['page2'];
-        else $block .= "p. " . $entree['page'];
+        $block .= '<b>' . $entree['vedette'] . '</b>';
+        $block .= '. <i>' . $entree['titre_nom'] . '</i>, ' 
+        . $entree['volume_annee'];
+        if ($entree['volume_soustitre']) {
+            $block .= ", " . $entree['volume_soustitre'];
+        }
+        if ($entree['page2'] != null) {
+            $block .= ", p. " . $entree['page'] . '-' . $entree['page2'];
+        }
+        else {
+            $block .= ", p. " . $entree['page'];
+        }
         $block .= ".</a>";
         $block .= "</div>";
         return $block;

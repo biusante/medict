@@ -16,7 +16,7 @@ if (!$src) return; // rien à chercher
 
 $starttime = microtime(true);
 
-$sql = "SELECT * FROM dico_sugg WHERE src_sort = ? AND cert = 1 ORDER BY dst_sort";
+$sql = "SELECT * FROM dico_sugg WHERE src_sort = ? AND cert = 1 ORDER BY dst_sort, volume_annee";
 $qsugg = Medict::$pdo->prepare($sql);
 $qsugg->execute(array($src));
 
@@ -57,6 +57,9 @@ while ($sugg = $qsugg->fetch(PDO::FETCH_ASSOC)) {
     }
     $qentree->execute(array($sugg['dico_entree']));
     $entree = $qentree->fetch();
+    $entree['page'] = $sugg['page'];
+    $entree['page2'] = null;
+    $entree['refimg'] = $sugg['refimg'];
     echo "\n".Medict::entree($entree);
 }
 echo "\n</details>";

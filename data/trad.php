@@ -17,7 +17,7 @@ if (!$t) return; // rien à chercher
 
 $starttime = microtime(true);
 
-$sql = "SELECT * FROM dico_trad WHERE src_sort = ? AND src_lang IN ('fra', 'lat', 'grc') ORDER BY dst_langno, dst_sort";
+$sql = "SELECT * FROM dico_trad WHERE src_sort = ? AND src_lang IN ('fra', 'lat', 'grc') ORDER BY dst_langno, dst_sort, volume_annee, page";
 $q_mot = Medict::$pdo->prepare($sql);
 $q_mot->execute(array($t));
 
@@ -45,6 +45,9 @@ while ($row = $q_mot->fetch(PDO::FETCH_ASSOC)) {
     }
     $q_entree->execute(array($row['dico_entree']));
     $entree = $q_entree->fetch();
+    $entree['page'] = $row['page'];
+    $entree['page2'] = null;
+    $entree['refimg'] = $row['refimg'];
     echo "\n".Medict::entree($entree);
 }
 echo "\n</details>";
