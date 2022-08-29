@@ -9,6 +9,12 @@
     --form_color: #7e8b49;
     --button_bg: #464d28;
     --button_color: #c8d0a6;
+    --med: rgba(128, 0, 0, .5);
+    --vet: rgba(96, 32, 0, .5);
+    --pharm: rgba(0, 0, 128, .5);
+    --sc: rgba(0, 32, 96, .5);
+    --hist: rgba(128, 128, 128, .5);
+    --biogr: rgba(96, 96, 128, .5);
 }
 
 
@@ -175,9 +181,34 @@ form.recherche {
 }
 
 form.recherche button,
-form.recherche input {
+form.recherche input[type="text"] {
     border: 1px solid var(--form_color);
     border-radius: 3px;
+}
+
+[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    margin: 0.2rem 0.5rem;
+    font: inherit;
+    color: var(--form_border);
+    width: 1rem;
+    height: 1rem;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--form_border);
+    border-radius: 3px;
+    background-color: var(--bg);
+    /*
+    box-shadow: inset 0px 0px 3px var(--form_border);
+    */
+}
+
+[type="checkbox"]:checked {
+    border-color: var(--form_border);
+    background-color: var(--form_bg);
+    box-shadow: inset 0px 0px 5px var(--form_border);
 }
 
 form.recherche .topmarg {
@@ -196,6 +227,12 @@ form.recherche .bislide .values {
 #q {
     text-align: left;
     padding: 0.1rem 1rem;
+}
+
+#q::placeholder {
+    font-weight: normal;
+    font-style: italic;
+    font-size: 85%;
 }
 
 form.recherche button {
@@ -354,15 +391,17 @@ input.an {
 /* checks titre */
 
 #titres_open {
+    /*
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    */
     text-align: center;
     font-size: 1.2rem;
     border: 1px solid var(--form_color);
     border-radius: 3px;
     cursor: pointer;
     height: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 #titres_open:hover {
@@ -373,7 +412,7 @@ input.an {
     display: none;
     position: fixed;
     z-index: 510;
-    padding: 5rem 2rem 2rem 40%;
+    padding: 2rem 2rem 2rem 30%;
     left: 0;
     top: 0;
     width: 100%;
@@ -384,8 +423,8 @@ input.an {
 
 .modal .close {
     position: absolute;
-    top: 15px;
-    right: 35px;
+    top: -10px;
+    right: 0px;
     color: #f1f1f1;
     font-size: 40px;
     font-weight: bold;
@@ -401,7 +440,6 @@ input.an {
 
 #titres_body {
     height: 100%;
-    padding: 1rem;
     background-color: #fff;
     display: flex;
     flex-flow: column;
@@ -413,25 +451,35 @@ input.an {
 }
 
 #titres_body header {
-    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
     display: flex;
+    border-bottom: 1px solid var(--form_border);
 }
 
 #titres_body .selector {
+    /*
     border: 1px solid var(--form_color);
     padding: 0.2rem 1rem 0.2rem 0;
+    */
     cursor: pointer;
     display: flex;
+    align-items: center
 }
 
 #medica u,
 a.entree u,
+form u,
 #titres_body u {
     font-variant: small-caps;
     text-decoration: none;
 }
 
+#titres_body u {
+    font-size: larger;
+}
+
 #titres_cols {
+    padding: 1rem 0 1rem 1rem;
     overflow: auto;
     display: flex;
     flex-direction: column;
@@ -439,28 +487,71 @@ a.entree u,
 }
 
 #titres_cols>* {
-    width: 50%;
+    /* width: 49%; */
     display: flex;
     position: relative;
+    align-items: center;
+    margin-bottom: 1px;
+    padding: 1px 0;
+    margin: 1px 1rem 0 0;
+}
+
+#titres_cols .titre:hover {
+    box-shadow: inset 0px 0px 5px var(--form_border);
 }
 
 #titres_cols>* label {
     width: 100%;
 }
 
-#titres_cols .titre {
-    border: 1px solid transparent;
+.selector.tag,
+#titres_cols .titre mark {
+    border-radius: 0.5rem;
+    padding: 0 0.2rem;
+    margin-left: 0.5rem;
+    color: var(--bg);
+    font-size: 90%;
 }
 
-#titres_cols .titre:hover {
-    border-color: var(--form_color);
+#titres_cols .titre mark {
+    white-space: nowrap;
+}
+
+.selector.med,
+mark.med {
+    background-color: var(--med);
+}
+
+.selector.vet,
+mark.vet {
+    background-color: var(--vet);
+}
+
+.selector.pharm,
+mark.pharm {
+    background-color: var(--pharm);
+}
+
+.selector.sc,
+mark.sc {
+    background-color: var(--sc);
+}
+
+.selector.hist,
+mark.hist {
+    background-color: var(--hist);
+}
+
+.selector.biogr,
+mark.biogr {
+    background-color: var(--biogr);
 }
 
 #titres_cols .titre.checked {
     background-color: var(--bg);
 }
 
-#coteAllUncheck {
+#allFUncheck {
     display: none;
 }
 

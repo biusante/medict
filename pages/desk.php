@@ -14,7 +14,7 @@ list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(titre_annee), MAX(titre
 $an1 = Web::par('an1', $an_min);
 $an2 = Web::par('an2', $an_max);
 */
-$q = Web::par('q', 'a');
+$q = Web::par('q', '');
 $t = Web::par('t', '');
 
 ?>
@@ -23,18 +23,13 @@ $t = Web::par('t', '');
         <form name="medict" class="recherche scrollable" autocomplete="off">
             <div>
                 <div>Rechercher un terme dans les vedettes</div>
-                <input name="q" id="q" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
+                <input name="q" id="q" placeholder="Taper une lettre" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
                 <input type="hidden" name="t" value="<?= htmlspecialchars($t, ENT_QUOTES, 'UTF-8'); ?>"/>
                 <input type="hidden" name="cote" value="<?= htmlspecialchars( Web::par('cote', ''), ENT_QUOTES, 'UTF-8'); ?>"/>
                 <input type="hidden" name="p" value="<?= intval( Web::par('p', '')); ?>"/>
                 <input type="hidden" name="bibl" />
             </div>
-            <br/>
-            <div title="Cliquer pour accéder à la liste des titres à sélectionner" id="titres_open">Liste des titres</div>
-            <div id="titres_modal" class="modal">
-                <span class="close">×</span>
-                <?php require(__DIR__.'/titres.php') ?>
-            </div>
+            <?php include(__DIR__.'/titres.php') ?>
             <button type="submit">Go</button>
         </form>
         <nav id="mots" class="data"  data-url="data/mots">

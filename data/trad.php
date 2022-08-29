@@ -45,9 +45,16 @@ while ($row = $q_mot->fetch(PDO::FETCH_ASSOC)) {
     }
     $q_entree->execute(array($row['dico_entree']));
     $entree = $q_entree->fetch();
+    if (!$entree) {
+        // pas normal, mais déjà vu
+        continue;
+    }
+
     $entree['page'] = $row['page'];
     $entree['page2'] = null;
     $entree['refimg'] = $row['refimg'];
+
+
     echo "\n".Medict::entree($entree);
 }
 echo "\n</details>";

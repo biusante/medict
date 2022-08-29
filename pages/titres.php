@@ -16,41 +16,73 @@ include_once(dirname(__DIR__) . "/Medict.php");
 
 use Oeuvres\Kit\{Web};
 
-function titre(&$cotes, &$row)
-{
-    $div = '';
-    $checked = '';
-    if ($cotes && isset($cotes[$row['cote']])) {
-        $checked = "\n".'      checked="checked"';
-    }
-    $div .= '
-<div class="titre">
-  <input type="checkbox"
-    name="'. Medict::F . '" 
-    value="' . $row['cote'] . '" 
-    '. $checked .'
-    id="check_' . $row['cote'] . '"
-    data-annee="'. $row['annee'] .'" 
-    data-nom="'. strip_tags($row['nom']) .'"
-    class="' . $row['class'] . '"
-  />
-  <label for="check_' . $row['cote'] . '"
-    title="' . strip_tags($row['bibl']) . '"
-  >
-    <span class="nom">' . $row['nom'] . '</span>
-  </label>
-</div>';
-    return $div;
+// load available dico ids from base
+$biblio = array();
+$coteQ = Medict::$pdo->prepare("SELECT cote, annee, an_max FROM dico_titre");
+$coteQ->execute();
+while ($row = $coteQ->fetch(PDO::FETCH_ASSOC)) {
+    $biblio[$row['cote']] = [$row['annee'], $row['an_max']];
 }
+$coteQ->fetchAll(PDO::FETCH_COLUMN, 0);
+
+// nom de la sélection
+$selname = "Tout sauf <u>Vidal</u>";
+// corpus requested ?
+$fdic = Web::pars(Medict::F);
+if (0 == count($fdic)) { // tout sauf Vidal
+    $fdic = $biblio;
+    unset($fdic['pharma_p11247']);
+}
+else if (0 < count($fdic)) { // si cotes demandées, vérifier qu’elles existent
+    $fdic = array_intersect($fdic, array_keys($biblio));
+    $fdic = array_flip($fdic);
+    // titrer la sélection
+    $count = count($fdic);
+    $min = 10000;
+    $max = 0;
+    foreach ($fdic as $cote => $blah) {
+        $dates = $biblio[$cote];
+        $min = min($min, $dates[0]);
+        if ($dates[1]) $max = max($max, $dates[1]);
+        else $max = max($max, $dates[0]);
+    }
+    $selname = $min;
+    if ($min != $max) $selname .=  ' – ' . $max;
+    if (1 == $count) $selname .= ' (1 titre)';
+    else $selname .= ' (' . $count . ' titres)';
+}
+
 ?>
 
-<div id="titres_body">
-    <header>
-        <div class="selector">
-            <input class="titre_check" id="allF" type="checkbox"/>
-            <label for="allF" id="allFCheck">Tout cocher</label>
-            <label for="allF" id="allFUncheck">Tout décocher</label>
-        </div>
+<div>
+    <div>Sélection de titres</div>
+    <div title="Cliquer pour accéder à la liste des titres à sélectionner" id="titres_open"><?=  $selname ?></div>
+</div>
+<div id="titres_modal" class="modal">
+    <span class="close">×</span>
+    <div id="titres_body">
+        <header>
+            <label>Ordre :
+                <select id="sortitres">
+                    <option value="annee">années</option>
+                    <option value="tags">mots-clés</option>
+                    <option value="nom">noms</option>
+                </select>
+            </label>
+            <div class="selector">
+                <input class="titre_check" id="allF" type="checkbox"/>
+                <label for="allF">Tout cocher / décocher</label>
+            </div>
+<?php
+foreach (Medict::TAGS as $tag => $a) {
+    echo '
+        <div class="selector tag ' . $tag .'">
+            <input class="titre_check" value="' . $tag . '" id="all' .$tag .'" type="checkbox"/>
+            <label for="all' . $tag .'">' . $a[1] .'</label>
+        </div>';
+}
+
+?>
         <!--
     <div class="bislide">
     <div>Limiter la recherche à une période</div>
@@ -59,20 +91,10 @@ function titre(&$cotes, &$row)
     <div class="values"></div>
     </div>
     -->
-    </header>
-    <div id="titres_cols">
+        </header>
+        <div id="titres_cols">
 
 <?php
-$cotes = Web::pars(Medict::F);
-if (0 < count($cotes)) { // si cotes demandées, vérifier qu’elles existent
-    // load available dico ids from base
-    $coteQ = Medict::$pdo->prepare("SELECT cote FROM dico_titre");
-    $coteQ->execute();
-    $biblio = $coteQ->fetchAll(PDO::FETCH_COLUMN, 0);
-    $cotes = array_intersect($cotes, $biblio);
-}
-if (0 < count($cotes)) $cotes = array_flip($cotes);
-else $cotes = null;
 
 $sql = "SELECT * FROM dico_titre ";
 $titreQ = Medict::$pdo->prepare($sql);
@@ -81,10 +103,52 @@ echo '
 ';
 while ($row = $titreQ->fetch(PDO::FETCH_ASSOC)) {
     if (!$row['cote']) continue; // buggy when a title has no cote
-    echo titre($cotes, $row);
+    $checked = ($fdic && isset($fdic[$row['cote']]));
+    echo titre($row, $checked);
 }
-
-
 ?>
+        </div>
     </div>
 </div>
+
+<?php
+
+function titre(&$row, $checked = false)
+{
+    if ($checked) $checked = "\n".'      checked="checked"';
+    else $checked = '';
+
+    $badges = '';
+    foreach (preg_split("/\s+/", $row['class']) as $tag) {
+        $badges .= ' <mark'
+            . ' class="' . $tag . '"'
+            . ' title="' . Medict::TAGS[$tag][1] . '"'
+            . '>'
+            . Medict::TAGS[$tag][0]
+            . '</mark>'
+        ;
+    }
+
+    $div = '';
+    $div .= '
+<div class="titre"
+    data-annee="'. $row['annee'] .'" 
+    data-an_max="'. $row['an_max'] .'" 
+    data-nom="'. strip_tags($row['nom']) .'"
+    data-tags="'. $row['class'] .'"
+>
+  <input type="checkbox"
+    name="'. Medict::F . '" 
+    value="' . $row['cote'] . '" 
+    '. $checked .'
+    id="check_' . $row['cote'] . '"
+    class="' . $row['class'] . '"
+  />
+  <label for="check_' . $row['cote'] . '"
+    title="' . strip_tags($row['bibl']) . '"
+  >' . $row['nomdate'] . $badges . '
+  </label>
+</div>';
+    return $div;
+}
+?>

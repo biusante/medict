@@ -524,6 +524,7 @@ class Medict {
                 this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
                 Formajax.divLoad('entrees');
                 Formajax.divLoad('sugg');
+                Medict.titreLabel();
             }
             // loop on all checkbox
         const ticklist = modal.querySelectorAll("input[type=checkbox][name=f]");
@@ -541,7 +542,7 @@ class Medict {
                 // all or none, exclude url par
                 // update URL but do not add entry in history
                 Medict.historyChange(null, ['f']);
-
+                /*
                 if (flag) {
                     document.getElementById('allFCheck').style.display = 'none';
                     document.getElementById('allFUncheck').style.display = 'block';
@@ -549,18 +550,100 @@ class Medict {
                     document.getElementById('allFCheck').style.display = 'block';
                     document.getElementById('allFUncheck').style.display = 'none';
                 }
+                */
                 for (let i = 0; i < ticklist.length; ++i) {
                     const checkbox = ticklist[i];
                     checkbox.checked = flag;
                     if (flag) checkbox.parentNode.classList.add("checked");
                     else checkbox.parentNode.classList.remove("checked");
                 }
+                // sélecteurs de tags
+                const alltag = modal.querySelectorAll(".selector.tag input");
+                for (let i = 0; i < alltag.length; ++i) {
+                    const checkbox = alltag[i];
+                    checkbox.checked = flag;
+                }
                 // submit form
                 this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
                 Formajax.divLoad('entrees');
                 Formajax.divLoad('sugg');
+                Medict.titreLabel();
             });
         }
+        const alltag = modal.querySelectorAll(".selector.tag input");
+        for (let i = 0; i < alltag.length; ++i) {
+            const checkbox = alltag[i];
+            const tag = checkbox.value;
+            if (!tag) continue;
+            checkbox.addEventListener("change", function(e) {
+                const flag = this.checked;
+                let selector = "input." + tag;
+                if (!flag) {
+                    selector = 'input[class="' + tag + '"]';
+                }
+                const tiktag = modal.querySelectorAll(selector);
+                for (let x = 0; x < tiktag.length; x++) {
+                    const tik = tiktag[x];
+                    tik.checked = flag;
+                    if (flag) tik.parentNode.classList.add("checked");
+                    else tik.parentNode.classList.remove("checked");
+                }
+                this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true })); // met à jour l’url
+                Formajax.divLoad('entrees');
+                Formajax.divLoad('sugg');
+                Medict.titreLabel();
+            });
+        }
+        Medict.titresOrdre();
+    }
+
+    /**
+     * Trier les titres par attribut
+     */
+    static titresOrdre() {
+        const nodeset = document.querySelectorAll("div.titre");
+        const divs = Array.from(nodeset);
+        const sortitres = document.getElementById('sortitres');
+        const titres_cols = document.getElementById('titres_cols');
+        sortitres.addEventListener("change", function(e) {
+            const field = this.value;
+            divs.sort(function(a, b) {
+                return a.dataset[field].localeCompare(b.dataset[field]);
+            });
+            divs.forEach(function(el) {
+                titres_cols.appendChild(el);
+            });
+        });
+    }
+
+    /**
+     * Construire un nom aide-mémoire pour une sélection
+     */
+    static titreLabel() {
+        let count = 0;
+        let datemin = 20000;
+        let datemax = 0;
+        // loop on all checkbox
+        const tiklist = document.querySelectorAll("input[type=checkbox][name=f]");
+        for (let i = 0; i < tiklist.length; i++) {
+            const tik = tiklist[i];
+            if (!tik.checked) continue;
+            const annee = tik.parentElement.dataset.annee;
+            count++;
+            datemin = Math.min(datemin, annee);
+            datemax = Math.max(datemax, annee);
+            const an_max = tik.parentElement.dataset.an_max;
+            if (an_max) datemax = Math.max(datemax, an_max);
+        }
+        let label = "Tout les titres";
+        if (count) {
+            label = datemin;
+            if (datemin != datemax) label += ' – ' + datemax;
+            if (1 == count) label += ' (1 titre)';
+            else label += ' (' + count + ' titres)';
+        }
+        var div = document.getElementById('titres_open');
+        if (div) div.innerHTML = label;
     }
 
     /**

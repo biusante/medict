@@ -15,6 +15,7 @@ $starttime = microtime(true);
 $reqPars = Medict::reqPars();
 
 $q = Web::par('q', null);
+if (!$q) return;
 
 if ($q) {
     $q = Medict::sortable($q);

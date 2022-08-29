@@ -11,8 +11,10 @@ use Oeuvres\Kit\{Web};
 
 // une veddette à chercher
 $src = preg_replace('@^1@', '', Web::par('t', null));
-if (!$src) return; // rien à chercher
-
+if (!$src) {
+    echo '<!-- Aucun mot cherché. -->';
+    return; // rien à chercher
+}
 
 $starttime = microtime(true);
 
@@ -24,7 +26,7 @@ $qfilter = null;
 // filtre par cote
 $reqPars = Medict::reqPars();
 if ($reqPars[Medict::DICO_TITRE]) {
-    $sql = "SELECT terme, terme_sort FROM dico_index WHERE terme_sort LIKE ? ";
+    $sql = "SELECT orth, orth_sort FROM dico_index WHERE orth_sort LIKE ? ";
     $sql .= " AND dico_titre IN (" . implode(", ", $reqPars[Medict::DICO_TITRE]) . ")";
     $sql .= " LIMIT 1"; 
     $qfilter = Medict::$pdo->prepare($sql);
@@ -43,7 +45,7 @@ while ($sugg = $qsugg->fetch(PDO::FETCH_ASSOC)) {
             flush();
         }
         if ($qfilter) {
-            $qfilter->execute(array('1' .  $sugg['dst']));
+            $qfilter->execute(array('1' .  $sugg['dst_sort']));
             if (!$qfilter->fetch()) continue;
         }
 

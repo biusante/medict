@@ -20,6 +20,14 @@ class Medict
     const AN2 = "an2";
     const F = "f";
     const DICO_TITRE = "dico_titre";
+    const TAGS = array(
+        'med' => ['méd.', 'Sciences médicales'],
+        'vet' => ['vétér.', 'Sciences vétérinaires'],
+        'pharm' => ['pharm.', 'Pharmacie'],
+        'sc' => ['sc.', 'Autres sciences'],
+        'hist' => ['hist.', 'Histoire'],
+        'biogr' => ['biogr.', 'Biographies'],
+    );
     /** SQL link */
     static public $pdo;
     /** requêtes préparées */
@@ -65,15 +73,15 @@ class Medict
         // load filter by cote 
         $reqPars[self::DICO_TITRE] = null;
         $reqPars[self::F] = null;
-        $cotes =  Web::pars(self::F);
-        if (count($cotes)) {
+        $fdic =  Web::pars(self::F);
+        if (count($fdic)) {
             $reqPars[self::DICO_TITRE] = array();
             $reqPars[self::F] = array();
                 if (!isset(self::$q['cote_id'])) {
                 self::$q['cote_id'] = self::$pdo->prepare("SELECT id FROM dico_titre WHERE cote = ?");
             }
-            $cotes_copy = $cotes;
-            foreach($cotes as $cote) {
+            $fdic_copy = $fdic;
+            foreach($fdic as $cote) {
                 self::$q['cote_id']->execute(array($cote));
                 $row = self::$q['cote_id']->fetch(PDO::FETCH_ASSOC);
                 if (!$row) continue;
