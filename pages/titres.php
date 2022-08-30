@@ -62,11 +62,11 @@ else if (0 < count($fdic)) { // si cotes demandées, vérifier qu’elles existe
     <span class="close">×</span>
     <div id="titres_body">
         <header>
-            <label>Ordre :
+            <label>Trier par
                 <select id="sortitres">
-                    <option value="annee">années</option>
+                    <option value="annee">année</option>
                     <option value="tags">mots-clés</option>
-                    <option value="nom">noms</option>
+                    <option value="nom">nom</option>
                 </select>
             </label>
             <div class="selector">

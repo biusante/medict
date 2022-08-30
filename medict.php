@@ -179,7 +179,9 @@ class Medict
      */
     public static function entree(&$entree)
     {
-        $url = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=' . $entree['volume_cote'] . '&amp;p=' . $entree['refimg'];
+        $url = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=' 
+        . strtok($entree['volume_cote'], '_') // 37020d_index
+        . '&amp;p=' . $entree['refimg'];
 
         $block = '';
         $block .= '<div class="entree">';

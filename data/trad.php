@@ -17,7 +17,7 @@ if (!$t) return; // rien à chercher
 
 $starttime = microtime(true);
 
-$sql = "SELECT * FROM dico_trad WHERE src_sort = ? AND src_lang IN ('fra', 'lat', 'grc') ORDER BY dst_langno, dst_sort, volume_annee, page";
+$sql = "SELECT * FROM dico_trad WHERE src_sort = ? ORDER BY dst_langno, dst_sort, volume_annee, page";
 $q_mot = Medict::$pdo->prepare($sql);
 $q_mot->execute(array($t));
 

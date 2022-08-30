@@ -635,7 +635,7 @@ class Medict {
             const an_max = tik.parentElement.dataset.an_max;
             if (an_max) datemax = Math.max(datemax, an_max);
         }
-        let label = "Tout les titres";
+        let label = "Tous les titres";
         if (count) {
             label = datemin;
             if (datemin != datemax) label += ' – ' + datemax;

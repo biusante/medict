@@ -31,7 +31,7 @@ if ($reqPars[Medict::DICO_TITRE]) {
     $fwhere[] = " dico_titre IN (" . implode(", ", $reqPars[Medict::DICO_TITRE]) . ")";
 }
 // base de la requête sql
-$fsql = "SELECT orth, orth_sort, COUNT(*) AS compte FROM dico_index WHERE orth_lang IN ('fra', 'lat', 'grc')";
+$fsql = "SELECT orth, orth_sort, COUNT(*) AS compte FROM dico_index WHERE ";
 
 // première requête, préfixe uniquement, copier les paramètres communs
 $sql = $fsql;
@@ -43,7 +43,7 @@ if ($q) {
 }
 
 if (count($where) > 0) {
-    $sql .= ' AND ' . implode(' AND ', $where);
+    $sql .= implode(' AND ', $where);
 }
 $sql .= " GROUP BY orth_sort ORDER BY orth_sort LIMIT " . $limit;
 $query = Medict::$pdo->prepare($sql);
@@ -51,8 +51,10 @@ echo "<!-- $sql
 " . print_r($where, true) . "
 -->\n";
 $query->execute($pars);
+$n = 1;
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-    html($row, $q);
+    html($row, $q, $n);
+    $n++;
     $limit--;
 }
 echo '<!--', number_format(microtime(true) - $starttime, 3), ' s. -->';
@@ -74,7 +76,7 @@ if ($q) {
     $pars[] = $v;
 }
 if (count($where) > 0) {
-    $sql .= ' AND ' . implode(' AND ', $where);
+    $sql .= implode(' AND ', $where);
 }
 $sql .= " GROUP BY orth_sort ORDER BY orth_sort LIMIT " . $limit;
 $query = Medict::$pdo->prepare($sql);
@@ -83,17 +85,17 @@ echo "<!-- $sql
 -->\n";
 $query->execute($pars);
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-    html($row, $q);
-    $limit --;
+    html($row, $q, $n);
+    $n++;
 }
 
 echo '<!--', number_format(microtime(true) - $starttime, 3), ' s. -->';
 
 
-function html(&$row, $q) {
+function html(&$row, $q, $n) {
     $href = '?t=' . $row['orth_sort'];
     $title = htmlspecialchars($row['orth']);
     $value = Medict::hilite($q, $row['orth']);
-    echo '<a href="' . $href .'">' . $value . ' <small>(', $row['compte'], ')</small></a>', "\n";
+    echo '<a href="' . $href .'"><small>' . $n .'.</small> ' . $value . ' <small>(', $row['compte'], ')</small></a>', "\n";
     flush();
 }
