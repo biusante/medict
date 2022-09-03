@@ -41,7 +41,9 @@ while ($row = $q_mot->fetch(PDO::FETCH_ASSOC)) {
         }
         echo '
 <details class="sugg">
-    <summary>[' . $row['dst_lang'] . '] <a class="sugg" href="?q=' . rawurlencode($row['dst']) . '">' . $row['dst'] . '</a></summary>';
+    <summary title="' . $row['dst'] . '">
+      <a class="sugg" href="?q=' . rawurlencode($row['dst']) . '">'
+    . '<small>[' . $row['dst_lang'] . ']</small> ' . $row['dst'] . '</a></summary>';
     }
     $q_entree->execute(array($row['dico_entree']));
     $entree = $q_entree->fetch();

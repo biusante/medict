@@ -52,7 +52,9 @@ while ($sugg = $qsugg->fetch(PDO::FETCH_ASSOC)) {
 
         echo "
 <details class=\"sugg\">
-    <summary><a class=\"sugg\" href=\"?q=" . rawurlencode($sugg['dst']) . "\">" . $sugg['dst'];
+    <summary><a class=\"sugg\" href=\"?q=" . rawurlencode($sugg['dst']) . '"' 
+    . ' title="' .  strip_tags($sugg['dst']) . '">' 
+    . $sugg['dst'];
     echo " <small>(". $sugg['score'], ")</small>";
         echo"</a></summary>";
         $last = $sugg['dst_sort'];

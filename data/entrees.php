@@ -27,7 +27,7 @@ if ($reqPars[Medict::DICO_TITRE]) {
 if (count($where) > 0) {
     $sql .= ' AND ' . implode(' AND ', $where);
 }
-$sql .= " ORDER BY volume_annee";
+$sql .= " ORDER BY volume_annee, dico_entree";
 
 echo "<!-- " . $_SERVER['REQUEST_URI'] . "
 $sql

@@ -15,6 +15,7 @@
     --sc: rgba(0, 32, 96, .5);
     --hist: rgba(128, 128, 128, .5);
     --biogr: rgba(96, 96, 128, .5);
+    --scroll-width: 6px;
 }
 
 
@@ -93,8 +94,12 @@ body {
     line-height: 1.5em;
 }
 
-#pied:hover {
-    padding-top: 5px;
+#pied:hover #upper-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 5px 2rem 0 2rem;
     transition: all .1s ease 0s;
     height: auto;
     background-color: var(--form_bg);
@@ -439,7 +444,9 @@ input.an {
 }
 
 #titres_body {
+    width: 100%;
     height: 100%;
+    position: relative;
     background-color: #fff;
     display: flex;
     flex-flow: column;
@@ -474,9 +481,7 @@ form u,
     text-decoration: none;
 }
 
-#titres_body u {
-    font-size: larger;
-}
+#titres_body u {}
 
 #titres_cols {
     padding: 1rem 0 1rem 1rem;
@@ -487,10 +492,10 @@ form u,
 }
 
 #titres_cols>* {
-    /* width: 49%; */
+    width: 48%;
     display: flex;
     position: relative;
-    align-items: center;
+    /* align-items: center; */
     margin-bottom: 1px;
     padding: 1px 0;
     margin: 1px 1rem 0 0;
@@ -506,9 +511,9 @@ form u,
 
 .selector.tag,
 #titres_cols .titre mark {
-    border-radius: 0.5rem;
+    border-radius: 0.4rem;
     padding: 0 0.2rem;
-    margin-left: 0.5rem;
+    margin-left: 0.3rem;
     color: var(--bg);
     font-size: 90%;
 }
@@ -581,9 +586,10 @@ mark.biogr {
 div.pannel header,
 #col3 header {
     margin: 0;
-    padding: 2px 0;
+    padding: 0;
     font-weight: normal;
     font-size: 1.3rem;
+    line-height: 1.7rem;
     background-color: var(--form_bg);
 }
 
@@ -605,21 +611,22 @@ div.pannel>nav.data {
 
 #mots,
 #entrees {
-    padding: 1rem 0 1rem 0.5rem;
+    padding: 1rem 0 1rem var(--scroll-width);
 }
 
 nav.data,
 .scrollable {
     overflow-y: scroll;
     /* Foreground, Background */
-    scrollbar-color: var(--button_color) var(--form_bg);
+    scrollbar-color: var(--button_color) var(--bg);
+    scrollbar-width: thin;
 }
 
 nav.data::-webkit-scrollbar,
 .scrollable::-webkit-scrollbar {
     /* needed for colors */
-    width: 16px;
-    height: 16px;
+    width: var(--scroll-width);
+    height: var(--scroll-width);
 }
 
 nav.data::-webkit-scrollbar-thumb,
@@ -631,7 +638,7 @@ nav.data::-webkit-scrollbar-thumb,
 nav.data::-webkit-scrollbar-track,
 .scrollable::-webkit-scrollbar-track {
     /* Background */
-    background: var(--form_bg);
+    background: var(--bg);
 }
 
 #mots a {
@@ -662,18 +669,84 @@ a.entree {
     border-bottom: 1px solid var(--form_bg);
 }
 
+#pantrad {
+    border-left: 1px solid var(--button_color);
+}
+
+details>summary {
+    list-style: none;
+    white-space: nowrap;
+}
+
+
+/* a.sugg::before, */
+
+details>summary::before {
+    color: var(--button_color);
+    border-color: var(--form_bg);
+    display: inline-block;
+    content: '✚';
+    text-align: center;
+    width: 1.1rem;
+    line-height: 1.4rem;
+    /* vertical-align: bottom; */
+    border-width: 1px;
+    border-style: solid solid none solid;
+}
+
+a.sugg {
+    padding: 1px 0.5rem 0 0.5rem;
+    line-height: 1.4rem;
+}
+
+a.sugg small {
+    color: var(--text);
+}
+
+
+/*
+a.sugg::before {
+    position: absolute;
+    background-color: var(--bg);
+    margin-left: -1.6rem;
+    margin-top: 0px;
+    border: none;
+    display: none;
+}
+
+a.sugg:hover::before {
+    display: inline-block;
+    content: '⬉';
+}
+*/
+
+details[open]>summary::before {
+    content: '─';
+}
+
+
+/*
+details.sugg summary:hover::before {
+    background-color: var(--form_bg);
+}
+*/
+
+details.sugg summary:hover::before {
+    color: var(--button_bg);
+}
+
+details.sugg {
+    margin-top: 0.3rem;
+    padding-left: 0.5rem;
+}
+
 details.sugg summary {
-    padding: 0.3rem 0.3rem 0.3rem 0.3rem;
     border-bottom: 1px solid var(--form_bg);
 }
 
 details.sugg summary a {
     display: inline-block;
     text-decoration: none;
-}
-
-details.sugg summary:hover {
-    background-color: var(--form_bg);
 }
 
 #col1 input.sugg {
@@ -850,17 +923,17 @@ div.volume {
 }
 
 .gutter-vertical {
-    height: 5px;
+    height: 10px;
     border-top: 1px solid var(--button_color);
-    border-bottom: 1px solid var(--bg);
-    background-color: var(--form_border);
+    border-bottom: 1px solid var(--button_color);
+    background-color: var(--form_bg);
 }
 
 .gutter-horizontal {
-    width: 5px;
+    width: 10px;
     border-right: 1px solid var(--button_color);
-    border-left: 1px solid var(--bg);
-    background-color: var(--form_border);
+    border-left: 1px solid var(--button_color);
+    background-color: var(--form_bg);
 }
 
 

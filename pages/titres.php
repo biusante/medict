@@ -64,9 +64,10 @@ else if (0 < count($fdic)) { // si cotes demandées, vérifier qu’elles existe
         <header>
             <label>Trier par
                 <select id="sortitres">
-                    <option value="annee">année</option>
-                    <option value="tags">mots-clés</option>
-                    <option value="nom">nom</option>
+                    <option value="annee, nom">année</option>
+                    <option value="tags, nom">mots-clés</option>
+                    <option value="nom, annee">nom</option>
+                    <option value="npages-, annee">taille (nb. total de p.)</option>
                 </select>
             </label>
             <div class="selector">
@@ -120,6 +121,7 @@ function titre(&$row, $checked = false)
 
     $badges = '';
     foreach (preg_split("/\s+/", $row['class']) as $tag) {
+        if (!$tag) continue;
         $badges .= ' <mark'
             . ' class="' . $tag . '"'
             . ' title="' . Medict::TAGS[$tag][1] . '"'
@@ -128,7 +130,9 @@ function titre(&$row, $checked = false)
             . '</mark>'
         ;
     }
-
+    $extend = '';
+    if ($row['vols'] > 1) $extend = ' ' . $row['vols']. ' vols.';
+    else if ($row['pages']) $extend = ' ' . $row['pages']. ' p.';
     $div = '';
     $div .= '
 <div class="titre"
@@ -136,6 +140,7 @@ function titre(&$row, $checked = false)
     data-an_max="'. $row['an_max'] .'" 
     data-nom="'. strip_tags($row['nom']) .'"
     data-tags="'. $row['class'] .'"
+    data-npages="'. $row['pages'] .'"
 >
   <input type="checkbox"
     name="'. Medict::F . '" 
@@ -146,7 +151,7 @@ function titre(&$row, $checked = false)
   />
   <label for="check_' . $row['cote'] . '"
     title="' . strip_tags($row['bibl']) . '"
-  >' . $row['nomdate'] . $badges . '
+  >' . $row['nomdate'] . $extend . $badges . '
   </label>
 </div>';
     return $div;

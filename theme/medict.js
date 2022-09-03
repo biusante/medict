@@ -606,9 +606,40 @@ class Medict {
         const sortitres = document.getElementById('sortitres');
         const titres_cols = document.getElementById('titres_cols');
         sortitres.addEventListener("change", function(e) {
-            const field = this.value;
+            const fields = this.value.split(/[,\s]+/);
             divs.sort(function(a, b) {
-                return a.dataset[field].localeCompare(b.dataset[field]);
+                for (let i = 0; i < fields.length; i++) {
+                    let f = fields[i];
+                    let reverse = false;
+                    if (f.charAt(f.length - 1) === '-') {
+                        f = f.slice(0, -1);
+                        reverse = true;
+                    }
+                    const sa = a.dataset[f];
+                    const sb = b.dataset[f];
+
+                    let na = parseFloat(sa);
+                    let nb = parseFloat(sb);
+                    if (!sa) na = 0;
+                    if (!sb) nb = 0;
+
+                    // string compare
+                    if (isNaN(na) || isNaN(nb)) {
+                        let ret = sa.localeCompare(sb);
+                        if (ret === 0) {
+                            // console.log(a.dataset[f] + '==' + b.dataset[f]);
+                            continue;
+                        }
+                        return ret;
+                    } else {
+                        // number compare
+                        let ret = na - nb;
+                        if (ret == 0) continue;
+                        if (reverse) return -ret;
+                        return ret;
+                    }
+                }
+                return 0;
             });
             divs.forEach(function(el) {
                 titres_cols.appendChild(el);
@@ -808,13 +839,20 @@ class Medict {
         let a = Formajax.selfOrAncestor(e.target, 'a');
         if (!a) return;
         if (!a.classList.contains('sugg')) return;
-        e.preventDefault();
+        e.preventDefault(); // do not click link
         const pars = new URLSearchParams(a.search);
         const q = pars.get('q');
         if (!q) return;
         Medict.form.q.value = q;
         // form.t.value = q; // non juste l’index
         Formajax.divLoad('mots');
+        let details = a.parentNode.parentNode;
+        if (details.getAttribute("open")) {
+            details.removeAttribute("open");
+        } else {
+            details.setAttribute("open", true);
+        }
+        return true;
     }
 
     /**

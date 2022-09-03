@@ -20,7 +20,7 @@ $t = Web::par('t', '');
 ?>
 <div id="medict">
     <div id="col1">
-        <form name="medict" class="recherche scrollable" autocomplete="off">
+        <form name="medict" class="recherche" autocomplete="off">
             <div>
                 <div>Rechercher un terme dans les vedettes</div>
                 <input name="q" id="q" placeholder="Taper une lettre" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
