@@ -49,22 +49,55 @@ SELECT
     ORDER BY sortable
     LIMIT $limit
 ";
-$query = Medict::$pdo->prepare($sql);
-$pars = [$q.'%'];
-
-echo "<!-- $sql
-".print_r($pars, true)."
--->\n";
+echo "<!-- \$q=$q -->\n";
 
 
 $starttime = microtime(true);
-$query->execute($pars);
-echo '<!--', number_format(microtime(true) - $starttime, 3), ' s. -->';
+$query = Medict::$pdo->prepare($sql);
+$query->execute([$q.'%']);
+echo "<!--", number_format(microtime(true) - $starttime, 3), " s. -->\n";
 $n = 1;
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
     html($row, $q, $n);
     $n++;
     $limit--;
+}
+
+// limit
+$sql = "
+SELECT
+    dico_terme.id AS id,
+    forme,
+    langue,
+    sortable,
+    COUNT(dico_entree) AS count
+FROM dico_rel
+INNER JOIN dico_terme
+    ON dico_rel.dico_terme = dico_terme.id
+        AND MATCH (locutable) AGAINST (? IN BOOLEAN MODE)
+WHERE
+    reltype = 1
+    $dico_titre
+GROUP BY sortable
+ORDER BY sortable
+LIMIT $limit
+";
+echo "\n<!-- $sql -->\n";
+
+$starttime = microtime(true);
+// si pas q parti ?
+if (mb_strpos($q, ' ') !== false) {
+    $search = '+' . preg_replace('@\s+@ui', '* +', $q) . '*';
+}
+else {
+    $search = $q . '*';
+}
+$query = Medict::$pdo->prepare($sql);
+$query->execute([$search]);
+echo "<!-- search=$search limit=$limit " . number_format(microtime(true) - $starttime, 3). " s. -->\n";
+while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+    html($row, $q, $n);
+    $n++;
 }
 
 
