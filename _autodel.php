@@ -17,7 +17,8 @@ $commands = array(
     "git pull 2>&1", // un warning
     "git checkout main -f 2>&1",
     */
-    "git pull 2>&1", // un warning
+    // Pour mise à jour après installation
+    "git pull 2>&1",
     "ls -alh",
 
 );
