@@ -1,4 +1,9 @@
+# scorie d’éditeur
 ~$*
 *.bak
-pars.php
 .~*
+
+# Exclure des scripts outils, sauf le template de paramètres
+_*.php
+!_pars.php
+pars*.php
