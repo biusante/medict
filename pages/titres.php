@@ -100,10 +100,16 @@ foreach (Medict::TAGS as $tag => $a) {
 $sql = "SELECT * FROM dico_titre ";
 $titreQ = Medict::$pdo->prepare($sql);
 $titreQ->execute(array());
+$sql = "SELECT id FROM dico_entree WHERE dico_titre = ? LIMIT 1 ";
+$entreeQ = Medict::$pdo->prepare($sql);
+
 echo '
 ';
 while ($row = $titreQ->fetch(PDO::FETCH_ASSOC)) {
     if (!$row['cote']) continue; // buggy when a title has no cote
+    $entreeQ->execute([$row['id']]);
+    if (!$entreeQ->fetch()) continue;
+    // tester s’il y a au moins une entrée (en cours de chargement)
     $checked = ($fdic && isset($fdic[$row['cote']]));
     echo titre($row, $checked);
 }

@@ -24,7 +24,7 @@ $body_class = $page;
     <meta charset="utf-8" />
     <title><?= Route::title('Métadictionnaires — Dictionnaires Medica — BIU Santé, Paris') ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
-    <link rel="icon" href="//u-paris.fr/wp-content/uploads/2019/04/Universite_Paris_Favicon.png" sizes="32x32">
+    <link rel="icon" href="<?= Route::app_href() ?>theme/UP_favicon.png" sizes="32x32">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.10.5/viewer.min.css" rel="stylesheet" />
     
