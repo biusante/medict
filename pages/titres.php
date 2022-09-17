@@ -4,17 +4,13 @@
  * This file is part of Medict https://github.com/biusante/medict
  * Copyright (c) 2021 Université Paris Cité / Bibliothèques / Histoire de la santé
  */
+declare(strict_types=1);
 
-/* format de sortie
-{  "data": [
-    {"n":1, "id":0, "hits":262, "text":"Titre court"},
-    {"n":2, "id":1, "hits":76, "text":"Forget, Joséphine de"}
-], "meta": {"time": "0ms", "query": null, "cardinality": -1}}
-*/
+$start_time = microtime(true);
 
 include_once(dirname(__DIR__) . "/Medict.php");
 
-use Oeuvres\Kit\{Web};
+use Oeuvres\Kit\{Route,Web};
 
 // load available dico ids from base
 $biblio = array();
@@ -126,15 +122,17 @@ function titre(&$row, $checked = false)
     else $checked = '';
 
     $badges = '';
-    foreach (preg_split("/\s+/", $row['class']) as $tag) {
-        if (!$tag) continue;
-        $badges .= ' <mark'
-            . ' class="' . $tag . '"'
-            . ' title="' . Medict::TAGS[$tag][1] . '"'
-            . '>'
-            . Medict::TAGS[$tag][0]
-            . '</mark>'
-        ;
+    if ($row['class']) {
+        foreach (preg_split("/\s+/", $row['class']) as $tag) {
+            if (!$tag) continue;
+            $badges .= ' <mark'
+                . ' class="' . $tag . '"'
+                . ' title="' . Medict::TAGS[$tag][1] . '"'
+                . '>'
+                . Medict::TAGS[$tag][0]
+                . '</mark>'
+            ;
+        }
     }
     $extend = '';
     if ($row['vols'] > 1) $extend = ' ' . $row['vols']. ' vols.';
@@ -162,4 +160,7 @@ function titre(&$row, $checked = false)
 </div>';
     return $div;
 }
+
+echo "<!-- " . number_format(microtime(true) - $start_time, 3) . " s. -->\n";
+
 ?>
