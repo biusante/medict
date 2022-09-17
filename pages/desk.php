@@ -5,7 +5,7 @@
  */
 require_once(dirname(__DIR__) . "/Medict.php");
 
-use Oeuvres\Kit\{Web};
+use Oeuvres\Kit\{Route,Web};
 
 /** Search form  */
 
@@ -21,13 +21,13 @@ $t = Web::par('t', '');
 <div id="medict">
     <div id="col1">
         <form name="medict" class="recherche" autocomplete="off">
-            <div>
-                <div>Rechercher un terme dans les vedettes</div>
-                <input name="q" id="q" placeholder="Taper une lettre" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
-                <input type="hidden" name="t" value="<?= htmlspecialchars($t, ENT_QUOTES, 'UTF-8'); ?>"/>
-                <input type="hidden" name="cote" value="<?= htmlspecialchars( Web::par('cote', ''), ENT_QUOTES, 'UTF-8'); ?>"/>
-                <input type="hidden" name="p" value="<?= intval( Web::par('p', '')); ?>"/>
-                <input type="hidden" name="bibl" />
+            <input type="hidden" name="t" value="<?= htmlspecialchars($t, ENT_QUOTES, 'UTF-8'); ?>"/>
+            <input type="hidden" name="cote" value="<?= htmlspecialchars( Web::par('cote', ''), ENT_QUOTES, 'UTF-8'); ?>"/>
+            <input type="hidden" name="p" value="<?= intval( Web::par('p', '')); ?>"/>
+            <input type="hidden" name="bibl" />
+            <div class="flexbuts">
+                <input name="q" id="q" placeholder="Rechercher un terme" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
+                <a title="Effacer la sélection de titres" href="<?= Route::app_href() ?>." class="but reset">⟳</a>
             </div>
             <?php include(__DIR__.'/titres.php') ?>
             <button type="submit">Go</button>

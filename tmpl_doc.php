@@ -5,7 +5,6 @@
  * Copyright (c) 2021 Université Paris Cité / Bibliothèques / Histoire de la santé
  */
 /** Template */
-
 declare(strict_types=1);
 
 require_once(__DIR__ . "/Medict.php");
@@ -22,7 +21,7 @@ $body_class = $page;
 
 <head>
     <meta charset="utf-8" />
-    <title><?= Route::title('Métadictionnaires — Dictionnaires Medica — BIU Santé, Paris') ?></title>
+    <title><?= Route::title('Métadictionnaire — Dictionnaires Medica — BIU Santé, Paris') ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
     <link rel="icon" href="<?= Route::app_href() ?>theme/UP_favicon.png" sizes="32x32">
 
@@ -32,13 +31,10 @@ $body_class = $page;
     <!-- Polices -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&amp;subset=latin,latin-ext" />
     <!-- Feuilles de styles -->
-    <link rel="stylesheet" href="https://www.biusante.parisdescartes.fr/ressources/css/up-font-definitions.css?2.3.8" />
-    <link rel="stylesheet" href="https://www.biusante.parisdescartes.fr/ressources/css/style.css?2.3.8" />
+    <link rel="stylesheet" href="https://www.biusante.parisdescartes.fr/ressources/css/style.css?2.9.11" />
     <link rel="stylesheet" href="<?= Route::app_href() ?>vendor/split.css" />
     <link rel="stylesheet" href="<?= Route::app_href() ?>theme/medict.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
-    <!-- jQuery (for the Medica menu)  -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 </head>
 
 <body class="<?= $body_class ?>">
@@ -130,10 +126,12 @@ $body_class = $page;
             </div>
         </div>
     </div>
-    <script src="<?= Route::app_href() ?>theme/biusante.js"></script>
-    <script src="<?= Route::app_href() ?>vendor/viewer.js"></script>
     <script src="<?= Route::app_href() ?>vendor/split.js"></script>
+    <script src="<?= Route::app_href() ?>vendor/viewer.js"></script>
     <script src="<?= Route::app_href() ?>theme/medict.js"></script>
+    <!-- jQuery (for the Medica menu) too heavy  -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="<?= Route::app_href() ?>theme/biusante.js"></script>
 </body>
 
 </html>
