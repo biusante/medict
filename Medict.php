@@ -24,12 +24,12 @@ class Medict
         'med' => ['méd.', 'Sciences médicales'],
         'vet' => ['vétér.', 'Sciences vétérinaires'],
         'pharm' => ['pharm.', 'Pharmacie'],
-        'autres' => ['autres', 'Autres'],
         'gloss' => ['gloss.', 'Glossaires'],
+        'biogr' => ['biogr.', 'Biographies'],
+        'autres' => ['autres', 'Autres'],
         
         // 'sc' => ['sc.', 'Autres sciences'],
         // 'hist' => ['hist.', 'Histoire'],
-        // 'biogr' => ['biogr.', 'Biographies'],
     );
     static $langs = [null, 'fra', 'lat', 'grc', 'eng', 'deu', 'spa', 'ita'];
 
@@ -194,7 +194,7 @@ class Medict
      */
     public static function entree(&$entree)
     {
-        
+
         $cote = $entree['volume_cote'];
         $cote = strtok($cote, '~'); // 37020d~index
         $url = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=' 
