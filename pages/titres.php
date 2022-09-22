@@ -60,6 +60,7 @@ else if (0 < count($fdic)) { // si cotes demandées, vérifier qu’elles existe
         <header>
             <label>Trier par
                 <select id="sortitres">
+                    <option value="id"></option>
                     <option value="annee, nom">année</option>
                     <option value="tags, nom">mots-clés</option>
                     <option value="nom, annee">nom</option>
@@ -144,6 +145,7 @@ function titre(&$row, $checked = false)
     $div = '';
     $div .= '
 <div class="titre"
+    data-id="'. $row['id'] .'" 
     data-annee="'. $row['annee'] .'" 
     data-an_max="'. $row['an_max'] .'" 
     data-nom="'. strip_tags($row['nom']) .'"
