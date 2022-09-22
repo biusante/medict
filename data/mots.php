@@ -18,7 +18,7 @@ $q = Web::par('q', null);
 if (!$q) return;
 
 if ($q) {
-    $q = Medict::sortable($q);
+    $q = Medict::deforme($q);
 }
 
 $dico_titre = '';
@@ -30,23 +30,23 @@ if ($reqPars[Medict::DICO_TITRE]) {
 
 $limit = 1000; // nombre maximal de vedettes affichées
 
-// Vu avec EXPLAIN, cherche d’abord dans sortable
+// Vu avec EXPLAIN, cherche d’abord dans deforme
 $sql = "
 SELECT
     dico_terme.id AS id,
     forme,
     langue,
-    sortable,
+    deforme,
     COUNT(dico_entree) AS count
     FROM dico_rel
     INNER JOIN dico_terme
         ON dico_rel.dico_terme = dico_terme.id
-        AND sortable LIKE ?
+        AND deforme LIKE ?
     WHERE
-        reltype = 1
+        reltype IN (1, 2, 4) AND orth IS NULL
         $dico_titre
-    GROUP BY sortable
-    ORDER BY sortable
+    GROUP BY deforme
+    ORDER BY deforme
     LIMIT $limit
 ";
 echo "<!-- \$q=$q -->\n";
@@ -69,17 +69,17 @@ SELECT
     dico_terme.id AS id,
     forme,
     langue,
-    sortable,
+    deforme,
     COUNT(dico_entree) AS count
 FROM dico_rel
 INNER JOIN dico_terme
     ON dico_rel.dico_terme = dico_terme.id
-        AND MATCH (locutable) AGAINST (? IN BOOLEAN MODE)
+        AND MATCH (deloc) AGAINST (? IN BOOLEAN MODE)
 WHERE
-    reltype = 1
+    reltype IN (1, 2, 4) AND orth IS NULL
     $dico_titre
-GROUP BY sortable
-ORDER BY sortable
+GROUP BY deforme
+ORDER BY deforme
 LIMIT $limit
 ";
 echo "\n<!-- $sql -->\n";
@@ -99,6 +99,7 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
     html($row, $q, $n);
     $n++;
 }
+echo '<p class="end"></p>';
 
 function html(&$row, $q, $n) {
     $href = '?t=' . $row['id'];

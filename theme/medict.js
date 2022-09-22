@@ -457,7 +457,7 @@ class Medict {
             but.onclick = function(e) {
                 e.preventDefault();
                 if (!aref.dataset.cote || !aref.dataset.p) return;
-                console.log(aref.dataset.p + 1);
+                // console.log(aref.dataset.p + 1);
                 Medict.facs(aref.dataset.cote, parseInt(aref.dataset.p, 10) + 1);
                 Medict.historyChange();
                 return false;

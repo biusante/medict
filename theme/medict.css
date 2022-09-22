@@ -557,11 +557,15 @@ mark.pharm {
     background-color: var(--pharm);
 }
 
+.selector.autres,
+mark.autres,
 .selector.sc,
 mark.sc {
     background-color: var(--sc);
 }
 
+.selector.gloss,
+mark.gloss,
 .selector.hist,
 mark.hist {
     background-color: var(--hist);
@@ -634,6 +638,10 @@ div.pannel>nav.data {
     padding: 1rem 0 1rem var(--scroll-width);
 }
 
+#mots .end {
+    height: calc(100% - 5em);
+}
+
 nav.data,
 .scrollable {
     overflow-y: scroll;
@@ -677,7 +685,7 @@ nav.data a:hover {
 
 nav.data a.active {
     background-color: var(--form_bg);
-    font-weight: bold;
+    /* font-weight: bold; */
     color: var(--text);
 }
 

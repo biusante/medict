@@ -24,10 +24,15 @@ class Medict
         'med' => ['méd.', 'Sciences médicales'],
         'vet' => ['vétér.', 'Sciences vétérinaires'],
         'pharm' => ['pharm.', 'Pharmacie'],
-        'sc' => ['sc.', 'Autres sciences'],
-        'hist' => ['hist.', 'Histoire'],
-        'biogr' => ['biogr.', 'Biographies'],
+        'autres' => ['autres', 'Autres'],
+        'gloss' => ['gloss.', 'Glossaires'],
+        
+        // 'sc' => ['sc.', 'Autres sciences'],
+        // 'hist' => ['hist.', 'Histoire'],
+        // 'biogr' => ['biogr.', 'Biographies'],
     );
+    static $langs = [null, 'fra', 'lat', 'grc', 'eng', 'deu', 'spa', 'ita'];
+
     /** SQL link */
     static public $pdo;
     /** requêtes préparées */
@@ -152,23 +157,33 @@ class Medict
     */
     }
 
-    /** Clé de simplification d’un terme */
-    public static function sortable($s)
+    public static function deforme($s, $langue=null)
     {
         // bas de casse
         $s = mb_convert_case($s, MB_CASE_FOLD, "UTF-8");
-        // ligatures
-        $s = strtr(
-            $s,
-            array(
-                'œ' => 'oe',
-                'æ' => 'ae',
-            )
-        );
         // décomposer lettres et accents
         $s = Normalizer::normalize($s, Normalizer::FORM_D);
         // ne conserver que les lettres et les espaces, et les traits d’union
         $s = preg_replace("/[^\p{L}\-\s]/u", '', $s);
+        if ('lat' === $langue) {
+            $s = strtr($s,
+                array(
+                    'œ' => 'e',
+                    'æ' => 'e',
+                    'j' => 'i',
+                    'u' => 'v',
+                )
+            );
+        } else {
+            // ligatures
+            $s = strtr(
+                $s,
+                array(
+                    'œ' => 'oe',
+                    'æ' => 'ae',
+                )
+            );
+        }
         // normaliser les espaces
         $s = preg_replace('/[\s\-]+/', ' ', trim($s));
         return $s;
@@ -179,6 +194,7 @@ class Medict
      */
     public static function entree(&$entree)
     {
+        
         $cote = $entree['volume_cote'];
         $cote = strtok($cote, '~'); // 37020d~index
         $url = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=' 
@@ -188,6 +204,9 @@ class Medict
         $block = '';
         $block .= '<div class="entree">';
         $block .= '<a class="entree" target="facs" href="' . $url . '">';
+        if (isset($entree['in']) && $entree['in']) {
+            $block .= "« " . $entree['in'] . " » <i>in</i> ";
+        }
         $block .= '<b>' . $entree['vedette'] . '</b>';
         $block .= '. <i>' . $entree['titre_nom'] . '</i>, ' 
         . $entree['volume_annee'];

@@ -10,63 +10,100 @@ include_once(dirname(__DIR__) . "/Medict.php");
 use Oeuvres\Kit\{Web};
 
 // une veddette à chercher
-$src = preg_replace('@^1@', '', Web::par('t', null));
-if (!$src) {
+$t = Web::par('t', null);
+// rien à chercher
+if (!$t) {
     echo '<!-- Aucun mot cherché. -->';
     return; // rien à chercher
 }
 
 $starttime = microtime(true);
 
-$sql = "SELECT * FROM dico_sugg WHERE src_sort = ? AND cert = 1 ORDER BY dst_sort, volume_annee";
-$qsugg = Medict::$pdo->prepare($sql);
-$qsugg->execute(array($src));
+$sql = "
+SELECT *
+FROM dico_rel
+INNER JOIN dico_terme
+    ON dico_rel.dico_terme = dico_terme.id
+WHERE
+    reltype = 3
+    AND dico_terme != ?
+    AND dico_entree IN (SELECT dico_entree FROM dico_rel WHERE reltype = 3 AND dico_terme = ?)
+ORDER BY deforme, volume_annee
+
+";
+
+$qrel = Medict::$pdo->prepare($sql);
+$qrel->execute([$t, $t]);
+echo "<!-- $sql ; $t -->\n";
+echo "<!--", number_format(microtime(true) - $starttime, 3), " s. -->\n";
 
 $qfilter = null;
+
 // filtre par cote
+// ne pas suggérer un mot qu’on ne trouverait pas dans le corpus
 $reqPars = Medict::reqPars();
 if ($reqPars[Medict::DICO_TITRE]) {
-    $sql = "SELECT orth, orth_sort FROM dico_index WHERE orth_sort LIKE ? ";
-    $sql .= " AND dico_titre IN (" . implode(", ", $reqPars[Medict::DICO_TITRE]) . ")";
-    $sql .= " LIMIT 1"; 
+    $dico_titre = "AND dico_titre IN (" . implode(", ", $reqPars[Medict::DICO_TITRE]) . ")";
+    $sql = "
+SELECT *
+FROM dico_rel
+WHERE
+    dico_terme = ?
+    AND (reltype = 1 OR reltype = 4)
+    $dico_titre
+LIMIT 1;
+    ";
     $qfilter = Medict::$pdo->prepare($sql);
 }
 
 
-echo "<!-- $sql ; $src -->\n";
 
-$qentree = Medict::$pdo->prepare("SELECT * FROM dico_entree WHERE id = ?");
+$sql = "
+SELECT
+    * 
+FROM dico_entree
+INNER JOIN dico_volume
+    ON dico_entree.dico_volume = dico_volume.id
+WHERE dico_entree.id = ?
+";
+$qentree = Medict::$pdo->prepare($sql);
 $last = null;
-while ($sugg = $qsugg->fetch(PDO::FETCH_ASSOC)) {
-    if ($last != $sugg['dst_sort']) {
+while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
+    if ($last != $rel['id']) {
+
         if ($last !== null) {
             echo "\n</details>";
             echo "\n&#10;";
             flush();
         }
         if ($qfilter) {
-            $qfilter->execute(array('1' .  $sugg['dst_sort']));
+            $qfilter->execute(array($rel['id']));
             if (!$qfilter->fetch()) continue;
         }
-
+        $forme = $rel['forme'];
 
         echo "
 <details class=\"sugg\">
-    <summary><a class=\"sugg\" href=\"?q=" . rawurlencode($sugg['dst']) . '"' 
-    . ' title="' .  strip_tags($sugg['dst']) . '">' 
-    . $sugg['dst'];
+    <summary><a class=\"sugg\" href=\"?q=" . rawurlencode($forme) . '"' 
+    . ' title="' .  strip_tags($forme) . '">' 
+    . $forme;
+    /* On ne sait pas encore le score ici encore
     echo " <small>(". $sugg['score'], ")</small>";
+    */
         echo"</a></summary>";
-        $last = $sugg['dst_sort'];
+        $last = $rel['id'];
     }
-    $qentree->execute(array($sugg['dico_entree']));
+    $qentree->execute(array($rel['dico_entree']));
     $entree = $qentree->fetch();
-    $entree['page'] = $sugg['page'];
+    $entree['in'] = 'V. ' . $forme;
+    $entree['page'] = $rel['page'];
+    $entree['refimg'] = $rel['refimg'];
     $entree['page2'] = null;
-    $entree['refimg'] = $sugg['refimg'];
-    echo "\n".Medict::entree($entree);
+    echo "\n".Medict::entree($entree);    
 }
-echo "\n</details>";
-echo "\n&#10;";
-flush();
+if ($last) {
+    echo "\n</details>";
+    echo "\n&#10;";
+    flush();    
+}
 echo '<!--', number_format(microtime(true) - $starttime, 3), ' s. -->';
