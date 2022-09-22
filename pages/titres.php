@@ -137,6 +137,10 @@ function titre(&$row, $checked = false)
     $extend = '';
     if ($row['vols'] > 1) $extend = ' ' . $row['vols']. ' vols.';
     else if ($row['pages']) $extend = ' ' . $row['pages']. ' p.';
+    $title = '';
+    if (isset($row['bibl']) && $row['bibl']) {
+        $title = "\n title=\"".  strip_tags($row['bibl']) . "\"\n";
+    }
     $div = '';
     $div .= '
 <div class="titre"
@@ -153,9 +157,8 @@ function titre(&$row, $checked = false)
     id="check_' . $row['cote'] . '"
     class="' . $row['class'] . '"
   />
-  <label for="check_' . $row['cote'] . '"
-    title="' . strip_tags($row['bibl']) . '"
-  >' . $row['nomdate'] . $extend . $badges . '
+  <label for="check_' . $row['cote'] . '"' . $title . '>' 
+  . $row['nomdate'] . $extend . $badges . '
   </label>
 </div>';
     return $div;
