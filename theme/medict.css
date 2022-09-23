@@ -13,7 +13,9 @@
     --vet: rgba(96, 32, 0, .5);
     --pharm: rgba(0, 0, 128, .5);
     --sc: rgba(0, 32, 96, .5);
+    --gloss: rgba(0, 32, 96, .5);
     --hist: rgba(128, 128, 128, .5);
+    --autres: rgba(128, 128, 128, .5);
     --biogr: rgba(96, 96, 128, .5);
     --scroll-width: 6px;
 }
@@ -557,18 +559,24 @@ mark.pharm {
     background-color: var(--pharm);
 }
 
-.selector.autres,
-mark.autres,
 .selector.sc,
 mark.sc {
     background-color: var(--sc);
 }
 
-.selector.gloss,
-mark.gloss,
+.selector.autres,
+mark.autres {
+    background-color: var(--autres);
+}
+
 .selector.hist,
 mark.hist {
     background-color: var(--hist);
+}
+
+.selector.gloss,
+mark.gloss {
+    background-color: var(--gloss);
 }
 
 .selector.biogr,

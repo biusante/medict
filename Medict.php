@@ -194,7 +194,7 @@ class Medict
      */
     public static function entree(&$entree)
     {
-
+        if (!$entree) return; // ????
         $cote = $entree['volume_cote'];
         $cote = strtok($cote, '~'); // 37020d~index
         $url = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=' 

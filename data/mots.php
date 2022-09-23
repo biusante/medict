@@ -29,7 +29,7 @@ if ($reqPars[Medict::DICO_TITRE]) {
 
 // limiter le nombre de résultats
 $limit = 1000;
-$rels = "(reltype = 1 OR (reltype = 4 AND ORTH IS NULL ))";
+$rels = "(reltype = 1 OR (reltype = 4 AND ORTH IS NULL ) OR (reltype = 2 AND ORTH IS NULL ))";
 
 /*
 // si une seule lettre, c’est lent, contournement

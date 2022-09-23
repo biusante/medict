@@ -27,6 +27,7 @@ if ($reqPars[Medict::DICO_TITRE]) {
 
 // pareil que mots.php
 $rels = "(reltype = 1 OR (reltype = 4 AND ORTH IS NULL ))";
+$rels = "(reltype = 1 OR (reltype = 4 AND ORTH IS NULL ) OR (reltype = 2 AND ORTH IS NULL ))";
 
 
 
