@@ -17,6 +17,17 @@ if (!$t) {
     return; // rien à chercher
 }
 
+// Le mot source
+$sql = "SELECT forme FROM dico_terme WHERE id = ?";
+$qsrc = Medict::$pdo->prepare($sql);
+$qsrc->execute([$t]);
+$row = $qsrc->fetch();
+if (!$row) {
+    echo "<!-- $t Mot inconnu -->";
+    return; // rien à chercher
+}
+$src_forme = $row['forme'];
+
 $starttime = microtime(true);
 
 $sql = "
@@ -78,7 +89,10 @@ while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
         }
         if ($qfilter) {
             $qfilter->execute(array($rel['id']));
-            if (!$qfilter->fetch()) continue;
+            if (!$qfilter->fetch()) {
+                $last = null;
+                continue;
+            }
         }
         $forme = $rel['forme'];
 
@@ -95,7 +109,7 @@ while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
     }
     $qentree->execute(array($rel['dico_entree']));
     $entree = $qentree->fetch();
-    $entree['in'] = 'V. ' . $forme;
+    // $entree['in'] = 'V. ' . $forme;
     $entree['page'] = $rel['page'];
     $entree['refimg'] = $rel['refimg'];
     $entree['page2'] = null;

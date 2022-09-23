@@ -31,6 +31,7 @@ if ($reqPars[Medict::DICO_TITRE]) {
 $limit = 1000;
 $rels = "(reltype = 1 OR (reltype = 4 AND ORTH IS NULL ))";
 
+/*
 // si une seule lettre, c’est lent, contournement
 if (mb_strlen($q) == 1) {
     $limit = 100;
@@ -40,6 +41,7 @@ SELECT *
     FROM dico_terme
     WHERE deforme LIKE ?
     ORDER BY deforme
+    LIMIT 1000
 ";
     $qterme = Medict::$pdo->prepare($sql);
     echo "<!-- $sql -->\n";
@@ -48,7 +50,7 @@ SELECT COUNT(*) AS count
     FROM dico_rel
     WHERE 
         dico_terme = ?
-        AND $rels 
+        AND reltype = 1
         $dico_titre
 ";
     echo "<!-- $sql -->\n";
@@ -74,6 +76,7 @@ SELECT COUNT(*) AS count
     echo "<!--", number_format(microtime(true) - $time_start, 3), " s. -->\n";
     return;
 }
+*/
 
 // Vu avec EXPLAIN, cherche d’abord dans deforme
 $sql = "
