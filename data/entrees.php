@@ -25,13 +25,17 @@ if ($reqPars[Medict::DICO_TITRE]) {
     $dico_titre = "AND dico_titre IN (" . implode(", ", $reqPars[Medict::DICO_TITRE]) . ")";
 }
 
+// pareil que mots.php
+$rels = "(reltype = 1 OR (reltype = 4 AND ORTH IS NULL ))";
+
+
 
 $sql = "
 SELECT *
 FROM dico_rel
 WHERE
     dico_terme = ?
-    AND reltype IN (1, 2, 4) AND orth IS NULL
+    AND $rels
     $dico_titre
 ORDER BY
     volume_annee,
