@@ -28,7 +28,7 @@ WHERE
     reltype = 2
     AND dico_terme != ?
     AND dico_entree IN (SELECT dico_entree FROM dico_rel WHERE reltype = 2 AND dico_terme = ?)
-ORDER BY langue, deforme, volume_annee
+ORDER BY langue, deforme, volume_annee DESC
 
 ";
 
@@ -49,7 +49,7 @@ $qentree = Medict::$pdo->prepare($sql);
 $last = null;
 while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
     if ($last != $rel['id']) {
-
+        // pas de volume ? pas compris pourquoi
         if ($last !== null) {
             echo "\n</details>";
             echo "\n&#10;";
@@ -71,6 +71,12 @@ while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
     }
     $qentree->execute(array($rel['dico_entree']));
     $entree = $qentree->fetch();
+    if (!isset($entree['volume_cote']) || !$entree['volume_cote']) {
+        print_r($entree);
+        continue;
+    }
+
+
     $entree['in'] = "[$langue] " . $forme;
     $entree['page'] = $rel['page'];
     $entree['refimg'] = $rel['refimg'];

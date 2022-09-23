@@ -11,7 +11,7 @@ use Oeuvres\Kit\{Web};
 
 
 // pars
-$starttime = microtime(true);
+$time_start = microtime(true);
 $reqPars = Medict::reqPars();
 
 $q = Web::par('q', null);
@@ -27,8 +27,53 @@ if ($reqPars[Medict::DICO_TITRE]) {
     $dico_titre = "AND dico_titre IN (" . implode(", ", $reqPars[Medict::DICO_TITRE]) . ")";
 }
 
+// limiter le nombre de résultats
+$limit = 1000;
+$rels = "(reltype = 1 OR (reltype = 4 AND ORTH IS NULL ))";
 
-$limit = 1000; // nombre maximal de vedettes affichées
+// si une seule lettre, c’est lent, contournement
+if (mb_strlen($q) == 1) {
+    $limit = 100;
+
+    $sql = "
+SELECT * 
+    FROM dico_terme
+    WHERE deforme LIKE ?
+    ORDER BY deforme
+";
+    $qterme = Medict::$pdo->prepare($sql);
+    echo "<!-- $sql -->\n";
+    $sql = "
+SELECT COUNT(*) AS count
+    FROM dico_rel
+    WHERE 
+        dico_terme = ?
+        AND $rels 
+        $dico_titre
+";
+    echo "<!-- $sql -->\n";
+    $qrel = Medict::$pdo->prepare($sql);
+
+
+    $qterme->execute([$q.'%']);
+    echo "<!--", number_format(microtime(true) - $time_start, 3), " s. -->\n";
+    $n = 1;
+    while ($terme = $qterme->fetch(PDO::FETCH_ASSOC)) {
+        $id = $terme['id'];
+        // echo $id . " " . $terme['forme']."\n";
+
+        $qrel->execute([$id]);
+        $rel = $qrel->fetch();
+        if (!$rel) continue;
+        $count = $rel['count'];
+        if (!$count) continue;
+        html($n, $id, $terme['forme'], $count, $q);
+        $n++;
+        if (!--$limit) break;
+    }
+    echo "<!--", number_format(microtime(true) - $time_start, 3), " s. -->\n";
+    return;
+}
 
 // Vu avec EXPLAIN, cherche d’abord dans deforme
 $sql = "
@@ -43,7 +88,7 @@ SELECT
         ON dico_rel.dico_terme = dico_terme.id
         AND deforme LIKE ?
     WHERE
-        reltype IN (1, 2, 4) AND orth IS NULL
+        $rels
         $dico_titre
     GROUP BY deforme
     ORDER BY deforme
@@ -51,14 +96,13 @@ SELECT
 ";
 echo "<!-- \$q=$q -->\n";
 
-
 $starttime = microtime(true);
 $query = Medict::$pdo->prepare($sql);
 $query->execute([$q.'%']);
-echo "<!--", number_format(microtime(true) - $starttime, 3), " s. -->\n";
+echo "<!--", number_format(microtime(true) - $time_start, 3), " s. -->\n";
 $n = 1;
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-    html($row, $q, $n);
+    html($n, $row['id'], $row['forme'], $row['count'], $q);
     $n++;
     $limit--;
 }
@@ -76,7 +120,7 @@ INNER JOIN dico_terme
     ON dico_rel.dico_terme = dico_terme.id
         AND MATCH (deloc) AGAINST (? IN BOOLEAN MODE)
 WHERE
-    reltype IN (1, 2, 4) AND orth IS NULL
+    $rels
     $dico_titre
 GROUP BY deforme
 ORDER BY deforme
@@ -94,19 +138,19 @@ else {
 }
 $query = Medict::$pdo->prepare($sql);
 $query->execute([$search]);
-echo "<!-- search=$search limit=$limit " . number_format(microtime(true) - $starttime, 3). " s. -->\n";
+echo "<!-- search=$search limit=$limit " . number_format(microtime(true) - $time_start, 3). " s. -->\n";
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-    html($row, $q, $n);
+    html($n, $row['id'], $row['forme'], $row['count'], $q);
     $n++;
 }
 echo '<p class="end"></p>';
 
-function html(&$row, $q, $n) {
-    $href = '?t=' . $row['id'];
-    $title = htmlspecialchars($row['forme']);
-    $terme = Medict::hilite($q, $row['forme']);
+function html($n, $id, $forme, $count, $q) {
+    $href = '?t=' . $id;
+    $title = htmlspecialchars($forme);
+    $terme = Medict::hilite($q, $forme);
     echo '<a href="' . $href .'"><small>' . $n .'.</small> ' . $terme 
-    . ' <small>('.  $row['count'] . ')</small>'
+    . ' <small>('.  $count . ')</small>'
     .'</a>', "\n";
     flush();
 }
