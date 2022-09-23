@@ -69,10 +69,12 @@ while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
         echo"</a></summary>";
         $last = $rel['id'];
     }
+
     $qentree->execute(array($rel['dico_entree']));
     $entree = $qentree->fetch();
+
     if (!isset($entree['volume_cote']) || !$entree['volume_cote']) {
-        print_r($entree);
+        // pb dans les données le volume n’existe pas
         continue;
     }
 
@@ -81,7 +83,7 @@ while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
     $entree['page'] = $rel['page'];
     $entree['refimg'] = $rel['refimg'];
     $entree['page2'] = null;
-    echo "\n".Medict::entree($entree);    
+    echo "\n".Medict::entree($entree);
 }
 if ($last) {
     echo "\n</details>";
