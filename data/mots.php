@@ -105,7 +105,7 @@ $query->execute([$q.'%']);
 echo "<!--", number_format(microtime(true) - $time_start, 3), " s. -->\n";
 $n = 1;
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-    html($n, $row['id'], $row['forme'], $row['count'], $q);
+    html($n, $row['deforme'], $row['forme'], $row['count'], $q);
     $n++;
     $limit--;
 }
@@ -143,13 +143,13 @@ $query = Medict::$pdo->prepare($sql);
 $query->execute([$search]);
 echo "<!-- search=$search limit=$limit " . number_format(microtime(true) - $time_start, 3). " s. -->\n";
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-    html($n, $row['id'], $row['forme'], $row['count'], $q);
+    html($n, $row['deforme'], $row['forme'], $row['count'], $q);
     $n++;
 }
 echo '<p class="end"></p>';
 
-function html($n, $id, $forme, $count, $q) {
-    $href = '?t=' . $id;
+function html($n, $deforme, $forme, $count, $q) {
+    $href = '?t=' . $deforme;
     $title = htmlspecialchars($forme);
     $terme = Medict::hilite($q, $forme);
     echo '<a href="' . $href .'"><small>' . $n .'.</small> ' . $terme 
