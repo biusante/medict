@@ -36,7 +36,7 @@ $sql = "
 SELECT *
 FROM dico_rel
 WHERE
-    dico_terme = ?
+    dico_terme IN (SELECT id FROM dico_terme WHERE deforme = ?)
     AND $rels
     $dico_titre
 ORDER BY
