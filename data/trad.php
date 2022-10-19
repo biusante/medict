@@ -19,6 +19,15 @@ if (!$t) {
 
 $time_start = microtime(true);
 
+$sql = "SELECT id FROM dico_terme WHERE deforme = ?";
+$qterme = Medict::$pdo->prepare($sql);
+$qterme->execute([$t]);
+$dico_terme = [];
+while ($terme = $qterme->fetch(PDO::FETCH_ASSOC)) {
+    $dico_terme[] = $terme['id'];
+}
+$dico_terme = '(' . implode(', ', $dico_terme) . ')';
+
 $sql = "
 SELECT *
 FROM dico_rel
@@ -26,15 +35,15 @@ INNER JOIN dico_terme
     ON dico_rel.dico_terme = dico_terme.id
 WHERE
     reltype = 2
-    AND dico_terme != ?
-    AND dico_entree IN (SELECT dico_entree FROM dico_rel WHERE reltype = 2 AND dico_terme = ?)
+    AND dico_terme NOT IN $dico_terme
+    AND dico_entree IN (SELECT dico_entree FROM dico_rel WHERE reltype = 2 AND dico_terme IN $dico_terme)
 ORDER BY langue, deforme, volume_annee DESC
 
 ";
 
 $qrel = Medict::$pdo->prepare($sql);
-$qrel->execute([$t, $t]);
-echo "<!-- $sql ; $t -->\n";
+$qrel->execute([]);
+echo "<!-- $t ; $sql -->\n";
 echo "<!--", number_format(microtime(true) - $time_start, 3), " s. -->\n";
 
 $sql = "

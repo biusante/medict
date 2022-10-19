@@ -10,25 +10,25 @@ include_once(dirname(__DIR__) . "/Medict.php");
 use Oeuvres\Kit\{Web};
 
 // une veddette à chercher
-$t = Web::par('t', null);
-// rien à chercher
-if (!$t) {
-    echo '<!-- Aucun mot cherché. -->';
-    return; // rien à chercher
-}
-
-// Le mot source
-$sql = "SELECT forme FROM dico_terme WHERE id = ?";
-$qsrc = Medict::$pdo->prepare($sql);
-$qsrc->execute([$t]);
-$row = $qsrc->fetch();
-if (!$row) {
-    echo "<!-- $t Mot inconnu -->";
-    return; // rien à chercher
-}
-$src_forme = $row['forme'];
-
 $starttime = microtime(true);
+$t = Web::par('t', null);
+$sql = "SELECT id FROM dico_terme WHERE deforme = ?";
+$qterme = Medict::$pdo->prepare($sql);
+$qterme->execute([$t]);
+$dico_terme = [];
+while ($terme = $qterme->fetch(PDO::FETCH_ASSOC)) {
+    $dico_terme[] = $terme['id'];
+}
+// rien à chercher
+if (!count($dico_terme)) {
+    echo "<!-- $t, mot inconnu -->";
+    return; // rien à chercher
+}
+$dico_terme = '(' . implode(', ', $dico_terme) . ')';
+
+
+// $src_forme = $row['forme'];
+
 
 $sql = "
 SELECT *
@@ -37,14 +37,14 @@ INNER JOIN dico_terme
     ON dico_rel.dico_terme = dico_terme.id
 WHERE
     reltype = 3
-    AND dico_terme != ?
-    AND dico_entree IN (SELECT dico_entree FROM dico_rel WHERE reltype = 3 AND dico_terme = ?)
+    AND dico_terme NOT IN $dico_terme
+    AND dico_entree IN (SELECT dico_entree FROM dico_rel WHERE reltype = 3 AND dico_terme IN $dico_terme)
 ORDER BY deforme, volume_annee
 
 ";
 
 $qrel = Medict::$pdo->prepare($sql);
-$qrel->execute([$t, $t]);
+$qrel->execute([]);
 echo "<!-- $sql ; $t -->\n";
 echo "<!--", number_format(microtime(true) - $starttime, 3), " s. -->\n";
 
@@ -64,6 +64,8 @@ WHERE
     $dico_titre
 LIMIT 1;
     ";
+    echo "<!-- FILTRE $sql -->\n";
+
     $qfilter = Medict::$pdo->prepare($sql);
 }
 

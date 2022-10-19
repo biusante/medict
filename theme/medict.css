@@ -401,7 +401,8 @@ input.an {
     display: flex;
 }
 
-.flexbuts .reset {
+a.but {
+    display: inline-block;
     text-align: center;
     text-decoration: none;
     font-size: 1.8rem;
@@ -430,7 +431,7 @@ input.an {
     height: 2rem;
 }
 
-.flexbuts .reset:hover,
+.but:hover,
 #titres_open:hover {
     background-color: var(--bg);
 }

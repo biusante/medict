@@ -15,7 +15,6 @@ require_once($appdir . "Medict.php");
 
 use Oeuvres\Kit\{Route};
 
-
 // data servlets, no template
 Route::get('/data/(.*)', $appdir . 'data/$1.php', null, null);
 
