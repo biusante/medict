@@ -111,7 +111,7 @@ while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
     }
     $qentree->execute(array($rel['dico_entree']));
     $entree = $qentree->fetch();
-    // $entree['in'] = 'V. ' . $forme;
+    $entree['in'] = 'V. ' . $forme;
     $entree['page'] = $rel['page'];
     $entree['refimg'] = $rel['refimg'];
     $entree['page2'] = null;
