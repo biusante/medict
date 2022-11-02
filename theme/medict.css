@@ -32,6 +32,17 @@ body {
     height: 100%;
 }
 
+a {
+    user-drag: none;
+    /*
+    cursor: auto;
+    -webkit-user-select: text;
+    -moz-select: text;
+    -ms-select: text;
+    user-select: text;
+    */
+}
+
 #page {
     position: absolute;
     top: 0;

@@ -393,6 +393,16 @@ class Medict {
         }
     };
 
+    static getSelectionText() {
+        var text = "";
+        if (window.getSelection) {
+            text = window.getSelection().toString();
+        } else if (document.selection && document.selection.type != "Control") {
+            text = document.selection.createRange().text;
+        }
+        return text;
+    }
+
     static init() {
         // init the form
         Medict.form = document.forms['medict'];
@@ -864,13 +874,15 @@ class Medict {
         let a = Formajax.selfOrAncestor(e.target, 'a');
         if (!a) return;
         if (!a.classList.contains('entree')) return;
+        e.preventDefault();
+        // if text selected, do not apply link
+        if (Medict.getSelectionText()) return;
         // https://www.biusante.parisdescartes.fr/iiif/2/bibnum:45674x04:%%/full/full/0/default.jpg
         // https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=pharma_019428x01&amp;p=444"
         // https://www.biusante.parisdescartes.fr/iiif/2/bibnum:47661x59:0122/0,512,512,512/512,/0/default.jpg
         let found = a.search.match(/cote=([^&]*)/);
         if (!found) return; // url error ?
         // seems we can prevent default now
-        e.preventDefault();
         const cote = found[1];
         found = a.search.match(/p=([^&]*)/);
         if (!found) return; // url error ?
@@ -945,6 +957,9 @@ class Medict {
         // catch a link inside column of terms
         let a = Formajax.selfOrAncestor(e.target, 'a');
         if (!a) return;
+        // if text selected, do not apply link
+        if (Medict.getSelectionText()) return;
+
         const pars = new URLSearchParams(a.search);
         const terme = pars.get('t');
 

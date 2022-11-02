@@ -38,7 +38,9 @@ $t = Web::par('t', '');
     </div>
     <div id="col2">
         <div class="pannel entrees" id="panentrees">
-            <header>Entrées</header>
+            <header>Entrées 
+            <!-- <a class="but" target="_blank" href="data/entrees?<?= Web::query() ?>">🡵</a> -->
+            </header>
             <nav id="entrees"  class="data" data-url="data/entrees">
             
             </nav>
