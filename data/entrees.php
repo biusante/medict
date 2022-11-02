@@ -26,7 +26,6 @@ if ($reqPars[Medict::DICO_TITRE]) {
 }
 
 // pareil que mots.php
-
 $rels = "(reltype = 1 OR reltype = 4  OR (reltype = 2 AND orth IS NULL ))";
 
 
@@ -46,7 +45,7 @@ ORDER BY
 ";
 $pars = [$t];
 
-echo "<!-- " . $_SERVER['REQUEST_URI'] . "
+echo "<!-- 
 $sql
 " . print_r($pars, true) . "
 -->
@@ -59,7 +58,7 @@ $relQ->execute($pars);
 echo '<!--', number_format(microtime(true) - $starttime, 3), ' s. -->';
 
 // Récupérer la forme trouvée
-$formeQ = Medict::$pdo->prepare("SELECT forme FROM dico_terme WHERE id = ?"); 
+$formeQ = Medict::$pdo->prepare("SELECT forme FROM dico_terme WHERE deforme = ?"); 
 $formeQ->execute($pars);
 $row = $formeQ->fetch();
 $forme = null;

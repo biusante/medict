@@ -152,7 +152,7 @@ function html($n, $deforme, $forme, $count, $q) {
     $href = '?t=' . $deforme;
     $title = htmlspecialchars($forme);
     $terme = Medict::hilite($q, $forme);
-    echo '<a href="' . $href .'"><small>' . $n .'.</small> ' . $terme 
+    echo '<a draggable="false" href="' . $href .'"><small>' . $n .'.</small> ' . $terme 
     . ' <small>('.  $count . ')</small>'
     .'</a>', "\n";
     flush();

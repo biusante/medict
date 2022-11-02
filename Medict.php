@@ -203,7 +203,9 @@ class Medict
 
         $block = '';
         $block .= '<div class="entree">';
-        $block .= '<a class="entree" target="facs" href="' . $url . '">';
+        $block .= '<a class="entree" target="facs"' 
+        . ' draggable="false"'
+        . ' href="'. $url . '">';
         if (isset($entree['in']) && $entree['in']) {
             $block .= "« " . $entree['in'] . " » <i>in</i> ";
         }
