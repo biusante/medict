@@ -157,6 +157,23 @@ class Medict
     */
     }
 
+    /**
+     * Élément de requête SQL partagé entre colonne d’index et accès entrées
+     */
+    public static function rels_vedettes()
+    {
+        $reltype_orth = 1;
+        $reltype_term = 2;
+        $reltype_foreign = 3;
+        // colonne index : vedettes, sous-vedettes (locutions), traductions
+        // orth IS NULL ? sans doute un mauvais hack, à revoir
+        $rels = "(reltype = $reltype_orth OR reltype = $reltype_term  OR (reltype = $reltype_foreign AND orth IS NULL ))";
+        return $rels;
+    }
+
+    /**
+     * Cette méthode doit être identique à celle utilisée à l’indexation
+     */
     public static function deforme($s, $langue=null)
     {
         // bas de casse

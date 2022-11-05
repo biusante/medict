@@ -29,7 +29,8 @@ if ($reqPars[Medict::DICO_TITRE]) {
 
 // limiter le nombre de résultats
 $limit = 1000;
-$rels = "(reltype = 1 OR reltype = 4  OR (reltype = 2 AND orth IS NULL ))";
+// pareil que entrees.php
+$rels = Medict::rels_vedettes();
 
 /*
 // si une seule lettre, c’est lent, contournement

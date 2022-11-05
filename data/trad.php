@@ -28,15 +28,16 @@ while ($terme = $qterme->fetch(PDO::FETCH_ASSOC)) {
 }
 $dico_terme = '(' . implode(', ', $dico_terme) . ')';
 
+$reltype_foreign = 3;
 $sql = "
 SELECT *
 FROM dico_rel
 INNER JOIN dico_terme
     ON dico_rel.dico_terme = dico_terme.id
 WHERE
-    reltype = 2
+    reltype = $reltype_foreign
     AND dico_terme NOT IN $dico_terme
-    AND dico_entree IN (SELECT dico_entree FROM dico_rel WHERE reltype = 2 AND dico_terme IN $dico_terme)
+    AND dico_entree IN (SELECT dico_entree FROM dico_rel WHERE reltype = $reltype_foreign AND dico_terme IN $dico_terme)
 ORDER BY langue, deforme, volume_annee DESC
 
 ";

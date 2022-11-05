@@ -26,7 +26,7 @@ if ($reqPars[Medict::DICO_TITRE]) {
 }
 
 // pareil que mots.php
-$rels = "(reltype = 1 OR reltype = 4  OR (reltype = 2 AND orth IS NULL ))";
+$rels = Medict::rels_vedettes();
 
 
 
