@@ -14,6 +14,15 @@
 /var/www/html/medict$ vi pars.php
 ~~~~
 4. http://localhost/medict
-![image](https://user-images.githubusercontent.com/5686231/201225285-fd59f3a1-9cc0-4948-94b1-2459d14a2a28.png)
 
+## Requis
+
+* Modules Apache
+  * mod_rewrite — pour url propres
+* Modules PHP
+  *    
+
+## Arbre des fichiers
+
+* [.htaccess](.htaccess) 
 
