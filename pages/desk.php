@@ -27,7 +27,7 @@ $t = Web::par('t', '');
             <input type="hidden" name="bibl" />
             <div class="flexbuts">
                 <input name="q" id="q" placeholder="Rechercher un terme" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
-                <a title="Tout réinitialiser" href="<?= Route::app_href() ?>." class="but reset">⟳</a>
+                <a title="Tout réinitialiser" href="<?= Route::home_href() ?>." class="but reset">⟳</a>
             </div>
             <?php include(__DIR__.'/titres.php') ?>
             <button type="submit">Go</button>

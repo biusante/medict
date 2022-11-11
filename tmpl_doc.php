@@ -4,7 +4,16 @@
  * This file is part of Medict https://github.com/biusante/medict
  * Copyright (c) 2021 Université Paris Cité / Bibliothèques / Histoire de la santé
  */
-/** Template */
+/** 
+ * La “templette” de la page d’accueil.
+ * 
+ * Les contenus sont insérés par le routeur (Route) qui a l’information.
+ * 
+ * Route::main() : le contenu à insérer selon l’url demandée
+ * Route::home_href() : lien relatif a ici selon l’url demandée
+ * 
+ */
+
 declare(strict_types=1);
 
 require_once(__DIR__ . "/Medict.php");
@@ -23,7 +32,7 @@ $body_class = $page;
     <meta charset="utf-8" />
     <title><?= Route::title('Métadictionnaire — Dictionnaires Medica — BIU Santé, Paris') ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
-    <link rel="icon" href="<?= Route::app_href() ?>theme/UP_favicon.png" sizes="32x32">
+    <link rel="icon" href="<?= Route::home_href() ?>theme/UP_favicon.png" sizes="32x32">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.10.5/viewer.min.css" rel="stylesheet" />
     
@@ -32,8 +41,8 @@ $body_class = $page;
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&amp;subset=latin,latin-ext" />
     <!-- Feuilles de styles -->
     <link rel="stylesheet" href="https://www.biusante.parisdescartes.fr/ressources/css/style.css?2.9.11" />
-    <link rel="stylesheet" href="<?= Route::app_href() ?>vendor/split.css" />
-    <link rel="stylesheet" href="<?= Route::app_href() ?>theme/medict.css" />
+    <link rel="stylesheet" href="<?= Route::home_href() ?>vendor/split.css" />
+    <link rel="stylesheet" href="<?= Route::home_href() ?>theme/medict.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
 </head>
 
@@ -111,10 +120,10 @@ $body_class = $page;
             <div id="upper-footer">
                 <div id="logos-institutionnels">
                     <span>
-                        <a href="https://u-paris.fr/bibliotheques" target="_blank"> <img class="logo" src="<?= Route::app_href() ?>theme/UP_monog_48px.png" alt="Monogramme Université Paris Cité"></a>
+                        <a href="https://u-paris.fr/bibliotheques" target="_blank"> <img class="logo" src="<?= Route::home_href() ?>theme/UP_monog_48px.png" alt="Monogramme Université Paris Cité"></a>
                     </span>
                     <span>
-                        <img class="logo" src="<?= Route::app_href() ?>theme/IA_48px.png" alt="Logo Investissements d'avenir">
+                        <img class="logo" src="<?= Route::home_href() ?>theme/IA_48px.png" alt="Logo Investissements d'avenir">
                     </span>
                 </div>
                 <div id="liens-utilitaires">
@@ -126,12 +135,12 @@ $body_class = $page;
             </div>
         </div>
     </div>
-    <script src="<?= Route::app_href() ?>vendor/split.js"></script>
-    <script src="<?= Route::app_href() ?>vendor/viewer.js"></script>
-    <script src="<?= Route::app_href() ?>theme/medict.js"></script>
+    <script src="<?= Route::home_href() ?>vendor/split.js"></script>
+    <script src="<?= Route::home_href() ?>vendor/viewer.js"></script>
+    <script src="<?= Route::home_href() ?>theme/medict.js"></script>
     <!-- jQuery (for the Medica menu) too heavy  -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-    <script src="<?= Route::app_href() ?>theme/biusante.js"></script>
+    <script src="<?= Route::home_href() ?>theme/biusante.js"></script>
 </body>
 
 </html>
