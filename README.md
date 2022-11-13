@@ -1,19 +1,6 @@
 # BIU Santé / Médica / Métadictionnaire : application web
 
-## Installation rapide
-
-1. Charger une base de données MySQL, cf. entrepôt [medict_sql](https://github.com/biusante/medict_sql#readme)
-2. Récupérer la dernière version de l’aplication dans un dossier servi par Apache
-~~~~
-/var/www/html$ git clone https://github.com/biusante/medict.git
-~~~~
-3. Paramétrage (connexion MySQL)
-~~~~
-/var/www/html$ cd medict
-/var/www/html/medict$ cp _pars.php pars.php
-/var/www/html/medict$ vi pars.php
-~~~~
-4. http://localhost/medict
+Cet entrepôt contient l’application web de publication du Métadictionnaire (données à charger ou produire avec [medict_sql](https://github.com/biusante/medict_sql#readme)). Par design, cette application essaiera de rester en lecture seule et ne produire aucune données, sauf besoins de l’équipe de recherche.
 
 ## Requis
 
@@ -22,9 +9,80 @@ Un serveur PHP/MySQL installé.
 * Module Apache
   * mod_rewrite — pour routage des url
 * Modules PHP
-  * intl — pour normalisation du grec, [Normalizer](https://www.php.net/manual/fr/class.normalizer.php)
-  * mbstring — traitement de chaînes unicode
   * pdo_mysql — connexion à la base de données
+  * mbstring — traitement de chaînes unicode
+  * intl — pour normalisation du grec, [Normalizer](https://www.php.net/manual/fr/class.normalizer.php)
+
+
+## Installation rapide
+
+1. Charger une base de données MySQL avec [medict_sql](https://github.com/biusante/medict_sql#readme)
+2. Récupérer la dernière version de l’aplication dans un dossier servi par Apache
+```bash
+# vérifier les droits sur le dossier html/ (.)
+/var/www/html$ ls -alh
+total 20K
+drwxrwsr-x 2 root les_admins 4.0K Nov 13 12:42 .
+# facultatif, donne les droits d’écriture au groupe sur les fichiers créés
+/var/www/html$ umask 0002
+# Apache n’a (pour l’instant) pas besoin d’écrire
+# Ceci pourra évoluer selon les demandes scientifiques
+# dernière version de l’appli
+/var/www/html$ git clone https://github.com/biusante/medict.git
+```
+3. Paramétrage (connexion MySQL)
+```bash
+/var/www/html$ cd medict
+/var/www/html/medict$ ls -alh
+total 80K
+drwxrwsr-x 9 moi_meme les_admins 4.0K Nov 13 12:54 .
+drwxrwsr-x 3 root     les_admins 4.0K Nov 13 12:54 ..
+drwxrwsr-x 8 moi_meme les_admins 4.0K Nov 13 12:54 .git
+-rw-rw-r-- 1 moi_meme les_admins   55 Nov 13 12:54 .gitattributes
+-rw-rw-r-- 1 moi_meme les_admins  127 Nov 13 12:54 .gitignore
+-rw-rw-r-- 1 moi_meme les_admins  435 Nov 13 12:54 .htaccess
+-rw-rw-r-- 1 moi_meme les_admins 8.5K Nov 13 12:54 Medict.php
+-rw-rw-r-- 1 moi_meme les_admins 2.5K Nov 13 12:54 README.md
+-rw-rw-r-- 1 moi_meme les_admins  191 Nov 13 12:54 _pars.php
+drwxrwsr-x 2 moi_meme les_admins 4.0K Nov 13 12:54 data
+drwxrwsr-x 2 moi_meme les_admins 4.0K Nov 13 12:54 doc
+-rw-rw-r-- 1 moi_meme les_admins  893 Nov 13 12:54 index.php
+drwxrwsr-x 2 moi_meme les_admins 4.0K Nov 13 12:54 pages
+drwxrwsr-x 4 moi_meme les_admins 4.0K Nov 13 12:54 php
+drwxrwsr-x 2 moi_meme les_admins 4.0K Nov 13 12:54 theme
+-rw-rw-r-- 1 moi_meme les_admins 7.8K Nov 13 12:54 tmpl_doc.php
+drwxrwsr-x 3 moi_meme les_admins 4.0K Nov 13 12:54 vendor
+/var/www/html/medict$ cp _pars.php pars.php
+/var/www/html/medict$ vi pars.php
+```
+4. http://localhost/medict
+
+
+## Erreurs connues
+
+Les erreurs suivantes ont été rencontrées lors de l’installation de l’application
+sur un serveur Ubuntu 22.04 LTS vierge.
+
+**http://localhost/medict HTTP ERROR 500**
+
+Votre serveur refuse d’afficher les erreurs PHP, c’est la configuration par défaut en production
+(ce qui est une bonne pratique). Le fichier [.htaccess](.htaccess) par défaut de l’application
+force normalement l’affichage des messages d’erreur. Vérifier que la configuration de votre
+serveur http (Apache) prend en compte les fichiers .htaccess. Assurez-vous que le dossier qui 
+contient l’application a bien la commande `AllowOverride All`.
+
+```apacheconf
+# Ubuntu /etc/apache2/sites-available/000-default.conf
+DocumentRoot /var/www/html
+<Directory /var/www/html>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+```
+
+Ne pas oublier de redémarrer apache `sudo service apache2 restart`.
+
 
 ## Arbre des fichiers
 
