@@ -7,10 +7,11 @@
 /** 
  * La “templette” de la page d’accueil.
  * 
- * Les contenus sont insérés par le routeur (Route) qui a l’information.
+ * Les contenus sont insérés par le routeur (Route) selon l’url demandée
  * 
- * Route::main() : le contenu à insérer selon l’url demandée
- * Route::home_href() : lien relatif a ici selon l’url demandée
+ * Route::main() : le contenu principal à insérer 
+ * Route::home_href() : lien relatif a ici
+ * Route::title() : titre du 
  * 
  */
 

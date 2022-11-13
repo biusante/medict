@@ -49,17 +49,42 @@ class Medict
 
     public static function init()
     {
-        $ex = "";
+        $ex = [];
         foreach(self::EXTENSIONS as $ext=>$mess) {
             if (extension_loaded($ext)) continue;
-            $ex .= "$ext, extension php requise (cf. php.ini)\n{$mess[0]}\nUbuntu 22.04$ sudo apt install {$mess[1]}\n";
+            echo "<p>
+<b>$ext</b>, extension php requise (cf. php.ini)
+<br/>{$mess[0]}
+<br/><code>Ubuntu 22.04$ sudo apt install {$mess[1]}</code>
+</p>
+";
+            $ex [] = $ext;
         }
-        if ($ex) {
-            throw new Exception($ex);
+        if (count($ex)) {
+            throw new Exception("Au moins une extension php manquante : ".implode(", ", $ex));
+        }
+        $pars_file = __DIR__ . '/pars.php';
+        if (!file_exists($pars_file)) {
+            throw new Exception("Paramètres MySQL manquants (pars.php). Modèle : _pars.php");
         }
         self::$pars = include dirname(__FILE__) . '/pars.php';
+
+        $keys = ['host', 'port', 'base', 'user', 'pass'];
+        $e = [];
+        foreach($keys as $k) {
+            if (isset(self::$pars[$k]) && self::$pars[$k]) continue;
+            $e[] = $k;
+            echo "<p>pars.php ['$k' => ???] paramètre requis</p>";
+        }
+        if (count($e)) {
+            $count = count($e) . " paramètres manquants";
+            if (count($e) == 1) $count = "1 paramètre manquant";
+            throw new Exception("$pars_file, $count : ".implode(", ", $e));
+        }
+
+
         self::$pdo =  new PDO(
-            "mysql:host=" . self::$pars['host'] . ";port=" . self::$pars['port'] . ";dbname=" . self::$pars['dbname'],
+            "mysql:host=" . self::$pars['host'] . ";port=" . self::$pars['port'] . ";dbname=" . self::$pars['base'],
             self::$pars['user'],
             self::$pars['pass'],
             array(

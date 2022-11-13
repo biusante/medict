@@ -2,9 +2,14 @@
 /** Paramètres locaux de connexions à la base MySQL */
 
 return array(
-  'host' => 'localhost',
+  // serveur MySQL
+  'host' => '127.0.0.1',
+  // port MySQL
   'port' => '3306',
-  'dbname' => 'medict',
-  'user' => '?????',
-  'pass' => '?????',
+  // base du métadictionnaire créeé avec https://github.com/biusante/medict_sql
+  'base' => 'medict', 
+  // utilisateur avec 
+  'user' => 'medict',
+  // mot de passe de cet utilisateur 
+  'pass' => ?????, 
 );

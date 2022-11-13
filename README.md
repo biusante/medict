@@ -4,7 +4,7 @@ Cet entrepôt contient l’application web de publication du Métadictionnaire (
 
 ## Requis
 
-Un serveur PHP/MySQL installé.
+Un serveur MySQL **5.7**. Attention, très gros problème de performances avec **MySQL 8** (requêtes en timeout), cf. https://dev.mysql.com/doc/refman/8.0/en/known-issues.html. Aucun contournement n’a encore été trouvé.
 
 * Module Apache
   * mod_rewrite — pour routage des url
@@ -83,6 +83,87 @@ DocumentRoot /var/www/html
 
 Ne pas oublier de redémarrer apache `sudo service apache2 restart`.
 
+**Fatal error: Uncaught Exception: Fatal error: Uncaught Exception: Au moins une extension php manquante : … in …medict/Medict.php**
+
+Extensions PHP requises qui ne sont pas installées sur le serveur.
+```bash
+Ubuntu 22.04$ sudo apt update
+Ubuntu 22.04$ sudo apt install php-mysql php-mbstring php-intl
+Ubuntu 22.04$ sudo service apache2 restart
+```
+
+**Fatal error: Uncaught Exception: Paramètres MySQL manquants (pars.php). Modèle : _pars.php in …medict/Medict.php**
+
+L’application ne trouve pas son fichier de paramétrage attendu dans `./pars.php`.
+
+**Fatal error: Uncaught Exception: pars.php, 5 paramètres manquants : host, port, base, user, pass in …medict/Medict.php**
+
+1 ou plusieurs paramètre requis ne sont pas renseignés dans ./pars.php, cf. [_pars.php](_pars.php).
+
+```php
+return array(
+  // serveur MySQL
+  'host' => '127.0.0.1',
+  // port MySQL
+  'port' => '3306',
+  // base du métadictionnaire créeé avec https://github.com/biusante/medict_sql
+  'base' => 'medict', 
+  // utilisateur avec 
+  'user' => 'medict',
+  // mot de passe de cet utilisateur 
+  'pass' => ?????, 
+);
+```
+
+**PDOException: SQLSTATE[HY000] [2002] Connection refused**
+
+MySQL n’est pas démarré.
+
+```bash
+Ubuntu 22.04$ telnet 127.0.0.1 3306
+Trying 127.0.0.1...
+telnet: Unable to connect to remote host: Connection refused
+Ubuntu 22.04$ sudo service mysql restart
+Ubuntu 22.04$ telnet 127.0.0.1 3306
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+# demande un mot de passe, arrêter avec Ctrl+C
+```
+
+**PDOException: SQLSTATE[HY000] [1044] Access denied for user …**
+
+Ce serveur MySQL ne connaît pas l’utilisateur déclaré dans votre fichier pars.php. Cet utilisateur a besoin des seuls droits de SELECT (`GRANT SELECT ON medict.*`).
+
+```bash
+Ubuntu 22.04$ sudo mysql
+mysql> CREATE USER 'medict'@'localhost' IDENTIFIED BY 'MotDePasseSuperSecret';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> GRANT SELECT ON medict.* TO 'medict'@'localhost';
+Query OK, 0 rows affected (0.02 sec)
+```
+
+**404 Not Found (dans tous les cadres)**
+
+Le module Apache mod_rewrite n’est probablement pas fonctionnel.
+
+```bash
+Ubuntu 22.04$ sudo a2enmod rewrite
+Ubuntu 22.04$ sudo service apache2 restart
+```
+
+**[data/mots?q=a](http://localhost/medict/data/mots?q=a) PDOException: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column…**
+
+La base est sans doute mal chargée.
+
+```bash
+Ubuntu 22.04$ sudo mysql
+mysql> source …medict_sql/data_sql/medict_dico_titre.sql;
+mysql> source …medict_sql/data_sql/medict_dico_volume.sql;
+mysql> source …medict_sql/data_sql/medict_dico_terme.sql;
+mysql> source …medict_sql/data_sql/medict_dico_entree.sql;
+mysql> source …medict_sql/data_sql/medict_dico_rel.sql;
+```
 
 ## Arbre des fichiers
 
