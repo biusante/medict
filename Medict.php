@@ -16,6 +16,11 @@ Medict::init();
 class Medict
 {
     /** Constantes */
+    const EXTENSIONS = array(
+        "pdo_mysql" => ["Connexion PDO à mysql", 'php-mysql'],
+        'mbstring' => ["Fonctions de chaîne “nulti-bytes” (unicode)", 'php-mbstring'],
+        'intl' => ["Fonctions d'“internationalisation” (Normalizer pour le grec ancien)", 'php-intl'],
+    );
     const AN1 = "an1";
     const AN2 = "an2";
     const F = "f";
@@ -44,6 +49,14 @@ class Medict
 
     public static function init()
     {
+        $ex = "";
+        foreach(self::EXTENSIONS as $ext=>$mess) {
+            if (extension_loaded($ext)) continue;
+            $ex .= "$ext, extension php requise (cf. php.ini)\n{$mess[0]}\nUbuntu 22.04$ sudo apt install {$mess[1]}\n";
+        }
+        if ($ex) {
+            throw new Exception($ex);
+        }
         self::$pars = include dirname(__FILE__) . '/pars.php';
         self::$pdo =  new PDO(
             "mysql:host=" . self::$pars['host'] . ";port=" . self::$pars['port'] . ";dbname=" . self::$pars['dbname'],
