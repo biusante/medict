@@ -34,6 +34,10 @@ body {
     height: 100%;
 }
 
+body.desk {
+    overflow: hidden;
+}
+
 a {
     user-drag: none;
     /*
@@ -83,6 +87,8 @@ a {
     flex: 0 0 auto;
     height: 22px;
     background-color: var(--form_bg);
+    position: relative;
+    bottom: 0;
     /*
     box-shadow: 0 -1px 0 rgba(0, 0, 0, .5);
     */
@@ -118,6 +124,7 @@ a {
     transition: all .1s ease 0s;
     height: auto;
     background-color: var(--form_bg);
+    font-size: 1.2rem;
 }
 
 #pied:hover img.logo {
@@ -152,7 +159,12 @@ a {
 }
 
 #logos-institutionnels {
-    padding-top: 2px;
+    display: flex;
+    align-items: center;
+}
+
+#logos-institutionnels > * {
+    padding: 0 4px;
 }
 
 #liens-utilitaires {

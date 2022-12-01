@@ -13,6 +13,7 @@ Un serveur MySQL **5.7**. Attention, très gros problème de performances avec *
   * mbstring — traitement de chaînes unicode
   * intl — pour normalisation du grec, [Normalizer](https://www.php.net/manual/fr/class.normalizer.php)
 
+Attention, un Ubuntu récent force à l’utilisation de MySQL 8 (contrairement aux hébergements mutualisés). Il n’est plus possible d’installer MySQL 5.7 par les dépôts par défaut.
 
 ## Installation rapide
 
