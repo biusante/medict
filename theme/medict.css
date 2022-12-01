@@ -68,6 +68,32 @@ a {
     width: 100%;
 }
 
+#tete h1 {
+    margin: 0;
+    padding: 0;
+    border: none;
+    text-align: center;
+    font-size: 2rem !important;
+}
+
+#site-name a {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+#tete h1::after {
+    display: none;
+}
+
+#tete-titre {
+    align-self: center;
+    padding: 10px 0 0 0;
+}
+
+#tete-titre .liens {
+    text-align: right;
+}
+
 #header-main-content {
     height: auto;
     width: auto;
@@ -163,7 +189,7 @@ a {
     align-items: center;
 }
 
-#logos-institutionnels > * {
+#logos-institutionnels>* {
     padding: 0 4px;
 }
 

@@ -85,6 +85,12 @@ $body_class = $page;
           </div>
 
         </div>
+        <div id="tete-titre">
+          <h1>Métadictionnaire médical multilingue</h1>
+          <div class="liens">
+            <a target="_blank" class="externe" href="https://www.biusante.parisdescartes.fr/histoire/medica/presentation-metadictionnaire.php">Présentation</a>
+          </div>
+        </div>
         <div id="menu-container">
           <div id="site-name">
             <a href="https://u-paris.fr/bibliotheques">Bibliothèques d'Université Paris Cité</a>
@@ -122,7 +128,7 @@ $body_class = $page;
         <div id="logos-institutionnels">
           <span>Un projet de</span>
           <span>
-            <a target="_blank" 
+            <a target="_blank"
             href="https://u-paris.fr/bibliotheques"><img class="logo" 
             src="<?= Route::home_href() ?>theme/logo_UPC_48px.png" 
             alt="UP Cité"></a>
