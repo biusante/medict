@@ -105,7 +105,7 @@ class Medict
     public static function reqPars()
     {
         $reqPars = array();
-        list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee), MAX(annee) FROM dico_titre")->fetch();
+        list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee), MAX(annee) FROM dico_titre")->fetch();;
         $an1 = Web::par(self::AN1, null);
         if ($an1 <=  $an_min) $an1 = null;
         $an2 = Web::par(self::AN2, null);

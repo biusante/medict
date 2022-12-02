@@ -81,14 +81,7 @@ foreach (Medict::TAGS as $tag => $a) {
 }
 
 ?>
-        <!--
-    <div class="bislide">
-    <div>Limiter la recherche à une période</div>
-    <input name="an1" step="1" value="<?= $an1 ?>" min="<?= $an_min ?>" max="<?= $an_max ?>" type="range"/>
-    <input name="an2" step="1" value="<?= $an2 ?>" min="<?= $an_min ?>" max="<?= $an_max ?>" type="range"/>
-    <div class="values"></div>
-    </div>
-    -->
+
         </header>
         <div id="titres_cols">
 
