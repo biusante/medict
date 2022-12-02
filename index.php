@@ -7,6 +7,17 @@
 /** router */
 declare(strict_types=1);
 
+/*** POLYFILL AJOUTE PAR OGH ***/
+if (!function_exists('array_key_first')) {
+    function array_key_first(array $arr){
+        foreach($arr as $key => $unused) {
+            return $key;
+        }
+        return null;
+    }
+}
+/*** FIN DU POLYFILL AJOUTE PAR OGH ***/
+
 // Change this path if app is in another folder
 $appdir = __DIR__ . "/";
 
