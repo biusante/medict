@@ -93,7 +93,7 @@ class Medict
                 // if true : big queries need memory
                 // if false : multiple queries arre not allowed
                 // PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,
-            ),
+            )
         );
         // self::$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
         mb_internal_encoding("UTF-8");
@@ -215,7 +215,7 @@ class Medict
     public static function deforme($s, $langue=null)
     {
         // bas de casse
-        $s = mb_convert_case($s, MB_CASE_FOLD, "UTF-8");
+        $s = mb_convert_case($s, MB_CASE_LOWER, "UTF-8");
         // décomposer lettres et accents
         $s = Normalizer::normalize($s, Normalizer::FORM_D);
         // ne conserver que les lettres et les espaces, et les traits d’union
