@@ -14,46 +14,40 @@ declare(strict_types=1);
 
 namespace Oeuvres\Kit;
 
-use Psr\Log\{LoggerInterface, NullLogger};
+use Oeuvres\Teinte\Format\File;
 
 mb_internal_encoding("UTF-8");
-I18n::init();
+
 class I18n
 {
-    /** A logger */
-    private static $logger;
     /** Messages */
     private static $messages = array();
 
     /**
-     * Intialize static variables
+     * Load default error messages send by app
      */
-    public static function init()
+    public static function init(): void
     {
-        self::$logger = new NullLogger();
-    }
-
-    /**
-     * Set logger
-     */
-    public static function setLogger(LoggerInterface $logger)
-    {
-        self::$logger = $logger;
+        self::load(__DIR__ . '/I18n_en.tsv');
     }
 
     /**
      * Load an array of messages
      */
-    public static function load($tsv_file)
+    public static function load($tsv_file): void
     {
-        $map = File::tsv_map($tsv_file);
+        $map = Parse::tsv_map($tsv_file);
+        if ($map === null) {
+            Log::warning("I18n error");
+            return;
+        }
         self::put($map);
     }
 
     /**
      * Put an array of messages, new value for same key overwrite old one
      */
-    public static function put($messages)
+    public static function put($messages): void
     {
         self::$messages = array_merge(self::$messages, $messages);
     }
@@ -65,23 +59,47 @@ class I18n
     {
         $args = func_get_args();
         if (count($args) < 1) {
-            self::$logger->warning("No message requested");
-            return ' ';
+            Log::warning("A key is required for a message");
+            return '';
         }
-        $key = $args[0];
-        if (isset(self::$messages[$key])) {
-            $args[0] = self::$messages[$key];
+        $msg = array_shift($args);
+        if (isset(self::$messages[$msg])) {
+            $msg = self::$messages[$msg];
         } else {
             // test if capitalized key exists
-            $keyuc1 = mb_strtoupper(mb_substr($key, 0, 1)) . mb_substr($key, 1);
+            $keyuc1 = mb_strtoupper(mb_substr($msg, 0, 1)) . mb_substr($msg, 1);
             if (isset(self::$messages[$keyuc1])) {
                 $args[0] = mb_strtolower(self::$messages[$keyuc1]);
             } else {
-                self::$logger->warning("No message found for the key=\"$key\"");
+                Log::warning("No message found for the key=\"$msg\"");
             }
         }
-        // call sprintf 
-        return forward_static_call_array('sprintf', $args);
+        // sprintf is not safe if not enough arguments
+        return self::format($msg, $args);
+    }
+
+    /**
+     * a python format like
+     */
+    public static function format(string $msg, ?array $vars): string
+    {
+        $vars = (array)$vars;
+        // in case of sprintf
+        $msg = preg_replace('#%s#', '{}', $msg);
+            //numbering empty {}
+        $msg = preg_replace_callback('#\{\}#', function($r){
+            static $i = 0;
+            return '{'.($i++).'}';
+        }, $msg);
+        return str_replace(
+            array_map(function($k) {
+                return '{'.$k.'}';
+            }, array_keys($vars)),
+
+            array_values($vars),
+
+            $msg
+        );
     }
 
     /**
@@ -106,3 +124,4 @@ class I18n
 
 
 }
+I18n::init();

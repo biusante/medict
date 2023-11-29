@@ -42,7 +42,7 @@ $body_class = $page;
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&amp;subset=latin,latin-ext" />
   <!-- Feuilles de styles -->
   <link rel="stylesheet" href="https://www.biusante.parisdescartes.fr/ressources/css/style.css?2.9.11" />
-  <link rel="stylesheet" href="<?= Route::home_href() ?>vendor/split.css" />
+  <link rel="stylesheet" href="<?= Route::home_href() ?>js/split.css" />
   <link rel="stylesheet" href="<?= Route::home_href() ?>theme/medict.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
 </head>
@@ -185,8 +185,8 @@ $body_class = $page;
       </div>
     </div>
   </div>
-  <script src="<?= Route::home_href() ?>vendor/split.js"></script>
-  <script src="<?= Route::home_href() ?>vendor/viewer.js"></script>
+  <script src="<?= Route::home_href() ?>js/split.js"></script>
+  <script src="<?= Route::home_href() ?>js/viewer.js"></script>
   <script src="<?= Route::home_href() ?>theme/medict.js"></script>
   <!-- jQuery (for the Medica menu) too heavy  -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>

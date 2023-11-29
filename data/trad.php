@@ -7,10 +7,10 @@
 
 include_once(dirname(__DIR__) . "/Medict.php");
 
-use Oeuvres\Kit\{Web};
+use Oeuvres\Kit\{Http};
 
 // une veddette à chercher
-$t = Web::par('t', null);
+$t = Http::par('t', null);
 // rien à chercher
 if (!$t) {
     echo '<!-- Aucun mot cherché. -->';

@@ -5,7 +5,7 @@
  */
 require_once(dirname(__DIR__) . "/Medict.php");
 
-use Oeuvres\Kit\{Route,Web};
+use Oeuvres\Kit\{Http, Route};
 
 /** Search form  */
 
@@ -14,16 +14,16 @@ list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(titre_annee), MAX(titre
 $an1 = Web::par('an1', $an_min);
 $an2 = Web::par('an2', $an_max);
 */
-$q = Web::par('q', '');
-$t = Web::par('t', '');
+$q = Http::par('q', '');
+$t = Http::par('t', '');
 
 ?>
 <div id="medict">
     <div id="col1">
         <form name="medict" class="recherche" autocomplete="off">
             <input type="hidden" name="t" value="<?= htmlspecialchars($t, ENT_QUOTES, 'UTF-8'); ?>"/>
-            <input type="hidden" name="cote" value="<?= htmlspecialchars( Web::par('cote', ''), ENT_QUOTES, 'UTF-8'); ?>"/>
-            <input type="hidden" name="p" value="<?= intval( Web::par('p', '')); ?>"/>
+            <input type="hidden" name="cote" value="<?= htmlspecialchars( Http::par('cote', ''), ENT_QUOTES, 'UTF-8'); ?>"/>
+            <input type="hidden" name="p" value="<?= intval(Http::par('p', '')); ?>"/>
             <input type="hidden" name="bibl" />
             <div class="flexbuts">
                 <input name="q" id="q" placeholder="Rechercher un terme" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
@@ -39,7 +39,7 @@ $t = Web::par('t', '');
     <div id="col2">
         <div class="pannel entrees" id="panentrees">
             <header>Entrées 
-            <!-- <a class="but" target="_blank" href="data/entrees?<?= Web::query() ?>">🡵</a> -->
+            <!-- <a class="but" target="_blank" href="data/entrees?<?= Http::query() ?>">🡵</a> -->
             </header>
             <nav id="entrees"  class="data" data-url="data/entrees">
             

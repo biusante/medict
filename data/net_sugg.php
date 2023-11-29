@@ -7,14 +7,14 @@
 
 include_once(dirname(__DIR__) . "/Medict.php");
 
-use Oeuvres\Kit\{Web};
+use Oeuvres\Kit\{Http};
 
 // une ou plusieurs vedette source
 // nombre d’itérations < 5
 
 // pôle centraux
-$suns = Web::pars('t');
-$src = preg_replace('@^1@', '', Web::par('t', null));
+$suns = Http::pars('t');
+$src = preg_replace('@^1@', '', Http::par('t', null));
 if (!$src) return; // rien à chercher
 
 

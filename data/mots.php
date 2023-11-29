@@ -7,14 +7,14 @@
 
 include_once(dirname(__DIR__) . "/Medict.php");
 
-use Oeuvres\Kit\{Web};
+use Oeuvres\Kit\{Http};
 
 
 // pars
 $time_start = microtime(true);
 $reqPars = Medict::reqPars();
 
-$q = Web::par('q', null);
+$q = Http::par('q', null);
 if (!$q) return;
 
 if ($q) {

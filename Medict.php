@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Part of Medict https://github.com/biusante/medict
@@ -6,11 +6,9 @@
  * MIT License https://opensource.org/licenses/mit-license.php
  */
 
-declare(strict_types=1);
+include_once(__DIR__ . '/vendor/autoload.php');
 
-include_once(__DIR__ . '/php/autoload.php');
-
-use Oeuvres\Kit\{Web};
+use Oeuvres\Kit\{Http};
 
 Medict::init();
 class Medict
@@ -69,7 +67,7 @@ class Medict
         }
         self::$pars = include dirname(__FILE__) . '/pars.php';
 
-        $keys = ['host', 'port', 'base', 'user', 'pass'];
+        $keys = ['host', 'port', 'dbname', 'user', 'password'];
         $e = [];
         foreach($keys as $k) {
             if (isset(self::$pars[$k]) && self::$pars[$k]) continue;
@@ -84,9 +82,9 @@ class Medict
 
 
         self::$pdo =  new PDO(
-            "mysql:host=" . self::$pars['host'] . ";port=" . self::$pars['port'] . ";dbname=" . self::$pars['base'],
+            "mysql:host=" . self::$pars['host'] . ";port=" . self::$pars['port'] . ";dbname=" . self::$pars['dbname'],
             self::$pars['user'],
-            self::$pars['pass'],
+            self::$pars['password'],
             array(
                 PDO::ATTR_PERSISTENT => true,
                 PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
@@ -106,9 +104,9 @@ class Medict
     {
         $reqPars = array();
         list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(annee), MAX(annee) FROM dico_titre")->fetch();
-        $an1 = Web::par(self::AN1, null);
+        $an1 = Http::par(self::AN1, null);
         if ($an1 <=  $an_min) $an1 = null;
-        $an2 = Web::par(self::AN2, null);
+        $an2 = Http::par(self::AN2, null);
         if ($an2 >=  $an_max) $an2 = null;
         if ($an1 !== null && $an2 !== null && $an2 < $an1) $an2 = $an1;
         $reqPars[self::AN1] = $an1;
@@ -116,7 +114,7 @@ class Medict
         // load filter by cote 
         $reqPars[self::DICO_TITRE] = null;
         $reqPars[self::F] = null;
-        $fdic =  Web::pars(self::F);
+        $fdic =  Http::pars(self::F);
         if (count($fdic)) {
             $reqPars[self::DICO_TITRE] = array();
             $reqPars[self::F] = array();
@@ -212,7 +210,7 @@ class Medict
     /**
      * Cette méthode doit être identique à celle utilisée à l’indexation
      */
-    public static function deforme($s, $langue=null)
+    public static function deforme(string $s, bool $uvij=false)
     {
         // bas de casse
         $s = mb_convert_case($s, MB_CASE_FOLD, "UTF-8");
@@ -220,7 +218,7 @@ class Medict
         $s = Normalizer::normalize($s, Normalizer::FORM_D);
         // ne conserver que les lettres et les espaces, et les traits d’union
         $s = preg_replace("/[^\p{L}\-\s]/u", '', $s);
-        if ('lat' === $langue) {
+        if ($uvij === true) {
             $s = strtr($s,
                 array(
                     'œ' => 'e',

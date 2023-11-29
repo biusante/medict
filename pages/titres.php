@@ -10,7 +10,7 @@ $start_time = microtime(true);
 
 include_once(dirname(__DIR__) . "/Medict.php");
 
-use Oeuvres\Kit\{Route,Web};
+use Oeuvres\Kit\{Http};
 
 // load available dico ids from base
 $biblio = array();
@@ -24,7 +24,7 @@ $coteQ->fetchAll(PDO::FETCH_COLUMN, 0);
 // nom de la sélection
 $selname = "Tout sauf <u>Vidal</u>";
 // corpus requested ?
-$fdic = Web::pars(Medict::F);
+$fdic = Http::pars(Medict::F);
 if (0 == count($fdic)) { // tout sauf Vidal
     $fdic = $biblio;
     unset($fdic['pharma_p11247']);
