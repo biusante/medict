@@ -17,9 +17,7 @@ $reqPars = Medict::reqPars();
 $q = Http::par('q', null);
 if (!$q) return;
 
-if ($q) {
-    $q = Medict::deforme($q);
-}
+
 
 $dico_titre = '';
 // filtre par cote
@@ -90,7 +88,7 @@ SELECT
     FROM dico_rel
     INNER JOIN dico_terme
         ON dico_rel.dico_terme = dico_terme.id
-        AND deforme LIKE ?
+        AND (deforme LIKE ? or uvij LIKE ?)
     WHERE
         $rels
         $dico_titre
@@ -98,15 +96,19 @@ SELECT
     ORDER BY deforme
     LIMIT $limit
 ";
-echo "<!-- \$q=$q -->\n";
+
+$deforme = Medict::deforme($q);
+$uvij = Medict::deforme($q, true);
+echo "<!-- \$q=$uvij -->\n";
+echo "\n<!-- $sql -->\n";
 
 $starttime = microtime(true);
 $query = Medict::$pdo->prepare($sql);
-$query->execute([$q.'%']);
+$query->execute([$deforme.'%', $uvij.'%']);
 echo "<!--", number_format(microtime(true) - $time_start, 3), " s. -->\n";
 $n = 1;
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-    html($n, $row['deforme'], $row['forme'], $row['count'], $q);
+    html($n, $row['deforme'], $row['forme'], $row['count'], $deforme);
     $n++;
     $limit--;
 }
@@ -134,17 +136,17 @@ echo "\n<!-- $sql -->\n";
 
 $starttime = microtime(true);
 // si pas q parti ?
-if (mb_strpos($q, ' ') !== false) {
-    $search = '+' . preg_replace('@\s+@ui', '* +', $q) . '*';
+if (mb_strpos($deforme, ' ') !== false) {
+    $search = '+' . preg_replace('@\s+@ui', '* +', $deforme) . '*';
 }
 else {
-    $search = $q . '*';
+    $search = $deforme . '*';
 }
 $query = Medict::$pdo->prepare($sql);
 $query->execute([$search]);
 echo "<!-- search=$search limit=$limit " . number_format(microtime(true) - $time_start, 3). " s. -->\n";
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-    html($n, $row['deforme'], $row['forme'], $row['count'], $q);
+    html($n, $row['deforme'], $row['forme'], $row['count'], $deforme);
     $n++;
 }
 echo '<p class="end"></p>';
