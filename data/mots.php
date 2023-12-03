@@ -88,14 +88,17 @@ SELECT
     FROM dico_rel
     INNER JOIN dico_terme
         ON dico_rel.dico_terme = dico_terme.id
-        AND (deforme LIKE ? or uvij LIKE ?)
-    WHERE
-        $rels
-        $dico_titre
+        AND (deforme LIKE ?)
+
     GROUP BY deforme
     ORDER BY deforme
     LIMIT $limit
 ";
+/*
+    WHERE
+        $rels
+        $dico_titre
+*/
 
 $deforme = Medict::deforme($q);
 $uvij = Medict::deforme($q, true);
@@ -104,10 +107,11 @@ echo "\n<!-- $sql -->\n";
 
 $starttime = microtime(true);
 $query = Medict::$pdo->prepare($sql);
-$query->execute([$deforme.'%', $uvij.'%']);
+$query->execute([$deforme.'%']);
 echo "<!--", number_format(microtime(true) - $time_start, 3), " s. -->\n";
 $n = 1;
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+
     html($n, $row['deforme'], $row['forme'], $row['count'], $deforme);
     $n++;
     $limit--;

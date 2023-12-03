@@ -29,14 +29,13 @@ if ($reqPars[Medict::DICO_TITRE]) {
 $rels = Medict::rels_vedettes();
 
 
-
+//     AND $rels
 
 $sql = "
 SELECT *
 FROM dico_rel
 WHERE
     dico_terme IN (SELECT id FROM dico_terme WHERE deforme = ?)
-    AND $rels
     $dico_titre
 ORDER BY
     volume_annee,

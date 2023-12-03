@@ -218,6 +218,16 @@ class Medict
         $s = Normalizer::normalize($s, Normalizer::FORM_D);
         // ne conserver que les lettres et les espaces, et les traits d’union
         $s = preg_replace("/[^\p{L}\-\s]/u", '', $s);
+
+        $s = strtr($s,
+            array(
+                'œ' => 'oe',
+                'æ' => 'ae',
+                'j' => 'i',
+                'u' => 'v',
+            )
+        );
+        /*
         if ($uvij === true) {
             $s = strtr($s,
                 array(
@@ -237,6 +247,7 @@ class Medict
                 )
             );
         }
+        */
         // normaliser les espaces
         $s = preg_replace('/[\s\-]+/', ' ', trim($s));
         return $s;
