@@ -89,6 +89,8 @@ SELECT
     INNER JOIN dico_terme
         ON dico_rel.dico_terme = dico_terme.id
         AND (deforme LIKE ?)
+    WHERE
+        $dico_titre
 
     GROUP BY deforme
     ORDER BY deforme
