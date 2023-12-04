@@ -22,7 +22,7 @@ if (!$q) return;
 $dico_titre = '';
 // filtre par cote
 if ($reqPars[Medict::DICO_TITRE]) {
-    $dico_titre = "AND dico_titre IN (" . implode(", ", $reqPars[Medict::DICO_TITRE]) . ")";
+    $dico_titre = "dico_titre IN (" . implode(", ", $reqPars[Medict::DICO_TITRE]) . ")";
 }
 
 // limiter le nombre de résultats

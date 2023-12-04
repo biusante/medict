@@ -29,8 +29,9 @@ if ($reqPars[Medict::DICO_TITRE]) {
 $rels = Medict::rels_vedettes();
 
 
-//     AND $rels
 
+
+// AND $rels
 $sql = "
 SELECT *
 FROM dico_rel
