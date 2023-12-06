@@ -203,7 +203,7 @@ class Medict
         $reltype_foreign = 3;
         // colonne index : vedettes, sous-vedettes (locutions), traductions
         // orth IS NULL ? sans doute un mauvais hack, à revoir
-        $rels = "(reltype = $reltype_orth OR reltype = $reltype_term  OR (reltype = $reltype_foreign AND orth IS NULL ))";
+        $rels = "reltype IN (1, 2, 3)";
         return $rels;
     }
 
@@ -218,38 +218,16 @@ class Medict
         $s = Normalizer::normalize($s, Normalizer::FORM_D);
         // ne conserver que les lettres et les espaces, et les traits d’union
         $s = preg_replace("/[^\p{L}\-\s]/u", '', $s);
-
-        $s = strtr($s,
+        // normaliser les espaces
+        $s = trim(preg_replace('/[\s\-]+/', ' ', trim($s)));
+        // ligatures
+        $s = strtr(
+            $s,
             array(
                 'œ' => 'oe',
                 'æ' => 'ae',
-                'j' => 'i',
-                'u' => 'v',
             )
         );
-        /*
-        if ($uvij === true) {
-            $s = strtr($s,
-                array(
-                    'œ' => 'e',
-                    'æ' => 'e',
-                    'j' => 'i',
-                    'u' => 'v',
-                )
-            );
-        } else {
-            // ligatures
-            $s = strtr(
-                $s,
-                array(
-                    'œ' => 'oe',
-                    'æ' => 'ae',
-                )
-            );
-        }
-        */
-        // normaliser les espaces
-        $s = preg_replace('/[\s\-]+/', ' ', trim($s));
         return $s;
     }
 

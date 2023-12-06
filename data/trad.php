@@ -19,16 +19,19 @@ if (!$t) {
 
 $time_start = microtime(true);
 
-$sql = "SELECT id FROM dico_terme WHERE deforme = ?";
+$sql = "SELECT id, langue FROM dico_terme WHERE deforme = ?";
 $qterme = Medict::$pdo->prepare($sql);
 $qterme->execute([$t]);
 $dico_terme = [];
+$langs = [];
 while ($terme = $qterme->fetch(PDO::FETCH_ASSOC)) {
     $dico_terme[] = $terme['id'];
+    $langs[$terme['langue']] = true;
 }
+$langs = '(' . implode(', ', $langs) . ')';
 $dico_terme = '(' . implode(', ', $dico_terme) . ')';
 
-$reltype_foreign = 3;
+$reltype_foreign = 11;
 $sql = "
 SELECT *
 FROM dico_rel
@@ -36,7 +39,7 @@ INNER JOIN dico_terme
     ON dico_rel.dico_terme = dico_terme.id
 WHERE
     reltype = $reltype_foreign
-    AND dico_terme NOT IN $dico_terme
+    AND dico_terme.langue NOT IN $langs
     AND dico_entree IN (SELECT dico_entree FROM dico_rel WHERE reltype = $reltype_foreign AND dico_terme IN $dico_terme)
 ORDER BY langue, deforme, volume_annee DESC
 
@@ -58,6 +61,7 @@ WHERE dico_entree.id = ?
 $qentree = Medict::$pdo->prepare($sql);
 $last = null;
 while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
+    // pas de “traductions” dans la langue de l’entrée demandée (= mot lié)
     if ($last != $rel['id']) {
         // pas de volume ? pas compris pourquoi
         if ($last !== null) {
