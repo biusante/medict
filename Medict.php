@@ -138,60 +138,55 @@ class Medict
         return $reqPars;
     }
 
-    public static function hilite($query, $vedette)
-    {
-        if (!$query) {
-            return $vedette;
-        }
+    static function hilite($query, $text) {
+        $query = trim($query);
+        // do not recompile for each word, cache
         if (!isset(self::$hire[$query])) {
-            $regs = preg_split("@[ ,]+@u", trim($query));
-            $regs = preg_replace(
-                array(
-                    "@[\P{L}]+@u",
-                    "@[aàâä]@ui",
-                    "@[æ]@ui",
-                    "@[cç]@ui",
-                    "@[eéèêë]@ui",
-                    "@[iîï]@ui",
-                    "@[oôö]@ui",
-                    "@[œ]@ui",
-                    "@[uûü]@ui",
-                    "@^.*$@ui",
-                ),
-                array(
-                    "",
-                    "[aàâä]",
-                    "ae",
-                    "[cç]",
-                    "[eéèêë]",
-                    "[iîï]",
-                    "[oôö]",
-                    "oe",
-                    "[uûü]",
-                    "@([^<>\p{L}])($0)@ui",
-                ),
-                $regs
-            );
-            self::$hire[$query] = $regs;
+            // simplification de la requête
+            // preg_quote est une précaution mais ne devrait pas être nécessaire
+            $query_desacc = trim(preg_quote(self::deforme($query)));
+            $query_words = explode(" ", $query_desacc);
+            $query_re = implode('|', array_map('preg_quote', $query_words));
+            // suffix
+            if ($query[0] == '*') {
+                $query_re = "/($query_re)\P{L}/u";
+            }
+            // prefix
+            else {
+                $query_re = "/\P{L}($query_re)/u";
+            }
+            self::$hire[$query] = $query_re;
         }
-        $regs = self::$hire[$query];
-        $vedette = " " . $vedette;
-    foreach ($regs as $re) {
-            $vedette = preg_replace($re, "$1<mark>$2</mark>", $vedette);
+        // char offset
+        $pos = 0;
+        $text_hilite = "";
+        // vedette sans accents avec le même nombre de caractères
+        // uvji ? \n ?
+        $text_desacc = preg_replace(
+            "/\p{Mn}+/u",
+            "",
+            Normalizer::normalize(
+                mb_convert_case($text, MB_CASE_FOLD, "UTF-8"), 
+                Normalizer::FORM_D
+            ),
+        );
+        if (preg_match_all(self::$hire[$query], " $text_desacc ", $m, PREG_OFFSET_CAPTURE)) {
+            foreach ($m[1] as $match) {
+                $match_string = $match[0];
+                $match_len = mb_strlen($match_string);
+                // char offset of matched word, corrected of the char prefix
+                $match_offset = intval($match[1]) - 1;
+                $text_hilite .= mb_substr($text, $pos, $match_offset - $pos);
+                $text_hilite .= "<mark>";
+                $text_hilite .= mb_substr($text, $match_offset, $match_len);
+                $text_hilite .= "</mark>";
+                $pos = $match_offset + $match_len;
+            }
         }
-        return $vedette;
-        /*
-    return preg_replace_callback(
-      $re,
-      function ($matches) use ($terme_sort) {
-        $test = Medict::sortable($matches[0]);
-        if ($test == $terme_sort) return "<mark>".$matches[0]."</mark>";
-        return $matches[0];
-      },
-      " ".$vedette
-    );
-    */
+        $text_hilite .= mb_substr($text, $pos);
+        return $text_hilite;
     }
+    
 
     /**
      * Élément de requête SQL partagé entre colonne d’index et accès entrées
@@ -210,7 +205,7 @@ class Medict
     /**
      * Cette méthode doit être identique à celle utilisée à l’indexation
      */
-    public static function deforme(string $s, bool $uvij=false)
+    public static function deforme(string $s, bool $nolig=false)
     {
         // bas de casse
         $s = mb_convert_case($s, MB_CASE_FOLD, "UTF-8");
@@ -221,13 +216,15 @@ class Medict
         // normaliser les espaces
         $s = trim(preg_replace('/[\s\-]+/', ' ', trim($s)));
         // ligatures
-        $s = strtr(
-            $s,
-            array(
-                'œ' => 'oe',
-                'æ' => 'ae',
-            )
-        );
+        if (!$nolig) {
+            $s = strtr(
+                $s,
+                array(
+                    'œ' => 'oe',
+                    'æ' => 'ae',
+                )
+            );
+        }
         return $s;
     }
 
