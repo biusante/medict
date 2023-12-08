@@ -174,8 +174,10 @@ class Medict
             foreach ($m[1] as $match) {
                 $match_string = $match[0];
                 $match_len = mb_strlen($match_string);
-                // char offset of matched word, corrected of the char prefix
-                $match_offset = intval($match[1]) - 1;
+                // convert byte offset in char offset of matched word
+                $match_offset = mb_strlen(
+                    substr($text_desacc, 0, intval($match[1]) - 1)
+                );
                 $text_hilite .= mb_substr($text, $pos, $match_offset - $pos);
                 $text_hilite .= "<mark>";
                 $text_hilite .= mb_substr($text, $match_offset, $match_len);
