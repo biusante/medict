@@ -563,8 +563,9 @@ class Medict {
         if (allF) {
             allF.addEventListener("change", function(e) {
                 const flag = this.checked;
-                // all or none, exclude url par
+                // all or none, clean selection
                 selectionField.value = '';
+                selectionBitSet.clear();
                 Medict.historyChange(null, ['f']);
                 /*
                 if (flag) {
