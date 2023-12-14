@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '15425c548eea52b79f69be2dedb5161cea5207d9',
+        'reference' => '4ef3afbe7b4a41ec43bd3127718f1bf8a03c5dd4',
         'name' => 'biusante/metadictionnaire',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '15425c548eea52b79f69be2dedb5161cea5207d9',
+            'reference' => '4ef3afbe7b4a41ec43bd3127718f1bf8a03c5dd4',
             'dev_requirement' => false,
         ),
         'oeuvres/kit' => array(
@@ -27,7 +27,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => '60ddd8e5e597bb8c16cdb7e148a623ef89c0878d',
+            'reference' => '74bdd92f30544fa6bbd9073dc1ed686894a821ed',
             'dev_requirement' => false,
         ),
         'psr/log' => array(

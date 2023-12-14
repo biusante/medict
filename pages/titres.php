@@ -11,7 +11,7 @@ $start_time = microtime(true);
 include_once(dirname(__DIR__) . "/Medict.php");
 
 use Oeuvres\Kit\{Http, Route};
-use Oeuvres\Kit\Bitset\{BitInt};
+use Oeuvres\Kit\BitSet\{BitInt};
 
 // load available dico ids from base
 $cote_row = [];
