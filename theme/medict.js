@@ -404,18 +404,20 @@ class Medict {
     }
 
     static init() {
+        // the bitset interaction
+        
         // init the form
         Medict.form = document.forms['medict'];
         if (!Medict.form) return;
-
+        Formajax.init(Medict.form);
+        // form needed for titresInit
         Medict.titresInit();
 
-        Formajax.init(Medict.form);
         // prevent submit before afect it as event
         Medict.form.addEventListener('submit', (e) => {
             e.preventDefault();
             Formajax.divLoad('mots');
-            Medict.historyChange();
+            Medict.historyChange(null, ['f']);
             return false;
         }, true);
         // send submit when suggest change
@@ -522,35 +524,47 @@ class Medict {
         }, true);
         // count checked checkboxes
         let checkeds = modal.querySelectorAll('input[type="checkbox"]:checked').length;
+        const selectionBitSet = new FastBitSet();
+        const selectionField = document.getElementById('selection');
         // Changement dans le formulaire
         const titreChange = function(e) {
-                if (this.checked) {
-                    this.parentNode.classList.add("checked");
-                } else {
-                    this.parentNode.classList.remove("checked");
-                }
-                Medict.historyChange();
-                // submit form
-                this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
-                Formajax.divLoad('entrees');
-                Formajax.divLoad('sugg');
-                Medict.titreLabel();
+            const div = this.parentNode;
+            const id = parseInt(div.dataset.id);
+            if (this.checked) {
+                div.classList.add("checked");
+                selectionBitSet.add(id);
+            } else {
+                this.parentNode.classList.remove("checked");
+                selectionBitSet.remove(id);
             }
-            // loop on all checkbox
+            selectionField.value = selectionBitSet.toBase64();
+            Medict.historyChange(null, ['f']);
+            // submit form
+            this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
+            Formajax.divLoad('entrees');
+            Formajax.divLoad('sugg');
+            Medict.titreLabel();
+        }
+        // loop on all checkbox
         const ticklist = modal.querySelectorAll("input[type=checkbox][name=f]");
         for (let i = 0; i < ticklist.length; ++i) {
             const checkbox = ticklist[i];
+            const id = parseInt(checkbox.parentNode.dataset.id);
             if (checkbox.checked) {
                 checkbox.parentNode.classList.add("checked");
+                selectionBitSet.add(id);
             }
             checkbox.addEventListener('change', titreChange);
         }
+        // update selection field and short url
+        selectionField.value = selectionBitSet.toBase64();
+        Medict.historyChange(null, ['f']);
         const allF = document.getElementById("allF");
         if (allF) {
             allF.addEventListener("change", function(e) {
                 const flag = this.checked;
                 // all or none, exclude url par
-                // update URL but do not add entry in history
+                selectionField.value = '';
                 Medict.historyChange(null, ['f']);
                 /*
                 if (flag) {
@@ -726,6 +740,8 @@ class Medict {
      * Push an entry in history
      */
     static historyPush(include, exclude) {
+        // default, exclude the f field, selection should work
+        if (exclude == null) exclude = ['f'];
         const url = new URL(window.location);
         url.search = Formajax.pars(include, exclude);
         window.history.pushState({}, '', url);
@@ -735,6 +751,8 @@ class Medict {
      * update URL but do not add entry in history
      */
     static historyChange(include, exclude) {
+        // default, exclude the f field, selection should work
+        if (exclude == null) exclude = ['f'];
         const url = new URL(window.location);
         url.search = Formajax.pars(include, exclude);
         window.history.replaceState({}, '', url);

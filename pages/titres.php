@@ -10,37 +10,53 @@ $start_time = microtime(true);
 
 include_once(dirname(__DIR__) . "/Medict.php");
 
-use Oeuvres\Kit\{Http};
+use Oeuvres\Kit\{Http, Route};
+use Oeuvres\Kit\BitSet\{BitInt};
 
 // load available dico ids from base
-$biblio = array();
-$coteQ = Medict::$pdo->prepare("SELECT cote, annee, an_max FROM dico_titre");
+$cote_row = [];
+$id_cote = [];
+$coteQ = Medict::$pdo->prepare("SELECT id, cote, annee, an_max FROM dico_titre");
 $coteQ->execute();
 while ($row = $coteQ->fetch(PDO::FETCH_ASSOC)) {
-    $biblio[$row['cote']] = [$row['annee'], $row['an_max']];
+    $id_cote[$row['id']] = $row['cote'];
+    $cote_row[$row['cote']] = $row;
 }
-$coteQ->fetchAll(PDO::FETCH_COLUMN, 0);
 
 // nom de la sélection
 $selname = "Tout sauf <u>Vidal</u>";
+// Sélection demandé comme un BitSet encodé Base64
+$selection = Http::par(Medict::SELECTION);
+$fdic = [];
+if ($selection) {
+    $bitSet = new BitInt();
+    if ($bitSet->fromBase64($selection) !== false) {
+        foreach ($bitSet as $id) {
+            $fdic[] = $id_cote[$id];
+        }
+    }
+}
+else {
+    $fdic = Http::pars(Medict::F);
+}
+
 // corpus requested ?
-$fdic = Http::pars(Medict::F);
 if (0 == count($fdic)) { // tout sauf Vidal
-    $fdic = $biblio;
+    $fdic = $cote_row;
     unset($fdic['pharma_p11247']);
 }
 else if (0 < count($fdic)) { // si cotes demandées, vérifier qu’elles existent
-    $fdic = array_intersect($fdic, array_keys($biblio));
+    $fdic = array_intersect($fdic, array_keys($cote_row));
     $fdic = array_flip($fdic);
     // titrer la sélection
     $count = count($fdic);
     $min = 10000;
     $max = 0;
     foreach ($fdic as $cote => $blah) {
-        $dates = $biblio[$cote];
-        $min = min($min, $dates[0]);
-        if ($dates[1]) $max = max($max, $dates[1]);
-        else $max = max($max, $dates[0]);
+        $row = $cote_row[$cote];
+        $min = min($min, $row['annee']);
+        if ($row['an_max']) $max = max($max, $row['an_max']);
+        else $max = max($max, $row['annee']);
     }
     $selname = $min;
     if ($min != $max) $selname .=  ' – ' . $max;
@@ -49,7 +65,6 @@ else if (0 < count($fdic)) { // si cotes demandées, vérifier qu’elles existe
 }
 
 ?>
-
 <div>
     <div>Sélection de titres</div>
     <div title="Cliquer pour accéder à la liste des titres à sélectionner" id="titres_open"><?=  $selname ?></div>
@@ -91,10 +106,10 @@ foreach (Medict::TAGS as $tag => $a) {
     -->
         </header>
         <div id="titres_cols">
-
 <?php
+// build a BitSet from titles, and transmit 
 
-$sql = "SELECT * FROM dico_titre ";
+$sql = "SELECT * FROM dico_titre ORDER BY annee;";
 $titreQ = Medict::$pdo->prepare($sql);
 $titreQ->execute(array());
 $sql = "SELECT id FROM dico_entree WHERE dico_titre = ? LIMIT 1 ";
@@ -111,6 +126,7 @@ while ($row = $titreQ->fetch(PDO::FETCH_ASSOC)) {
     echo titre($row, $checked);
 }
 ?>
+            <input id="selection" type="hidden" name="selection" value=""/>
         </div>
     </div>
 </div>

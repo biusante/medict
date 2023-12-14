@@ -13,6 +13,9 @@ use Oeuvres\Kit\{Http, Route};
 list($an_min, $an_max) = Medict::$pdo->query("SELECT MIN(titre_annee), MAX(titre_annee) FROM dico_titre")->fetch();
 $an1 = Web::par('an1', $an_min);
 $an2 = Web::par('an2', $an_max);
+
+
+
 */
 $q = Http::par('q', '');
 $t = Http::par('t', '');
@@ -21,15 +24,15 @@ $t = Http::par('t', '');
 <div id="medict">
     <div id="col1">
         <form name="medict" class="recherche" autocomplete="off">
-            <input type="hidden" name="t" value="<?= htmlspecialchars($t, ENT_QUOTES, 'UTF-8'); ?>"/>
-            <input type="hidden" name="cote" value="<?= htmlspecialchars( Http::par('cote', ''), ENT_QUOTES, 'UTF-8'); ?>"/>
-            <input type="hidden" name="p" value="<?= intval(Http::par('p', '')); ?>"/>
-            <input type="hidden" name="bibl" />
+            <?php include(__DIR__.'/titres.php') ?>
             <div class="flexbuts">
                 <input name="q" id="q" placeholder="Rechercher un terme" value="<?= htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" type="text"  autocomplete="off"/>
                 <a title="Tout réinitialiser" href="<?= Route::home_href() ?>." class="but reset">⟳</a>
             </div>
-            <?php include(__DIR__.'/titres.php') ?>
+            <input type="hidden" name="t" value="<?= htmlspecialchars($t, ENT_QUOTES, 'UTF-8'); ?>"/>
+            <input type="hidden" name="cote" value="<?= htmlspecialchars( Http::par('cote', ''), ENT_QUOTES, 'UTF-8'); ?>"/>
+            <input type="hidden" name="p" value="<?= intval(Http::par('p', '')); ?>"/>
+            <input type="hidden" name="bibl" />
             <button type="submit">Go</button>
         </form>
         <nav id="mots" class="data"  data-url="data/mots">

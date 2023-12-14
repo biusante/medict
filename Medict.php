@@ -22,6 +22,7 @@ class Medict
     const AN1 = "an1";
     const AN2 = "an2";
     const F = "f";
+    const SELECTION = "selection";
     const DICO_TITRE = "dico_titre";
     const TAGS = array(
         'med' => ['méd.', 'Sciences médicales'],
