@@ -32,7 +32,6 @@ $t = Http::par('t', '');
             <input type="hidden" name="t" value="<?= htmlspecialchars($t, ENT_QUOTES, 'UTF-8'); ?>"/>
             <input type="hidden" name="cote" value="<?= htmlspecialchars( Http::par('cote', ''), ENT_QUOTES, 'UTF-8'); ?>"/>
             <input type="hidden" name="p" value="<?= intval(Http::par('p', '')); ?>"/>
-            <input type="hidden" name="bibl" />
             <button type="submit">Go</button>
         </form>
         <nav id="mots" class="data"  data-url="data/mots">
