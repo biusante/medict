@@ -19,6 +19,7 @@ $an2 = Web::par('an2', $an_max);
 */
 $q = Http::par('q', '');
 $t = Http::par('t', '');
+$cote = Http::par('cote', '');
 
 ?>
 <div id="medict">
@@ -30,7 +31,7 @@ $t = Http::par('t', '');
                 <a title="Tout réinitialiser" href="<?= Route::home_href() ?>." class="but reset">⟳</a>
             </div>
             <input type="hidden" name="t" value="<?= htmlspecialchars($t, ENT_QUOTES, 'UTF-8'); ?>"/>
-            <input type="hidden" name="cote" value="<?= htmlspecialchars( Http::par('cote', ''), ENT_QUOTES, 'UTF-8'); ?>"/>
+            <input type="hidden" name="cote" value="<?= htmlspecialchars($cote, ENT_QUOTES, 'UTF-8'); ?>"/>
             <input type="hidden" name="p" value="<?= intval(Http::par('p', '')); ?>"/>
             <button type="submit">Go</button>
         </form>
@@ -65,7 +66,26 @@ $t = Http::par('t', '');
     <div id="col3">
         <header id="medica">
             <a id="medica-prev" href="#" class="entree"> </a>
-            <a id="medica-ext" target="_blank" title="Lien vers l’URL pérenne de cette page"></a>
+            <a id="medica-ext" target="_blank"><?php
+// TODO, get entry bibl with &cote=dico_volume.volume_cote, &t=dico_terme_deforme
+
+if ($cote && $t) {
+    $sql = "SELECT dico_entree.*, dico_volume.*
+FROM dico_entree, dico_rel, dico_volume, dico_terme 
+WHERE   dico_volume.volume_cote = ? 
+    AND dico_entree.dico_volume = dico_volume.id
+    AND dico_terme.deforme = ?
+    AND dico_rel.dico_terme = dico_terme.id 
+    AND dico_rel.dico_entree = dico_entree.id
+";
+    $entreeQ = Medict::$pdo->prepare($sql);
+    $entreeQ->execute([$cote, $t]);
+    $entree = $entreeQ->fetch(PDO::FETCH_ASSOC);
+    if ($entree) {
+        echo Medict::entree($entree, true) . "\n";
+    }
+}
+            ?></a>
             <a id="medica-next" href="#" class="entree"> </a>
         </header>
         <div>

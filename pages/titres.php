@@ -52,8 +52,8 @@ else if (0 < count($fdic)) { // si cotes demandées, vérifier qu’elles existe
     $count = count($fdic);
     $min = 10000;
     $max = 0;
-    foreach ($fdic as $cote => $blah) {
-        $row = $cote_row[$cote];
+    foreach ($fdic as $c => $blah) {
+        $row = $cote_row[$c];
         $min = min($min, $row['annee']);
         if ($row['an_max']) $max = max($max, $row['an_max']);
         else $max = max($max, $row['annee']);

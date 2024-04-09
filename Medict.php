@@ -94,6 +94,7 @@ class Medict
                 // PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,
             ),
         );
+        self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
         // self::$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
         mb_internal_encoding("UTF-8");
     }
@@ -234,7 +235,7 @@ class Medict
     /**
      * Affiche une entrée de dico
      */
-    public static function entree(&$entree)
+    public static function entree(&$entree, $facs=false)
     {
         if (!$entree) return; // ????
         $cote = $entree['volume_cote'];
@@ -244,10 +245,7 @@ class Medict
         . '&amp;p=' . $entree['refimg'];
 
         $block = '';
-        $block .= '<div class="entree">';
-        $block .= '<a class="entree" target="facs"' 
-        . ' draggable="false"'
-        . ' href="'. $url . '">';
+        if (!$facs) $block .= '<a class="entree" target="facs" draggable="false"' . ' href="'. $url . '">';
         if (isset($entree['in']) && $entree['in']) {
             $block .= "« " . $entree['in'] . " » <i>in</i> ";
         }
@@ -263,8 +261,7 @@ class Medict
         else {
             $block .= ", p. " . $entree['page'];
         }
-        $block .= ".</a>";
-        $block .= "</div>";
+        if (!$facs) $block .= ".</a>";
         return $block;
     }
 }

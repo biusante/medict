@@ -85,6 +85,8 @@ while ($rel = $relQ->fetch(PDO::FETCH_ASSOC)) {
         $entree['refimg'] = $rel['refimg'];
         $entree['page2'] = null;
     }
+    echo '<div class="entree">' . "\n";
     echo Medict::entree($entree) . "\n";
+    echo '</div>' . "\n";
     flush();
 }

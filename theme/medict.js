@@ -906,7 +906,10 @@ class Medict {
         found = a.search.match(/p=([^&]*)/);
         if (!found) return; // url error ?
         const p = found[1];
-        Medict.facs(cote, p, a.innerHTML);
+        Medict.facs(cote, p);
+        // update the bibliographic reference with clicked entry
+        const reflink = document.getElementById('medica-ext');
+        reflink.innerHTML = a.innerHTML;
         Medict.historyPush();
 
 
@@ -954,9 +957,6 @@ class Medict {
         // store cote and page here to help the prev / next button
         link.dataset.cote = cote;
         link.dataset.p = p;
-        if (bibl) link.innerHTML = bibl;
-        else bibl = link.innerHTML;
-        Medict.form['bibl'].value = Medict.sanitize(bibl);
         Medict.form['cote'].value = cote;
         Medict.form['p'].value = p;
     }
