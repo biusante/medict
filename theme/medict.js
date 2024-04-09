@@ -603,16 +603,24 @@ class Medict {
             checkbox.addEventListener("change", function(e) {
                 const flag = this.checked;
                 let selector = "input." + tag;
-                if (!flag) {
-                    selector = 'input[class="' + tag + '"]';
-                }
+
                 const tiktag = modal.querySelectorAll(selector);
                 for (let x = 0; x < tiktag.length; x++) {
                     const tik = tiktag[x];
                     tik.checked = flag;
-                    if (flag) tik.parentNode.classList.add("checked");
-                    else tik.parentNode.classList.remove("checked");
+                    const div = tik.parentNode;
+                    const id = parseInt(div.dataset.id);
+                    if (flag) {
+                        div.classList.add("checked");
+                        selectionBitSet.add(id);
+                    }
+                    else {
+                        div.classList.remove("checked");
+                        selectionBitSet.remove(id);
+                    }
                 }
+                selectionField.value = selectionBitSet.toBase64();
+                Medict.historyChange(null, ['f']);
                 this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true })); // met à jour l’url
                 Formajax.divLoad('entrees');
                 Formajax.divLoad('sugg');
