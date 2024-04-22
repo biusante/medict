@@ -41,7 +41,7 @@ $body_class = $page;
   <!-- Polices -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&amp;subset=latin,latin-ext" />
   <!-- Feuilles de styles -->
-  <link rel="stylesheet" href="https://www.biusante.parisdescartes.fr/ressources/css/style.css?2.9.11" />
+  <link rel="stylesheet" href="<?= Route::home_href() ?>theme/biusante.css" />
   <link rel="stylesheet" href="<?= Route::home_href() ?>js/split.css" />
   <link rel="stylesheet" href="<?= Route::home_href() ?>theme/medict.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
