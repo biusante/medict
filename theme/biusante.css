@@ -581,8 +581,11 @@ h6,
 }
 
 a.externe::after {
-    font-family: "biusante-icons";
+    /*  
+    font-family: "biusante-icons"; 
     content: '\e803';
+    */
+    content: '↗';
     margin-left: 0.2em;
 }
 

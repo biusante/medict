@@ -16,7 +16,7 @@ class Medict
     /** Constantes */
     const EXTENSIONS = array(
         "pdo_mysql" => ["Connexion PDO à mysql", 'php-mysql'],
-        'mbstring' => ["Fonctions de chaîne “nulti-bytes” (unicode)", 'php-mbstring'],
+        'mbstring' => ["Fonctions de chaîne “multi-bytes” (unicode)", 'php-mbstring'],
         'intl' => ["Fonctions d'“internationalisation” (Normalizer pour le grec ancien)", 'php-intl'],
     );
     const AN1 = "an1";
@@ -87,13 +87,15 @@ class Medict
             self::$pars['user'],
             self::$pars['password'],
             array(
-                PDO::ATTR_PERSISTENT => true,
+                // PDO::ATTR_PERSISTENT => true,
                 PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
                 // if true : big queries need memory
                 // if false : multiple queries arre not allowed
                 // PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,
             ),
         );
+        // Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'medict.dico_terme.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+        self::$pdo->query("SET @@sql_mode=REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', '');");
         self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
         // self::$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
         mb_internal_encoding("UTF-8");

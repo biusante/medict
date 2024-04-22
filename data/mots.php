@@ -53,7 +53,6 @@ else {
 
 
 /*
-// Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'medict.dico_terme.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
 // Vu avec EXPLAIN, cherche d’abord dans deforme
 $sql = "
 SELECT
@@ -89,7 +88,7 @@ WHERE
     AND $rels
     AND $where
     $dico_titre
-GROUP BY dico_terme.id, deforme
+GROUP BY deforme
 ORDER BY deforme
 LIMIT $limit
 ";
@@ -135,7 +134,7 @@ if (!$inverse) {
     WHERE
         $rels
         $dico_titre
-    GROUP BY dico_terme.id, deforme
+    GROUP BY deforme
     ORDER BY deforme
     LIMIT $limit
     ";
