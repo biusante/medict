@@ -1,5 +1,6 @@
 'use strict';
 
+const archivelab = true;
 
 
 /**
@@ -933,7 +934,6 @@ class Medict {
     }
 
 
-
     static facs(cote, p, bibl) {
         if (!cote || !p) return;
         p = Medict.pad(p, 4);
@@ -941,22 +941,19 @@ class Medict {
         // const href = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&cote=' + cote + '&p=' + p;
         const href = 'https://www.biusante.parisdescartes.fr/histmed/medica/page?' + cote + '&p=' + p;
 
-        // Biusanté, img moyenne
-        const srcLo = 'https://www.biusante.parisdescartes.fr/images/livres/' + cote + '/' + p + '.jpg';
-        /*
-        // Archives.org, iiif, lent
-        const srcHi = 'https://iiif.archivelab.org/iiif/BIUSante_' + cote + '$' + (p - 1) + '/full/full/0/default.jpg';
-        */
-        // Biusante, iiif, cassé
-        const srcHi = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ":" + p + '/full/full/0/default.jpg';
-        // Castelli pas de basse def
-        if (['07399'].includes(cote)) {
-            Medict.imgLo.src = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ":" + p + '/full/pct:50/0/default.jpg';;
-            Medict.imgHi.src = srcHi;
-        } else {
-            Medict.imgLo.src = srcLo;
-            Medict.imgHi.src = srcHi;
+        let srcLo, srcHi;
+        if (archivelab) {
+            srcHi = 'https://iiif.archivelab.org/iiif/BIUSante_' + cote + '$' + (p - 1) + '/full/full/0/default.jpg';
+            srcLo = 'https://iiif.archivelab.org/iiif/BIUSante_' + cote + '$' + (p - 1) + '/full/600,/0/default.jpg';
         }
+        else {
+            srcLo = 'https://www.biusante.parisdescartes.fr/images/livres/' + cote + '/' + p + '.jpg';
+            srcHi = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ":" + p + '/full/full/0/default.jpg';
+            // Castelli, pas de basse def
+            if (['07399'].includes(cote)) srcLo = srcHi;
+        } 
+        Medict.imgLo.src = srcLo;
+        Medict.imgHi.src = srcHi;
         // Medict.viewer.ready = true; // force abort of current loading
         Medict.viewer.update(); // let viewer show a waiting roll
 
