@@ -58,13 +58,14 @@ $relQ = Medict::$pdo->prepare($sql);
 $relQ->execute($pars);
 echo '<!--', number_format(microtime(true) - $starttime, 3), ' s. -->';
 
+/*
 // Récupérer la forme trouvée
 $formeQ = Medict::$pdo->prepare("SELECT forme FROM dico_terme WHERE deforme = ?"); 
 $formeQ->execute($pars);
 $row = $formeQ->fetch();
 $forme = null;
 if ($row) $forme = $row['forme'];
-
+*/
 
 $sql = "
 SELECT
@@ -80,7 +81,7 @@ while ($rel = $relQ->fetch(PDO::FETCH_ASSOC)) {
     $entree = $entreeQ->fetch(PDO::FETCH_ASSOC);
     // rajouter le mot d’origine si pas vedette
     if ($rel['reltype'] != 1) {
-        $entree['in'] = $forme;
+        $entree['in'] = $rel['forme'];
         $entree['page'] = $rel['page'];
         $entree['refimg'] = $rel['refimg'];
         $entree['page2'] = null;

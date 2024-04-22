@@ -79,7 +79,7 @@ $sql = "
 SELECT
     deforme,
     dico_terme.id AS id,
-    forme,
+    dico_terme.forme,
     langue,
     COUNT(dico_entree) AS count
 FROM dico_terme, dico_rel
@@ -123,7 +123,7 @@ if (!$inverse) {
     $sql = "
     SELECT
         dico_terme.id AS id,
-        forme,
+        dico_terme.forme,
         langue,
         deforme,
         COUNT(dico_entree) AS count
