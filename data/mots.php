@@ -52,7 +52,8 @@ else {
 }
 
 
-
+/*
+// Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'medict.dico_terme.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
 // Vu avec EXPLAIN, cherche d’abord dans deforme
 $sql = "
 SELECT
@@ -72,6 +73,27 @@ SELECT
     ORDER BY deforme
     LIMIT $limit
 ";
+*/
+
+
+$sql = "
+SELECT
+    deforme,
+    dico_terme.id AS id,
+    forme,
+    langue,
+    COUNT(dico_entree) AS count
+FROM dico_terme, dico_rel
+WHERE
+    dico_rel.dico_terme = dico_terme.id
+    AND $rels
+    AND $where
+    $dico_titre
+GROUP BY dico_terme.id, deforme
+ORDER BY deforme
+LIMIT $limit
+";
+
 
 echo "\n<!-- $sql -->\n";
 
@@ -113,7 +135,7 @@ if (!$inverse) {
     WHERE
         $rels
         $dico_titre
-    GROUP BY deforme
+    GROUP BY dico_terme.id, deforme
     ORDER BY deforme
     LIMIT $limit
     ";
