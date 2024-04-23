@@ -70,14 +70,18 @@ while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
             flush();
         }
         $trad_forme = $rel['forme'];
-
-        $langue = Medict::$langs[$rel['langue']];
+        if ($rel['langue']) {
+            $langue = Medict::$langs[$rel['langue']];
+        }
+        else {
+            $langue = false;
+        }
         echo "
 <details class=\"sugg\">
     <summary><a class=\"sugg\" href=\"?q=" . rawurlencode($trad_forme) . '"' 
-    . ' title="' .  strip_tags($trad_forme) . '">' 
-    . "<small>[$langue]</small> "
-    . $trad_forme;
+    . ' title="' .  strip_tags($trad_forme) . '">';
+    if ($langue) echo "<small>[$langue]</small> ";
+    echo $trad_forme;
     /* On ne sait pas encore le score ici encore
     echo " <small>(". $sugg['score'], ")</small>";
     */
@@ -97,8 +101,11 @@ while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
     if ($rel['orth']) {
         $entree['in'] = null;    
     }
-    else {
+    else if ($langue) {
         $entree['in'] = "[$langue] " . $trad_forme;
+    }
+    else {
+        $entree['in'] = $trad_forme;
     }
     $entree['page'] = $rel['page'];
     $entree['refimg'] = $rel['refimg'];
