@@ -35,7 +35,17 @@ class Medict
         // 'sc' => ['sc.', 'Autres sciences'],
         // 'hist' => ['hist.', 'Histoire'],
     );
-    static $langs = [null, 'fra', 'lat', 'grc', 'eng', 'deu', 'spa', 'ita'];
+    static $langs = [
+        1 => 'fra',
+        2 => 'lat',
+        3 => 'grc',
+        4 => 'eng',
+        5 => 'deu',
+        6 => 'spa',
+        7 => 'ita',
+        110 => 'heb',
+        111 => 'ara',
+    ];
 
     /** SQL link */
     static public $pdo;

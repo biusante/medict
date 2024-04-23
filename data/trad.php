@@ -28,7 +28,6 @@ while ($terme = $qterme->fetch(PDO::FETCH_ASSOC)) {
     $dico_terme[] = $terme['id'];
     $langs[$terme['langue']] = true;
 }
-$langs = '(' . implode(', ', $langs) . ')';
 $dico_terme = '(' . implode(', ', $dico_terme) . ')';
 
 $reltype_foreign = 11;
@@ -39,12 +38,11 @@ INNER JOIN dico_terme
     ON dico_rel.dico_terme = dico_terme.id
 WHERE
     reltype = $reltype_foreign
-    -- AND dico_terme.langue NOT IN $langs
     AND dico_entree IN (SELECT dico_entree FROM dico_rel WHERE reltype = $reltype_foreign AND dico_terme IN $dico_terme)
-ORDER BY langue, deforme, volume_annee DESC
+ORDER BY langue IS NULL ASC, langue ASC, deforme, volume_annee DESC
 
 ";
-
+// langue IS NULL ASC (null language at the end)
 $qrel = Medict::$pdo->prepare($sql);
 $qrel->execute([]);
 echo "<!-- $t ; $sql -->\n";
@@ -70,11 +68,10 @@ while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
             flush();
         }
         $trad_forme = $rel['forme'];
-        if ($rel['langue']) {
+        $langue = false;
+        // la base peut contenir des no de langue inconnus ici
+        if ($rel['langue'] && isset(Medict::$langs[$rel['langue']])) {
             $langue = Medict::$langs[$rel['langue']];
-        }
-        else {
-            $langue = false;
         }
         echo "
 <details class=\"sugg\">
