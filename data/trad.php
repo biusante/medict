@@ -39,7 +39,7 @@ INNER JOIN dico_terme
     ON dico_rel.dico_terme = dico_terme.id
 WHERE
     reltype = $reltype_foreign
-    AND dico_terme.langue NOT IN $langs
+    -- AND dico_terme.langue NOT IN $langs
     AND dico_entree IN (SELECT dico_entree FROM dico_rel WHERE reltype = $reltype_foreign AND dico_terme IN $dico_terme)
 ORDER BY langue, deforme, volume_annee DESC
 
@@ -69,14 +69,15 @@ while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
             echo "\n&#10;";
             flush();
         }
-        $forme = $rel['forme'];
+        $trad_forme = $rel['forme'];
+
         $langue = Medict::$langs[$rel['langue']];
         echo "
 <details class=\"sugg\">
-    <summary><a class=\"sugg\" href=\"?q=" . rawurlencode($forme) . '"' 
-    . ' title="' .  strip_tags($forme) . '">' 
+    <summary><a class=\"sugg\" href=\"?q=" . rawurlencode($trad_forme) . '"' 
+    . ' title="' .  strip_tags($trad_forme) . '">' 
     . "<small>[$langue]</small> "
-    . $forme;
+    . $trad_forme;
     /* On ne sait pas encore le score ici encore
     echo " <small>(". $sugg['score'], ")</small>";
     */
@@ -91,9 +92,12 @@ while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
         // pb dans les données le volume n’existe pas
         continue;
     }
-
-
-    $entree['in'] = "[$langue] " . $forme;
+    if ($rel['orth']) {
+        $entree['in'] = null;    
+    }
+    else {
+        $entree['in'] = "[$langue] " . $trad_forme;
+    }
     $entree['page'] = $rel['page'];
     $entree['refimg'] = $rel['refimg'];
     $entree['page2'] = null;
