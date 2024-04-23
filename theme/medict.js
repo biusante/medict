@@ -1,7 +1,7 @@
 'use strict';
 
-const archivelab = true;
-
+/** Faut-il utiliser le iiif d'archive.org, sur archivelab ?  */
+// var archivelab = true;
 
 /**
  * Toolkit for ajax forms
@@ -942,7 +942,7 @@ class Medict {
         const href = 'https://www.biusante.parisdescartes.fr/histmed/medica/page?' + cote + '&p=' + p;
 
         let srcLo, srcHi;
-        if (archivelab) {
+        if (('archivelab' in window) && archivelab) {
             srcHi = 'https://iiif.archivelab.org/iiif/BIUSante_' + cote + '$' + (p - 1) + '/full/full/0/default.jpg';
             srcLo = 'https://iiif.archivelab.org/iiif/BIUSante_' + cote + '$' + (p - 1) + '/full/600,/0/default.jpg';
         }
