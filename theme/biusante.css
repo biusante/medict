@@ -465,7 +465,10 @@ h6,
 /* '' */
 
 .icon-menu:before {
+    /*
     content: '\f0c9';
+    */
+    content: '▼';
 }
 
 
@@ -1035,10 +1038,11 @@ td.accueil {
 .breadcrumbs-root:before {
     position: relative;
     /* bottom: 1px;
-  margin: -1px 0; */
+  margin: -1px 0; 
     font-family: "biusante-icons";
     content: '\e808';
-    /* font-size: .92rem; */
+    font-size: .92rem; */
+    content: '❱';
 }
 
 
@@ -1181,7 +1185,9 @@ td.accueil {
 }
 
 #navigation-laterale>ol>li>ol>li>ol>li {
+    /*
     list-style-image: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-pucemenug.png');
+    */
 }
 
 
@@ -1482,7 +1488,7 @@ td .liste-liens-chevrons {
 }
 
 .liste-liens-chevrons li {
-    list-style-image: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-flechept.gif');
+    list-style-type: '❯';
     list-style-position: inside;
     margin: 0;
     padding: 3px;
@@ -1508,7 +1514,7 @@ td .liste-liens-chevrons {
 
 .liste {
     display: list-item;
-    list-style-image: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-puce-carre.gif');
+    list-style-type: '■';
     margin-left: 13px;
     line-height: 110%;
     margin-bottom: 0;
@@ -2305,7 +2311,7 @@ ul.listPages li {
     border: 0;
     padding: 2px 0;
     margin: 0;
-    list-style-image: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-puce-carre.gif') !important
+    list-style-type: '■' !important
 }
 
 ul.listPages li a {
