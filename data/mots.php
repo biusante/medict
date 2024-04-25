@@ -58,7 +58,7 @@ $sql = "
 SELECT
     dico_terme.id AS id,
     forme,
-    langue,
+    dico_terme.langue AS langue,
     deforme,
     COUNT(dico_entree) AS count
     FROM dico_rel
@@ -80,7 +80,7 @@ SELECT
     deforme,
     dico_terme.id AS id,
     dico_terme.forme,
-    langue,
+    dico_terme.langue AS langue,
     COUNT(dico_entree) AS count
 FROM dico_terme, dico_rel
 WHERE
@@ -130,8 +130,8 @@ if (!$inverse) {
     $sql = "
     SELECT
         dico_terme.id AS id,
-        dico_terme.forme,
-        langue,
+        dico_terme.forme AS forme,
+        dico_terme.langue AS langue,
         deforme,
         COUNT(dico_entree) AS count
     FROM dico_rel
