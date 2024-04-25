@@ -109,14 +109,21 @@ else {
 }
 // $query->execute([$deforme.'%']);
 echo "<!--", number_format(microtime(true) - $time_start, 3), " s. -->\n";
-$n = 1;
+$n = 0;
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-
-    html($n, $row['deforme'], $row['forme'], $row['count'], $q);
     $n++;
+    html($n, $row['deforme'], $row['forme'], $row['count'], $q);
     $limit--;
 }
 
+// locutions, recherche par index plein texte
+// le champ "deloc" omet le premier mot pour éviter de répéter ci-dessus
+$loc_col = "deloc";
+// "Coeur de boeuf", trouver avec "coeur boeuf" 
+// si pas de résultat ci-dessus, chercher partout
+if (!$n) {
+    $loc_col = "deforme";
+}
 // ne pas cherche dans les locutions en inverse ?
 if (!$inverse) {
     // limit
@@ -130,7 +137,7 @@ if (!$inverse) {
     FROM dico_rel
     INNER JOIN dico_terme
         ON dico_rel.dico_terme = dico_terme.id
-            AND MATCH (deloc) AGAINST (? IN BOOLEAN MODE)
+            AND MATCH ($loc_col) AGAINST (? IN BOOLEAN MODE)
     WHERE
         $rels
         $dico_titre
@@ -152,8 +159,8 @@ if (!$inverse) {
     $query->execute([$search]);
     echo "<!-- search=$search limit=$limit " . number_format(microtime(true) - $time_start, 3). " s. -->\n";
     while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-        html($n, $row['deforme'], $row['forme'], $row['count'], $q);
         $n++;
+        html($n, $row['deforme'], $row['forme'], $row['count'], $q);
     }
 
 }
