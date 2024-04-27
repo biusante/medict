@@ -39,7 +39,7 @@ INNER JOIN dico_terme
 WHERE
     reltype = $reltype_foreign
     AND dico_entree IN (SELECT dico_entree FROM dico_rel WHERE reltype = $reltype_foreign AND dico_terme IN $dico_terme)
-ORDER BY langue IS NULL ASC, langue ASC, deforme, volume_annee DESC
+ORDER BY dico_rel.langue IS NULL ASC, dico_rel.langue ASC, deforme, volume_annee DESC
 
 ";
 // langue IS NULL ASC (null language at the end)
