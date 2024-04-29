@@ -180,9 +180,9 @@ class Medict
             "/\p{Mn}+/u",
             "",
             Normalizer::normalize(
-                mb_convert_case($text, MB_CASE_FOLD, "UTF-8"), 
+                mb_convert_case($text, MB_CASE_LOWER, "UTF-8"), 
                 Normalizer::FORM_D
-            ),
+            )
         );
         if (preg_match_all(self::$hire[$query], " $text_desacc ", $m, PREG_OFFSET_CAPTURE)) {
             foreach ($m[1] as $match) {
