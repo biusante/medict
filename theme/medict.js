@@ -1,6 +1,7 @@
 'use strict';
 
-
+/** Faut-il utiliser le iiif d'archive.org, sur archivelab ?  */
+// var archivelab = true;
 
 /**
  * Toolkit for ajax forms
@@ -404,18 +405,20 @@ class Medict {
     }
 
     static init() {
+        // the bitset interaction
+        
         // init the form
         Medict.form = document.forms['medict'];
         if (!Medict.form) return;
-
+        Formajax.init(Medict.form);
+        // form needed for titresInit
         Medict.titresInit();
 
-        Formajax.init(Medict.form);
         // prevent submit before afect it as event
         Medict.form.addEventListener('submit', (e) => {
             e.preventDefault();
             Formajax.divLoad('mots');
-            Medict.historyChange();
+            Medict.historyChange(null, ['f']);
             return false;
         }, true);
         // send submit when suggest change
@@ -522,35 +525,48 @@ class Medict {
         }, true);
         // count checked checkboxes
         let checkeds = modal.querySelectorAll('input[type="checkbox"]:checked').length;
+        const selectionBitSet = new FastBitSet();
+        const selectionField = document.getElementById('selection');
         // Changement dans le formulaire
         const titreChange = function(e) {
-                if (this.checked) {
-                    this.parentNode.classList.add("checked");
-                } else {
-                    this.parentNode.classList.remove("checked");
-                }
-                Medict.historyChange();
-                // submit form
-                this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
-                Formajax.divLoad('entrees');
-                Formajax.divLoad('sugg');
-                Medict.titreLabel();
+            const div = this.parentNode;
+            const id = parseInt(div.dataset.id);
+            if (this.checked) {
+                div.classList.add("checked");
+                selectionBitSet.add(id);
+            } else {
+                this.parentNode.classList.remove("checked");
+                selectionBitSet.remove(id);
             }
-            // loop on all checkbox
+            selectionField.value = selectionBitSet.toBase64();
+            Medict.historyChange(null, ['f']);
+            // submit form
+            this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true }));
+            Formajax.divLoad('entrees');
+            Formajax.divLoad('sugg');
+            Medict.titreLabel();
+        }
+        // loop on all checkbox
         const ticklist = modal.querySelectorAll("input[type=checkbox][name=f]");
         for (let i = 0; i < ticklist.length; ++i) {
             const checkbox = ticklist[i];
+            const id = parseInt(checkbox.parentNode.dataset.id);
             if (checkbox.checked) {
                 checkbox.parentNode.classList.add("checked");
+                selectionBitSet.add(id);
             }
             checkbox.addEventListener('change', titreChange);
         }
+        // update selection field and short url
+        selectionField.value = selectionBitSet.toBase64();
+        Medict.historyChange(null, ['f']);
         const allF = document.getElementById("allF");
         if (allF) {
             allF.addEventListener("change", function(e) {
                 const flag = this.checked;
-                // all or none, exclude url par
-                // update URL but do not add entry in history
+                // all or none, clean selection
+                selectionField.value = '';
+                selectionBitSet.clear();
                 Medict.historyChange(null, ['f']);
                 /*
                 if (flag) {
@@ -588,16 +604,24 @@ class Medict {
             checkbox.addEventListener("change", function(e) {
                 const flag = this.checked;
                 let selector = "input." + tag;
-                if (!flag) {
-                    selector = 'input[class="' + tag + '"]';
-                }
+
                 const tiktag = modal.querySelectorAll(selector);
                 for (let x = 0; x < tiktag.length; x++) {
                     const tik = tiktag[x];
                     tik.checked = flag;
-                    if (flag) tik.parentNode.classList.add("checked");
-                    else tik.parentNode.classList.remove("checked");
+                    const div = tik.parentNode;
+                    const id = parseInt(div.dataset.id);
+                    if (flag) {
+                        div.classList.add("checked");
+                        selectionBitSet.add(id);
+                    }
+                    else {
+                        div.classList.remove("checked");
+                        selectionBitSet.remove(id);
+                    }
                 }
+                selectionField.value = selectionBitSet.toBase64();
+                Medict.historyChange(null, ['f']);
                 this.form.dispatchEvent(new Event('submit', { "bubbles": true, "cancelable": true })); // met à jour l’url
                 Formajax.divLoad('entrees');
                 Formajax.divLoad('sugg');
@@ -726,6 +750,8 @@ class Medict {
      * Push an entry in history
      */
     static historyPush(include, exclude) {
+        // default, exclude the f field, selection should work
+        if (exclude == null) exclude = ['f'];
         const url = new URL(window.location);
         url.search = Formajax.pars(include, exclude);
         window.history.pushState({}, '', url);
@@ -735,6 +761,8 @@ class Medict {
      * update URL but do not add entry in history
      */
     static historyChange(include, exclude) {
+        // default, exclude the f field, selection should work
+        if (exclude == null) exclude = ['f'];
         const url = new URL(window.location);
         url.search = Formajax.pars(include, exclude);
         window.history.replaceState({}, '', url);
@@ -887,7 +915,10 @@ class Medict {
         found = a.search.match(/p=([^&]*)/);
         if (!found) return; // url error ?
         const p = found[1];
-        Medict.facs(cote, p, a.innerHTML);
+        Medict.facs(cote, p);
+        // update the bibliographic reference with clicked entry
+        const reflink = document.getElementById('medica-ext');
+        reflink.innerHTML = a.innerHTML;
         Medict.historyPush();
 
 
@@ -903,7 +934,6 @@ class Medict {
     }
 
 
-
     static facs(cote, p, bibl) {
         if (!cote || !p) return;
         p = Medict.pad(p, 4);
@@ -911,22 +941,19 @@ class Medict {
         // const href = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&cote=' + cote + '&p=' + p;
         const href = 'https://www.biusante.parisdescartes.fr/histmed/medica/page?' + cote + '&p=' + p;
 
-        // Biusanté, img moyenne
-        const srcLo = 'https://www.biusante.parisdescartes.fr/images/livres/' + cote + '/' + p + '.jpg';
-        /*
-        // Archives.org, iiif, lent
-        const srcHi = 'https://iiif.archivelab.org/iiif/BIUSante_' + cote + '$' + (p - 1) + '/full/full/0/default.jpg';
-        */
-        // Biusante, iiif, cassé
-        const srcHi = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ":" + p + '/full/full/0/default.jpg';
-        // Castelli pas de basse def
-        if (['07399'].includes(cote)) {
-            Medict.imgLo.src = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ":" + p + '/full/pct:50/0/default.jpg';;
-            Medict.imgHi.src = srcHi;
-        } else {
-            Medict.imgLo.src = srcLo;
-            Medict.imgHi.src = srcHi;
+        let srcLo, srcHi;
+        if (('archivelab' in window) && archivelab) {
+            srcHi = 'https://iiif.archivelab.org/iiif/BIUSante_' + cote + '$' + (p - 1) + '/full/full/0/default.jpg';
+            srcLo = 'https://iiif.archivelab.org/iiif/BIUSante_' + cote + '$' + (p - 1) + '/full/600,/0/default.jpg';
         }
+        else {
+            srcLo = 'https://www.biusante.parisdescartes.fr/images/livres/' + cote + '/' + p + '.jpg';
+            srcHi = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ":" + p + '/full/full/0/default.jpg';
+            // Castelli, pas de basse def
+            if (['07399'].includes(cote)) srcLo = srcHi;
+        } 
+        Medict.imgLo.src = srcLo;
+        Medict.imgHi.src = srcHi;
         // Medict.viewer.ready = true; // force abort of current loading
         Medict.viewer.update(); // let viewer show a waiting roll
 
@@ -935,9 +962,6 @@ class Medict {
         // store cote and page here to help the prev / next button
         link.dataset.cote = cote;
         link.dataset.p = p;
-        if (bibl) link.innerHTML = bibl;
-        else bibl = link.innerHTML;
-        Medict.form['bibl'].value = Medict.sanitize(bibl);
         Medict.form['cote'].value = cote;
         Medict.form['p'].value = p;
     }

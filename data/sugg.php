@@ -7,11 +7,11 @@
 
 include_once(dirname(__DIR__) . "/Medict.php");
 
-use Oeuvres\Kit\{Web};
+use Oeuvres\Kit\{Http};
 
 // une veddette à chercher
 $starttime = microtime(true);
-$t = Web::par('t', null);
+$t = Http::par('t', null);
 $sql = "SELECT id FROM dico_terme WHERE deforme = ?";
 $qterme = Medict::$pdo->prepare($sql);
 $qterme->execute([$t]);

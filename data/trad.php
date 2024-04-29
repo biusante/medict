@@ -7,10 +7,10 @@
 
 include_once(dirname(__DIR__) . "/Medict.php");
 
-use Oeuvres\Kit\{Web};
+use Oeuvres\Kit\{Http};
 
 // une veddette à chercher
-$t = Web::par('t', null);
+$t = Http::par('t', null);
 // rien à chercher
 if (!$t) {
     echo '<!-- Aucun mot cherché. -->';
@@ -19,16 +19,18 @@ if (!$t) {
 
 $time_start = microtime(true);
 
-$sql = "SELECT id FROM dico_terme WHERE deforme = ?";
+$sql = "SELECT id, langue FROM dico_terme WHERE deforme = ?";
 $qterme = Medict::$pdo->prepare($sql);
 $qterme->execute([$t]);
 $dico_terme = [];
+$langs = [];
 while ($terme = $qterme->fetch(PDO::FETCH_ASSOC)) {
     $dico_terme[] = $terme['id'];
+    $langs[$terme['langue']] = true;
 }
 $dico_terme = '(' . implode(', ', $dico_terme) . ')';
 
-$reltype_foreign = 3;
+$reltype_foreign = 11;
 $sql = "
 SELECT *
 FROM dico_rel
@@ -36,12 +38,11 @@ INNER JOIN dico_terme
     ON dico_rel.dico_terme = dico_terme.id
 WHERE
     reltype = $reltype_foreign
-    AND dico_terme NOT IN $dico_terme
     AND dico_entree IN (SELECT dico_entree FROM dico_rel WHERE reltype = $reltype_foreign AND dico_terme IN $dico_terme)
-ORDER BY langue, deforme, volume_annee DESC
+ORDER BY dico_terme.langue IS NULL ASC, dico_terme.langue ASC, deforme, volume_annee DESC
 
 ";
-
+// langue IS NULL ASC (null language at the end)
 $qrel = Medict::$pdo->prepare($sql);
 $qrel->execute([]);
 echo "<!-- $t ; $sql -->\n";
@@ -58,6 +59,7 @@ WHERE dico_entree.id = ?
 $qentree = Medict::$pdo->prepare($sql);
 $last = null;
 while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
+    // pas de “traductions” dans la langue de l’entrée demandée (= mot lié)
     if ($last != $rel['id']) {
         // pas de volume ? pas compris pourquoi
         if ($last !== null) {
@@ -65,14 +67,18 @@ while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
             echo "\n&#10;";
             flush();
         }
-        $forme = $rel['forme'];
-        $langue = Medict::$langs[$rel['langue']];
+        $trad_forme = $rel['forme'];
+        $langue = false;
+        // la base peut contenir des no de langue inconnus ici
+        if ($rel['langue'] && isset(Medict::$langs[$rel['langue']])) {
+            $langue = Medict::$langs[$rel['langue']];
+        }
         echo "
 <details class=\"sugg\">
-    <summary><a class=\"sugg\" href=\"?q=" . rawurlencode($forme) . '"' 
-    . ' title="' .  strip_tags($forme) . '">' 
-    . "<small>[$langue]</small> "
-    . $forme;
+    <summary><a class=\"sugg\" href=\"?q=" . rawurlencode($trad_forme) . '"' 
+    . ' title="' .  strip_tags($trad_forme) . '">';
+    if ($langue) echo "<small>[$langue]</small> ";
+    echo $trad_forme;
     /* On ne sait pas encore le score ici encore
     echo " <small>(". $sugg['score'], ")</small>";
     */
@@ -87,9 +93,17 @@ while ($rel = $qrel->fetch(PDO::FETCH_ASSOC)) {
         // pb dans les données le volume n’existe pas
         continue;
     }
-
-
-    $entree['in'] = "[$langue] " . $forme;
+    // si un mot dans une clique de traduction est la vedette de l'article éviter
+    // « Même » in Même, mêmes. Littré Robin 13e éd., 1873...
+    if ($rel['orth']) {
+        $entree['in'] = null;    
+    }
+    else if ($langue) {
+        $entree['in'] = "[$langue] " . $trad_forme;
+    }
+    else {
+        $entree['in'] = $trad_forme;
+    }
     $entree['page'] = $rel['page'];
     $entree['refimg'] = $rel['refimg'];
     $entree['page2'] = null;
@@ -101,50 +115,3 @@ if ($last) {
     flush();    
 }
 return;
-
-$sql = "SELECT * FROM dico_trad WHERE src_sort = ? ORDER BY dst_langno, dst_sort, volume_annee, page";
-$q_mot = Medict::$pdo->prepare($sql);
-$q_mot->execute(array($t));
-
-echo "<!-- $sql ; $t -->\n";
-
-$q_entree = Medict::$pdo->prepare("SELECT * FROM dico_entree WHERE id = ?");
-$last_sort = null;
-$last_lang = null;
-while ($row = $q_mot->fetch(PDO::FETCH_ASSOC)) {
-    if (
-        $last_lang != $row['dst_lang']
-        || $last_sort != $row['dst_sort']
-    ) {
-        $last_lang = $row['dst_lang'];
-        $last_sort = $row['dst_sort'];
-        // fermer le dernier
-        if ($last_sort !== null) {
-            echo "\n</details>";
-            echo "\n&#10;";
-            flush();
-        }
-        echo '
-<details class="sugg">
-    <summary title="' . $row['dst'] . '">
-      <a class="sugg" href="?q=' . rawurlencode($row['dst']) . '">'
-    . '<small>[' . $row['dst_lang'] . ']</small> ' . $row['dst'] . '</a></summary>';
-    }
-    $q_entree->execute(array($row['dico_entree']));
-    $entree = $q_entree->fetch();
-    if (!$entree) {
-        // pas normal, mais déjà vu
-        continue;
-    }
-
-    $entree['page'] = $row['page'];
-    $entree['page2'] = null;
-    $entree['refimg'] = $row['refimg'];
-
-
-    echo "\n".Medict::entree($entree);
-}
-echo "\n</details>";
-echo "\n&#10;";
-flush();
-echo '<!--', number_format(microtime(true) - $starttime, 3), ' s. -->';

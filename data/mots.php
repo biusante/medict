@@ -7,19 +7,17 @@
 
 include_once(dirname(__DIR__) . "/Medict.php");
 
-use Oeuvres\Kit\{Web};
+use Oeuvres\Kit\{Http};
 
 
 // pars
 $time_start = microtime(true);
 $reqPars = Medict::reqPars();
 
-$q = Web::par('q', null);
+$q = trim(Http::par('q', null));
 if (!$q) return;
 
-if ($q) {
-    $q = Medict::deforme($q);
-}
+
 
 $dico_titre = '';
 // filtre par cote
@@ -31,66 +29,42 @@ if ($reqPars[Medict::DICO_TITRE]) {
 $limit = 1000;
 // pareil que entrees.php
 $rels = Medict::rels_vedettes();
+// test si uvji utile
+$deforme = Medict::deforme($q);
+$uvji = strtr($deforme, ['j' => 'i', 'u' => 'v']);
+// pas d’uvji pour une lettre ou pas d’u, j
+if ($deforme == $uvji || mb_strlen( $uvji, "UTF-8") < 2) {
+    $uvji = null;
+}
+$inverse = null;
+if ($q[0] === '*') {
+    $inverse = implode(array_reverse(preg_split('//u', $deforme, -1, PREG_SPLIT_NO_EMPTY)));
+}
+
+if ($inverse) {
+    $where = "(inverse LIKE ?)";
+}
+else if ($uvji) {
+    $where = "(deforme LIKE ? OR uvji LIKE ?)";
+}
+else {
+    $where = "deforme LIKE ?";
+}
+
 
 /*
-// si une seule lettre, c’est lent, contournement
-if (mb_strlen($q) == 1) {
-    $limit = 100;
-
-    $sql = "
-SELECT * 
-    FROM dico_terme
-    WHERE deforme LIKE ?
-    ORDER BY deforme
-    LIMIT 1000
-";
-    $qterme = Medict::$pdo->prepare($sql);
-    echo "<!-- $sql -->\n";
-    $sql = "
-SELECT COUNT(*) AS count
-    FROM dico_rel
-    WHERE 
-        dico_terme = ?
-        AND reltype = 1
-        $dico_titre
-";
-    echo "<!-- $sql -->\n";
-    $qrel = Medict::$pdo->prepare($sql);
-
-
-    $qterme->execute([$q.'%']);
-    echo "<!--", number_format(microtime(true) - $time_start, 3), " s. -->\n";
-    $n = 1;
-    while ($terme = $qterme->fetch(PDO::FETCH_ASSOC)) {
-        $id = $terme['id'];
-        // echo $id . " " . $terme['forme']."\n";
-
-        $qrel->execute([$id]);
-        $rel = $qrel->fetch();
-        if (!$rel) continue;
-        $count = $rel['count'];
-        if (!$count) continue;
-        html($n, $id, $terme['forme'], $count, $q);
-        $n++;
-        if (!--$limit) break;
-    }
-    echo "<!--", number_format(microtime(true) - $time_start, 3), " s. -->\n";
-    return;
-}
-*/
-
 // Vu avec EXPLAIN, cherche d’abord dans deforme
 $sql = "
 SELECT
     dico_terme.id AS id,
     forme,
-    langue,
+    dico_terme.langue AS langue,
     deforme,
     COUNT(dico_entree) AS count
     FROM dico_rel
     INNER JOIN dico_terme
         ON dico_rel.dico_terme = dico_terme.id
-        AND deforme LIKE ?
+        AND $where
     WHERE
         $rels
         $dico_titre
@@ -98,55 +72,99 @@ SELECT
     ORDER BY deforme
     LIMIT $limit
 ";
-echo "<!-- \$q=$q -->\n";
+*/
 
-$starttime = microtime(true);
-$query = Medict::$pdo->prepare($sql);
-$query->execute([$q.'%']);
-echo "<!--", number_format(microtime(true) - $time_start, 3), " s. -->\n";
-$n = 1;
-while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-    html($n, $row['deforme'], $row['forme'], $row['count'], $q);
-    $n++;
-    $limit--;
-}
 
-// limit
 $sql = "
 SELECT
-    dico_terme.id AS id,
-    forme,
-    langue,
     deforme,
+    dico_terme.id AS id,
+    dico_terme.forme,
+    dico_terme.langue AS langue,
     COUNT(dico_entree) AS count
-FROM dico_rel
-INNER JOIN dico_terme
-    ON dico_rel.dico_terme = dico_terme.id
-        AND MATCH (deloc) AGAINST (? IN BOOLEAN MODE)
+FROM dico_terme, dico_rel
 WHERE
-    $rels
+    dico_rel.dico_terme = dico_terme.id
+    AND $rels
+    AND $where
     $dico_titre
 GROUP BY deforme
 ORDER BY deforme
 LIMIT $limit
 ";
+
+
 echo "\n<!-- $sql -->\n";
 
 $starttime = microtime(true);
-// si pas q parti ?
-if (mb_strpos($q, ' ') !== false) {
-    $search = '+' . preg_replace('@\s+@ui', '* +', $q) . '*';
+$query = Medict::$pdo->prepare($sql);
+if ($inverse) {
+    $query->execute([$inverse.'%']);
+}
+else if ($uvji) {
+    $query->execute([$deforme.'%', $uvji.'%']);
 }
 else {
-    $search = $q . '*';
+    $query->execute([$deforme.'%']);
 }
-$query = Medict::$pdo->prepare($sql);
-$query->execute([$search]);
-echo "<!-- search=$search limit=$limit " . number_format(microtime(true) - $time_start, 3). " s. -->\n";
+// $query->execute([$deforme.'%']);
+echo "<!--", number_format(microtime(true) - $time_start, 3), " s. -->\n";
+$n = 0;
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-    html($n, $row['deforme'], $row['forme'], $row['count'], $q);
     $n++;
+    html($n, $row['deforme'], $row['forme'], $row['count'], $q);
+    $limit--;
 }
+
+// locutions, recherche par index plein texte
+// le champ "deloc" omet le premier mot pour éviter de répéter ci-dessus
+$loc_col = "deloc";
+// "Coeur de boeuf", trouver avec "coeur boeuf" 
+// si pas de résultat ci-dessus, chercher partout
+if (!$n) {
+    $loc_col = "deforme";
+}
+// ne pas cherche dans les locutions en inverse ?
+if (!$inverse) {
+    // limit
+    $sql = "
+    SELECT
+        dico_terme.id AS id,
+        dico_terme.forme AS forme,
+        dico_terme.langue AS langue,
+        deforme,
+        COUNT(dico_entree) AS count
+    FROM dico_rel
+    INNER JOIN dico_terme
+        ON dico_rel.dico_terme = dico_terme.id
+            AND MATCH ($loc_col) AGAINST (? IN BOOLEAN MODE)
+    WHERE
+        $rels
+        $dico_titre
+    GROUP BY deforme
+    ORDER BY deforme
+    LIMIT $limit
+    ";
+    echo "\n<!-- $sql -->\n";
+
+    $starttime = microtime(true);
+    // si pas q parti ?
+    if (mb_strpos($deforme, ' ') !== false) {
+        $search = '+' . preg_replace('@\s+@ui', '* +', $deforme) . '*';
+    }
+    else {
+        $search = $deforme . '*';
+    }
+    $query = Medict::$pdo->prepare($sql);
+    $query->execute([$search]);
+    echo "<!-- search=$search limit=$limit " . number_format(microtime(true) - $time_start, 3). " s. -->\n";
+    while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+        $n++;
+        html($n, $row['deforme'], $row['forme'], $row['count'], $q);
+    }
+
+}
+
 echo '<p class="end"></p>';
 
 function html($n, $deforme, $forme, $count, $q) {

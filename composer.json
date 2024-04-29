@@ -1,0 +1,20 @@
+{
+    "name": "biusante/metadictionnaire",
+    "description": "Métadictionnaire médical multilingue",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Nathalie Rousseau",
+            "role": "Lead"
+        },
+        {
+            "name": "Frédéric Glorieux",
+            "email": "frederic.glorieux@fictif.org",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "oeuvres/kit": "dev-main"
+    },
+    "minimum-stability": "dev"
+}

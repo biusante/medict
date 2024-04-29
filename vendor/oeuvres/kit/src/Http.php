@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Part of Teinte https://github.com/oeuvres/teinte
  * MIT License https://opensource.org/licenses/mit-license.php
@@ -10,43 +12,24 @@
  *                    & École nationale des chartes
  */
 
-declare(strict_types=1);
-
 namespace Oeuvres\Kit;
 
 use Exception;
-use Psr\Log\{LoggerInterface, NullLogger};
 
 /**
  * Tools to deal with PHP Http oddities
  * code convention https://www.php-fig.org/psr/psr-12/
  */
-Web::init();
-class Web
+class Http
 {
     /** web parameters */
     static $pars;
-    /** A logger */
-    private static $logger;
     /** pathinfo, relative to base application */
     static $pathinfo;
     /** relative path to base application, calculated with pathinfo */
     static $basehref;
     /** Content-Type header */
-    static $mime = array(
-        "css"  => 'text/css; charset=UTF-8',
-        "epub" => 'application/epub+zip',
-        "html" => 'text/html; charset=UTF-8',
-        "iramuteq" => "text/plain; charset=UTF-8",
-        "jpg"  => 'image/jpeg',
-        "js"  => 'text/javascript; charset=UTF-8',
-        "md" => "text/plain; charset=UTF-8",
-        "markdown" => "text/plain; charset=UTF-8",
-        "naked" => "text/plain; charset=UTF-8",
-        "png"  => 'image/png',
-        "xml"  => 'text/xml',
-        "xhtml" => 'text/html; charset=UTF-8',
-    );
+    static $mime;
     /** Langs */
     static $langs = array(
         "en" => "English",
@@ -55,20 +38,14 @@ class Web
     /** lang found */
     static $lang;
 
-    /**
-     * Intialize static variables
-     */
-    public static function init()
+    static public function session_before()
     {
-        self::$logger = new NullLogger();
-    }
-
-    /**
-     * Set logger
-     */
-    public static function setLogger(LoggerInterface $logger)
-    {
-        self::$logger = $logger;
+        // required for the php PHPSESSID param
+        session_set_cookie_params(["SameSite" => "lax"]); // none, lax, strict
+        // session_set_cookie_params(["Secure" => "true"]); // false, true
+        session_set_cookie_params(["HttpOnly" => "true"]); // false, true
+        // needed ?
+        // ini_set('session.gc_maxlifetime', strval(60*60));
     }
 
     /**
@@ -166,19 +143,38 @@ class Web
             }
             */
             // sanitize value for xss
-            $v= strip_tags(trim($v));
+            $v = strip_tags(trim($v));
             $pars[$k][] = $v;
         }
         return $pars;
     }
 
     /**
+     * Get a parameter as an int between min-max
+     */
+    public static function int(
+        $name,
+        ?int $default = null,
+        ?int $min = null,
+        ?int $max = null,
+        ?string $cookie = null
+    ) {
+        $value = self::par($name, null, null, $cookie);
+        if (!is_numeric($value)) return $default;
+        $value = intval($value);
+        if ($max && $value > $max) return $max;
+        if ($min && $value < $min) return $min;
+        return $value;
+    }
+
+
+    /**
      * Get a parameter as a single value 
      */
     public static function par(
         $name,
-        ?string $default = null, 
-        ?string $pattern = null, 
+        ?string $default = null,
+        ?string $pattern = null,
         ?string $cookie = null
     ) {
         // store params array extracted from query
@@ -187,9 +183,9 @@ class Web
         }
         // no key requested, shout ?
         if (!$name) {
-            self::$logger->warning(
-                "No name given for an http param\n" 
-                . implode("\n", I18n::trace())
+            Log::warning(
+                "No name given for an http param\n"
+                    . implode("\n", I18n::trace())
             );
             return null;
         }
@@ -200,14 +196,13 @@ class Web
             $value = self::$pars[$name][0];
         }
         // param maybe set programmatically, for example by Route
-        else if (isset($_GET[$name]) && trim($_GET[$name]) ) {
+        else if (isset($_GET[$name]) && trim($_GET[$name])) {
             $value = $_GET[$name];
-        }
-        else if (isset($_POST[$name]) && trim($_POST[$name]) ) {
+        } else if (isset($_POST[$name]) && trim($_POST[$name])) {
             $value = $_POST[$name];
         }
         // bad practice, maybe confused by cookie, but be nice
-        else if (isset($_REQUEST[$name]) && trim($_REQUEST[$name]) ) {
+        else if (isset($_REQUEST[$name]) && trim($_REQUEST[$name])) {
             $value = $_REQUEST[$name];
         }
         // validate before set a cookie
@@ -252,7 +247,7 @@ class Web
             return $default;
         }
         return null;
-    } 
+    }
 
 
     /**
@@ -267,11 +262,10 @@ class Web
      *)
      */
     public static function pars(
-        ?string $name = null, 
-        ?int $expire = 0, 
-        ?string $pattern = null, 
-        ?string $default = null, 
-        ?string $query = null
+        ?string $name = null,
+        $default = null,
+        ?string $pattern = null
+        // ?string $cookie = null
     ) {
         // store params array extracted from query
         if (!self::$pars) {
@@ -284,7 +278,8 @@ class Web
         // no param for this name
         else $pars = array();
 
-
+        // TODO, cookie for multiple values
+        /*
         // no cookie store requested
         if (!$expire);
         // if empty ?, delete cookie
@@ -300,6 +295,7 @@ class Web
         }
         // if cookie stored, load it
         else if (isset($_COOKIE[$name])) $pars = unserialize($_COOKIE[$name]);
+        */
         // validate
         if ($pattern) {
             $newPars = array();
@@ -360,8 +356,8 @@ class Web
     /**
      * build an optimized query string from requested params
      */
-    public static function qstring (
-       array $names 
+    public static function qstring(
+        array $names
     ): string {
         if (!self::$pars) self::$pars = self::parse();
         $query = array();
@@ -384,7 +380,9 @@ class Web
      * $exclude=array() : exclude some parameters
      */
     public static function query(
-        $keep = false, $exclude = array(), $query = null
+        $keep = false,
+        $exclude = array(),
+        $query = null
     ): string {
         // query given as param
         if ($query) {
@@ -394,8 +392,7 @@ class Web
         else if ($_SERVER['REQUEST_METHOD'] == "POST") {
             if (isset($HTTP_RAW_POST_DATA)) {
                 $query = $HTTP_RAW_POST_DATA;
-            }
-            else {
+            } else {
                 $query = file_get_contents("php://input");
             }
         }
@@ -413,6 +410,46 @@ class Web
         }
         return $query;
     }
+
+    /**
+     * Read file on request, or send nice headers fo nor modified
+     */
+    public static function readfile(string $file): bool
+    {
+        if (!isset(self::$mime)) {
+            self::$mime = include(__DIR__ . "/mime.php");
+        }
+        if (!Filesys::readable($file)) {
+            Log::warning(I18n::_("Web.readfile.404"));
+            return false;
+        }
+        self::notModified($file);
+        $ext = ltrim(pathinfo($file, PATHINFO_EXTENSION), '.');
+
+        header("Cache-control: public"); // for FireFox over https
+        header("Last-Modified: " . 
+            gmdate('D, d M Y H:i:s', filemtime($file)) . ' GMT');
+
+
+        if (isset(self::$mime[$ext])) {
+            $mime = self::$mime[$ext];
+            header('Content-Type: ' . $mime["type"]);
+            $type = $mime["type"];
+            // some infos for caching persistant resources
+            if (isset($mime['max-age'])) {
+                header('Cache-Control: max-age='. $mime['max-age']);
+                header('Expires: ' . gmdate('D, d M Y H:i:s', time() +  $mime['max-age']) . ' GMT');
+            }
+        }
+        if (!$mime) {
+            header('Content-Type: ' . mime_content_type($file));
+        }
+        $length = filesize($file);
+        header("Content-Length: $length");
+        readfile($file);
+        exit();
+    }
+
     /**
      * Send the best headers for cache, according to the request and a timestamp
      */
@@ -448,16 +485,11 @@ class Web
         }
         // header("X-Date: ". substr(gmdate('r'), 0, -5).'GMT');
         /*
-    // According to google, https://developers.google.com/speed/docs/best-practices/caching
-    // exclude etag if last-Modified, and last-Modified is better
-    $etag = '"'.md5($modification).'"';
-    header("ETag: $etag");
-    */
-        // it seems there is something to send
-        header("Cache control: public"); // for FireFox over https
-        header("Last-Modified: $modification");
-        // it's good to
-        if ($expires) header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
+        // According to google, https://developers.google.com/speed/docs/best-practices/caching
+        // exclude etag if last-Modified, and last-Modified is better
+        $etag = '"'.md5($modification).'"';
+        header("ETag: $etag");
+        */
     }
 
     /**
@@ -473,6 +505,7 @@ class Web
         if (isset($_REQUEST['force'])) return '?force=';
         return false;
     }
+
     /**
      * Get link to un upload file, by key or first one if no key
      * return a file record like in $_FILES
@@ -481,7 +514,7 @@ class Web
     public static function upload($key = null): ?array
     {
         // no post, return nothing
-        if ($_SERVER['REQUEST_METHOD'] != 'POST') return false;
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') return null;
         $lang = self::lang(array('en' => '', 'fr' => ''));
         $mess = array(
             UPLOAD_ERR_INI_SIZE => array(
@@ -513,12 +546,12 @@ class Web
                 'fr' => 'Erreur de configuration PHP, une extension a arrêté le téléchargement du fichier.',
             ),
             'nokey' => array(
-                'en' => "Teinte_Web::upload(), no field $key in submitted form.",
-                'fr' => "Teinte_Web::upload(), pas de champ $key dans le formulaire soumis.",
+                'en' => "Web::upload(), no field $key in submitted form.",
+                'fr' => "Web::upload(), pas de champ $key dans le formulaire soumis.",
             ),
             'nofile' => array(
-                'en' => 'Teinte_Web::upload(), no file found. Too big ? Directives in php.ini: upload_max_filesize=' . ini_get('upload_max_filesize') . ', post_max_size=' . ini_get('post_max_size'),
-                'fr' => 'Teinte_Web::upload(), pas de fichier trouvé. Trop gros ? Directives php.ini: upload_max_filesize=' . ini_get('upload_max_filesize') . ', post_max_size=' . ini_get('post_max_size'),
+                'en' => 'Web::upload(), no file found. Too big ? Directives in php.ini: upload_max_filesize=' . ini_get('upload_max_filesize') . ', post_max_size=' . ini_get('post_max_size'),
+                'fr' => 'Web::upload(), pas de fichier trouvé. Trop gros ? Directives php.ini: upload_max_filesize=' . ini_get('upload_max_filesize') . ', post_max_size=' . ini_get('post_max_size'),
             ),
         );
         if ($key && !isset($_FILES[$key])) throw new Exception($mess['nokey'][$lang]);
@@ -534,16 +567,12 @@ class Web
         return $file;
     }
 
-}
- /* What that for ? old ?
-if (get_magic_quotes_gpc()) {
-    function stripslashes_gpc(&$value)
+    /**
+     * Get length in byte from a string content, for Content-Length http header
+     */
+    static function length(string &$str)
     {
-        $value = stripslashes($value);
+        if (!$str) return 0;
+        return ini_get('mbstring.func_overload') ? mb_strlen($str, '8bit') : strlen($str);
     }
-    array_walk_recursive($_GET, 'stripslashes_gpc');
-    array_walk_recursive($_POST, 'stripslashes_gpc');
-    array_walk_recursive($_COOKIE, 'stripslashes_gpc');
-    array_walk_recursive($_REQUEST, 'stripslashes_gpc');
 }
-*/

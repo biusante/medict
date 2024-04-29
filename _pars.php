@@ -7,9 +7,9 @@ return array(
   // port MySQL
   'port' => '3306',
   // base du métadictionnaire créeé avec https://github.com/biusante/medict_sql
-  'base' => 'medict', 
+  'dbname' => 'medict', 
   // utilisateur avec 
   'user' => 'medict',
   // mot de passe de cet utilisateur 
-  'pass' => ?????, 
+  'password' => "?????", 
 );
