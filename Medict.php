@@ -102,7 +102,7 @@ class Medict
                 // if true : big queries need memory
                 // if false : multiple queries arre not allowed
                 // PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,
-            ),
+            )
         );
         // Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'medict.dico_terme.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
         self::$pdo->query("SET @@sql_mode=REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', '');");
@@ -176,13 +176,14 @@ class Medict
         $text_hilite = "";
         // vedette sans accents avec le même nombre de caractères
         // uvji ? \n ?
+        //  MB_CASE_FOLD >= php7.3
         $text_desacc = preg_replace(
             "/\p{Mn}+/u",
             "",
             Normalizer::normalize(
-                mb_convert_case($text, MB_CASE_FOLD, "UTF-8"), 
+                mb_convert_case($text, MB_CASE_LOWER, "UTF-8"), 
                 Normalizer::FORM_D
-            ),
+            )
         );
         if (preg_match_all(self::$hire[$query], " $text_desacc ", $m, PREG_OFFSET_CAPTURE)) {
             foreach ($m[1] as $match) {
@@ -223,8 +224,8 @@ class Medict
      */
     public static function deforme(string $s, bool $nolig=false)
     {
-        // bas de casse
-        $s = mb_convert_case($s, MB_CASE_FOLD, "UTF-8");
+        // bas de casse (MB_CASE_FOLD >= php7.3)
+        $s = mb_convert_case($s, MB_CASE_LOWER, "UTF-8");
         // décomposer lettres et accents
         $s = Normalizer::normalize($s, Normalizer::FORM_D);
         // ne conserver que les lettres et les espaces, et les traits d’union
