@@ -37,7 +37,6 @@ $body_class = $page;
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.10.5/viewer.min.css" rel="stylesheet" />
 
-
   <!-- Polices -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&amp;subset=latin,latin-ext" />
   <!-- Feuilles de styles -->
@@ -89,6 +88,8 @@ $body_class = $page;
           <h1>Métadictionnaire médical multilingue</h1>
           <div class="liens">
             <a target="_blank" class="externe" href="https://www.biusante.parisdescartes.fr/histoire/medica/presentation-metadictionnaire.php">Présentation</a>
+            |
+            <a target="_blank" class="externe" href="https://www.biusante.parisdescartes.fr/histoire/medica/corpus-metadictionnaire.php">Corpus</a>
           </div>
         </div>
         <div id="menu-container">
