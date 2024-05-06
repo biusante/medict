@@ -176,6 +176,7 @@ class Medict
         $text_hilite = "";
         // vedette sans accents avec le même nombre de caractères
         // uvji ? \n ?
+        //  MB_CASE_FOLD >= php7.3
         $text_desacc = preg_replace(
             "/\p{Mn}+/u",
             "",
@@ -223,7 +224,7 @@ class Medict
      */
     public static function deforme(string $s, bool $nolig=false)
     {
-        // bas de casse
+        // bas de casse (MB_CASE_FOLD >= php7.3)
         $s = mb_convert_case($s, MB_CASE_LOWER, "UTF-8");
         // décomposer lettres et accents
         $s = Normalizer::normalize($s, Normalizer::FORM_D);
