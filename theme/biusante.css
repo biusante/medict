@@ -20,7 +20,7 @@ html {
 
 html,
 body {
-    /* background-image: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-arriere3.jpg');
+    /* background-image: url('https://numerabilis.u-paris.fr/medica/ressources/images/imutil-arriere3.jpg');
     background-repeat: repeat;
     background-attachment: fixed;
     background-position: center top; */
@@ -181,8 +181,8 @@ h6,
 /* bloque quand le site est tombé
 @font-face {
     font-family: 'biusante-icons';
-    src: url('https://www.biusante.parisdescartes.fr/ressources/fonts/biusante-icons.eot?49241335');
-    src: url('https://www.biusante.parisdescartes.fr/ressources/fonts/biusante-icons.eot?49241335#iefix') format('embedded-opentype'), url('https://www.biusante.parisdescartes.fr/ressources/fonts/biusante-icons.woff2?49241335') format('woff2'), url('https://www.biusante.parisdescartes.fr/ressources/fonts/biusante-icons.woff?49241335') format('woff'), url('https://www.biusante.parisdescartes.fr/ressources/fonts/biusante-icons.ttf?49241335') format('truetype'), url('https://www.biusante.parisdescartes.fr/ressources/fonts/biusante-icons.svg?49241335#biusante-icons') format('svg');
+    src: url('https://numerabilis.u-paris.fr/medica/ressources/fonts/biusante-icons.eot?49241335');
+    src: url('https://numerabilis.u-paris.fr/medica/ressources/fonts/biusante-icons.eot?49241335#iefix') format('embedded-opentype'), url('https://numerabilis.u-paris.fr/medica/ressources/fonts/biusante-icons.woff2?49241335') format('woff2'), url('https://numerabilis.u-paris.fr/medica/ressources/fonts/biusante-icons.woff?49241335') format('woff'), url('https://numerabilis.u-paris.fr/medica/ressources/fonts/biusante-icons.ttf?49241335') format('truetype'), url('https://numerabilis.u-paris.fr/medica/ressources/fonts/biusante-icons.svg?49241335#biusante-icons') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -510,25 +510,25 @@ h6,
 }
 
 .ressource-enligne-payante::before {
-    content: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-icone-cadenas-rouge.png');
+    content: url('https://numerabilis.u-paris.fr/medica/ressources/images/imutil-icone-cadenas-rouge.png');
 }
 
 .ressource-enligne-gratuite::before {
-    content: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-icone-cadenas-vert.png');
+    content: url('https://numerabilis.u-paris.fr/medica/ressources/images/imutil-icone-cadenas-vert.png');
 }
 
 .ressource-livre::before {
-    content: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-icone-livre.png');
+    content: url('https://numerabilis.u-paris.fr/medica/ressources/images/imutil-icone-livre.png');
     padding-right: 0.25em;
 }
 
 .ressource-periodique::before {
-    content: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-icone-revue.png');
+    content: url('https://numerabilis.u-paris.fr/medica/ressources/images/imutil-icone-revue.png');
     padding-right: 0.25em;
 }
 
 .ressource-cederom::before {
-    content: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-icone-cdrom.png');
+    content: url('https://numerabilis.u-paris.fr/medica/ressources/images/imutil-icone-cdrom.png');
     padding-right: 0.25em;
 }
 
@@ -1186,7 +1186,7 @@ td.accueil {
 
 #navigation-laterale>ol>li>ol>li>ol>li {
     /*
-    list-style-image: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-pucemenug.png');
+    list-style-image: url('https://numerabilis.u-paris.fr/medica/ressources/images/imutil-pucemenug.png');
     */
 }
 
@@ -2258,7 +2258,7 @@ img.page-numerisee {
     margin: -1px 0 0 5px;
     width: 16px;
     height: 16px;
-    background: url('https://www.biusante.parisdescartes.fr/ressources/images/spinner.gif') no-repeat 0 0;
+    background: url('https://numerabilis.u-paris.fr/medica/ressources/images/spinner.gif') no-repeat 0 0;
 }
 
 .txtptcom,
@@ -2349,7 +2349,7 @@ ul.listPages li.lessPagesLink a {
 }
 
 .pave-accueil .lien-presentation a {
-    background-image: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-med-pref.gif');
+    background-image: url('https://numerabilis.u-paris.fr/medica/ressources/images/imutil-med-pref.gif');
     display: block;
     width: 12px;
     height: 12px;
@@ -2388,7 +2388,7 @@ Dans cette feuille de style sont définis des règles CSS spécifique à l'appli
 }
 
 .notice .notice-action-link:before {
-    content: url('https://www.biusante.parisdescartes.fr/ressources/images/imutil-arrow2.gif');
+    content: url('https://numerabilis.u-paris.fr/medica/ressources/images/imutil-arrow2.gif');
     margin-right: 2px;
 }
 

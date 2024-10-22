@@ -905,9 +905,7 @@ class Medict {
         e.preventDefault();
         // if text selected, do not apply link
         if (Medict.getSelectionText()) return;
-        // https://www.biusante.parisdescartes.fr/iiif/2/bibnum:45674x04:%%/full/full/0/default.jpg
-        // https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&amp;cote=pharma_019428x01&amp;p=444"
-        // https://www.biusante.parisdescartes.fr/iiif/2/bibnum:47661x59:0122/0,512,512,512/512,/0/default.jpg
+
         let found = a.search.match(/cote=([^&]*)/);
         if (!found) return; // url error ?
         // seems we can prevent default now
@@ -938,7 +936,6 @@ class Medict {
         if (!cote || !p) return;
         p = Medict.pad(p, 4);
         // Biusanté, lien page
-        // const href = 'https://www.biusante.parisdescartes.fr/histoire/medica/resultats/index.php?do=page&cote=' + cote + '&p=' + p;
         const href = 'https://www.biusante.parisdescartes.fr/histmed/medica/page?' + cote + '&p=' + p;
 
         let srcLo, srcHi;
@@ -947,7 +944,6 @@ class Medict {
             srcLo = 'https://iiif.archivelab.org/iiif/BIUSante_' + cote + '$' + (p - 1) + '/full/600,/0/default.jpg';
         }
         else {
-            // srcLo = 'https://www.biusante.parisdescartes.fr/images/livres/' + cote + '/' + p + '.jpg';
             srcLo = 'https://numerabilis.u-paris.fr/iiif/2/bibnum:' + cote + ':' + p + '/full/800,/0/default.jpg';
             srcHi = 'https://numerabilis.u-paris.fr/iiif/2/bibnum:' + cote + ":" + p + '/full/full/0/default.jpg';
             // Castelli, pas de basse def

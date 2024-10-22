@@ -53,24 +53,24 @@ $body_class = $page;
       <div id="header-main-content">
         <div id="main-logo-container">
           <span class="logo-img-helper"></span>
-          <a href="https://u-paris.fr/"><img src="https://www.biusante.parisdescartes.fr/histoire/medica/assets/images/UniversiteParisCite_logo_horizontal_couleur_RVB.png" alt=""></a>
+          <a href="https://u-paris.fr/"><img src="https://numerabilis.u-paris.fr/medica/bibliotheque-numerique/assets/images/UniversiteParisCite_logo_horizontal_couleur_RVB.png" alt=""></a>
           <div id="fil">
             <ol itemscope itemtype="http://schema.org/BreadcrumbList">
               <li class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                <a itemprop="item" href="https://www.biusante.parisdescartes.fr">
+                <a itemprop="item" href="https://numerabilis.u-paris.fr">
                   <span itemprop="name"><span class="breadcrumbs-root"></span>&nbsp;&nbsp;Accueil</span>
                 </a>
                 <meta itemprop="position" content="1" />
               </li>
               <li class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                <a itemprop="item" href="https://www.biusante.parisdescartes.fr/histoire/index.php">
-                  <span itemprop="name">Histoire de la santé</span>
+                <a itemprop="item" href="https://numerabilis.u-paris.fr/medica/index.php">
+                  <span itemprop="name">Medica</span>
                 </a>
                 <meta itemprop="position" content="2" />
               </li>
               <li class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                <a itemprop="item" href="https://www.biusante.parisdescartes.fr/histoire/medica/">
-                  <span itemprop="name">Medica</span>
+                <a itemprop="item" href="https://numerabilis.u-paris.fr/medica/bibliotheque-numerique/">
+                  <span itemprop="name">Bibliothèque numérique</span>
                 </a>
                 <meta itemprop="position" content="3" />
               </li>
@@ -87,9 +87,9 @@ $body_class = $page;
         <div id="tete-titre">
           <h1>Métadictionnaire médical multilingue</h1>
           <div class="liens">
-            <a target="_blank" class="externe" href="https://www.biusante.parisdescartes.fr/histoire/medica/presentation-metadictionnaire.php">Présentation</a>
+            <a target="_blank" class="externe" href="https://numerabilis.u-paris.fr/medica/bibliotheque-numerique/presentation-metadictionnaire.php">Présentation</a>
             |
-            <a target="_blank" class="externe" href="https://www.biusante.parisdescartes.fr/histoire/medica/corpus-metadictionnaire.php">Corpus</a>
+            <a target="_blank" class="externe" href="https://numerabilis.u-paris.fr/medica/bibliotheque-numerique/corpus-metadictionnaire.php">Corpus</a>
           </div>
         </div>
         <div id="menu-container">
@@ -102,15 +102,15 @@ $body_class = $page;
           <div id="menu-niveau1-conteneur">
             <div id="close-menu-icon" class="toggle-responsive-menu"><span class="icon-cancel"></span></div>
             <ol>
-              <li class="section-histoire menu-item-niveau1 actif"><a href="https://www.biusante.parisdescartes.fr/histoire/index.php">Histoire de la santé</a>
+              <li class="section-histoire menu-item-niveau1 actif"><a href="https://numerabilis.u-paris.fr/medica/index.php">Histoire de la santé</a>
                 <ol>
-                  <li class="menu-item-niveau2 actif"><a href="https://www.biusante.parisdescartes.fr/histoire/medica/index.php">Bibliothèque numérique <span class="nom-medica">Medica</span></a></li>
-                  <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/images/index.php">Images et portraits</a></li>
-                  <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/asclepiades/index.php">Asclépiades (thèses d&rsquo;histoire)</a></li>
+                  <li class="menu-item-niveau2 actif"><a href="https://numerabilis.u-paris.fr/medica/bibliotheque-numerique/index.php">Bibliothèque numérique <span class="nom-medica">Medica</span></a></li>
+                  <li class="menu-item-niveau2"><a href="https://numerabilis.u-paris.fr/medica/banque-images/index.php">Images et portraits</a></li>
+                  <li class="menu-item-niveau2"><a href="https://numerabilis.u-paris.fr/medica/asclepiades/index.php">Asclépiades (thèses d&rsquo;histoire)</a></li>
                   <li class="menu-item-niveau2"><a class="externe" href="http://www.calames.abes.fr" target="_blank">Manuscrits (Calames)</a></li>
-                  <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/biographies/index.php">Base biographique</a></li>
-                  <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/medicina/index.php">Medicina (bibliographie)</a></li>
-                  <li class="menu-item-niveau2"><a href="https://www.biusante.parisdescartes.fr/histoire/ebooks-on-demand.php">Numérisation à la demande (EOD)</a></li>
+                  <li class="menu-item-niveau2"><a href="https://numerabilis.u-paris.fr/medica/biographies/index.php">Base biographique</a></li>
+                  <li class="menu-item-niveau2"><a href="https://numerabilis.u-paris.fr/medica/medicina/index.php">Medicina (bibliographie)</a></li>
+                  <li class="menu-item-niveau2"><a href="https://numerabilis.u-paris.fr/medica/ebooks-on-demand.php">Numérisation à la demande (EOD)</a></li>
                 </ol>
               </li>
             </ol>
@@ -178,9 +178,9 @@ $body_class = $page;
           </span>
         </div>
         <div id="liens-utilitaires">
-          <a class="up-footer-button" href="https://www.biusante.parisdescartes.fr/infos/contacts/index.php">Contacts</a>
-          <a class="up-footer-button" href="https://www.biusante.parisdescartes.fr/mentions.php">Mentions légales</a>
-          <a class="up-footer-button" href="https://www.biusante.parisdescartes.fr/plan.php">Plan du site</a>
+          <!--
+          <a class="up-footer-button" href="https://placeholder">Contacts</a>
+                  -->
         </div>
         <span class="clearfix"></span>
       </div>

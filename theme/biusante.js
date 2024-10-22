@@ -1,6 +1,6 @@
 /** 
  * Bottom script from BIUSanté
- * https://www.biusante.parisdescartes.fr/histoire/medica/
+ * https://numerabilis.u-paris.fr/medica/bibliotheque-numerique/
  * to animate Medica menu 
  */
 (function($) {
