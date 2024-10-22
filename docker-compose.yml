@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: dockerfiles/app.dockerfile
+      args:
+        - APP_INSTALL_DIR=/var/www/html
+    environment:
+      docker: "true"
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html

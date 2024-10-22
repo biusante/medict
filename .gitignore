@@ -7,8 +7,3 @@
 _*.php
 !_pars.php
 pars*.php
-
-### Packages Composer
-vendor/*
-composer.phar
-/vendor/
