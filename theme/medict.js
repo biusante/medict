@@ -947,8 +947,9 @@ class Medict {
             srcLo = 'https://iiif.archivelab.org/iiif/BIUSante_' + cote + '$' + (p - 1) + '/full/600,/0/default.jpg';
         }
         else {
-            srcLo = 'https://www.biusante.parisdescartes.fr/images/livres/' + cote + '/' + p + '.jpg';
-            srcHi = 'https://www.biusante.parisdescartes.fr/iiif/2/bibnum:' + cote + ":" + p + '/full/full/0/default.jpg';
+            // srcLo = 'https://www.biusante.parisdescartes.fr/images/livres/' + cote + '/' + p + '.jpg';
+            srcLo = 'https://numerabilis.u-paris.fr/iiif/2/bibnum:' + cote + ':' + p + '/full/800,/0/default.jpg';
+            srcHi = 'https://numerabilis.u-paris.fr/iiif/2/bibnum:' + cote + ":" + p + '/full/full/0/default.jpg';
             // Castelli, pas de basse def
             if (['07399'].includes(cote)) srcLo = srcHi;
         } 
