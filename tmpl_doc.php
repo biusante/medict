@@ -68,32 +68,22 @@ $body_class = $page;
       <div id="header-main-content">
         <div id="main-logo-container">
           <span class="logo-img-helper"></span>
-          <a href="https://u-paris.fr/"><img src="https://numerabilis.u-paris.fr/medica/bibliotheque-numerique/assets/images/UniversiteParisCite_logo_horizontal_couleur_RVB.png" alt=""></a>
+          <a href="https://u-paris.fr/">
+            <img src="<?= Route::home_href() ?>theme/UniversiteParisCite_logo_horizontal_couleur_RVB.png" alt="">
+          </a>
           <div id="fil">
             <ol itemscope itemtype="http://schema.org/BreadcrumbList">
               <li class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                <a itemprop="item" href="https://numerabilis.u-paris.fr">
-                  <span itemprop="name"><span class="breadcrumbs-root"></span>&nbsp;&nbsp;Accueil</span>
+                <a itemprop="item" href="https://numerabilis.u-pariscite.fr">
+                  <span itemprop="name"><span class="breadcrumbs-root"></span>&nbsp;&nbsp;Numerabilis</span>
                 </a>
                 <meta itemprop="position" content="1" />
               </li>
               <li class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                <a itemprop="item" href="https://numerabilis.u-paris.fr/medica/index.php">
-                  <span itemprop="name">Medica</span>
+                <a itemprop="item" href="#">
+                  <span itemprop="name">Métadictionnaire</span>
                 </a>
                 <meta itemprop="position" content="2" />
-              </li>
-              <li class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                <a itemprop="item" href="https://numerabilis.u-paris.fr/medica/bibliotheque-numerique/">
-                  <span itemprop="name">Bibliothèque numérique</span>
-                </a>
-                <meta itemprop="position" content="3" />
-              </li>
-              <li class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                <span itemprop="item" href=".">
-                  <span itemprop="name">Dictionnaires</span>
-                </span>
-                <meta itemprop="position" content="4" />
               </li>
             </ol>
           </div>
@@ -102,9 +92,9 @@ $body_class = $page;
         <div id="tete-titre">
           <h1>Métadictionnaire médical multilingue</h1>
           <div class="liens">
-            <a target="_blank" class="externe" href="https://numerabilis.u-paris.fr/medica/bibliotheque-numerique/presentation-metadictionnaire.php">Présentation</a>
-            |
-            <a target="_blank" class="externe" href="https://numerabilis.u-paris.fr/medica/bibliotheque-numerique/corpus-metadictionnaire.php">Corpus</a>
+            <!--
+              <a target="_blank" class="externe" href="https://numerabilis.u-paris.fr/medica/bibliotheque-numerique/presentation-metadictionnaire.php">Présentation</a>
+            -->
           </div>
         </div>
         <div id="menu-container">
@@ -117,16 +107,7 @@ $body_class = $page;
           <div id="menu-niveau1-conteneur">
             <div id="close-menu-icon" class="toggle-responsive-menu"><span class="icon-cancel"></span></div>
             <ol>
-              <li class="section-histoire menu-item-niveau1 actif"><a href="https://numerabilis.u-paris.fr/medica/index.php">Histoire de la santé</a>
-                <ol>
-                  <li class="menu-item-niveau2 actif"><a href="https://numerabilis.u-paris.fr/medica/bibliotheque-numerique/index.php">Bibliothèque numérique <span class="nom-medica">Medica</span></a></li>
-                  <li class="menu-item-niveau2"><a href="https://numerabilis.u-paris.fr/medica/banque-images/index.php">Images et portraits</a></li>
-                  <li class="menu-item-niveau2"><a href="https://numerabilis.u-paris.fr/medica/asclepiades/index.php">Asclépiades (thèses d&rsquo;histoire)</a></li>
-                  <li class="menu-item-niveau2"><a class="externe" href="http://www.calames.abes.fr" target="_blank">Manuscrits (Calames)</a></li>
-                  <li class="menu-item-niveau2"><a href="https://numerabilis.u-paris.fr/medica/biographies/index.php">Base biographique</a></li>
-                  <li class="menu-item-niveau2"><a href="https://numerabilis.u-paris.fr/medica/medicina/index.php">Medicina (bibliographie)</a></li>
-                  <li class="menu-item-niveau2"><a href="https://numerabilis.u-paris.fr/medica/ebooks-on-demand.php">Numérisation à la demande (EOD)</a></li>
-                </ol>
+              <li class="section-histoire menu-item-niveau1 actif"><a href="https://numerabilis.u-pariscite.fr">Numerabilis</a>
               </li>
             </ol>
           </div>

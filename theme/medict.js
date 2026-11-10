@@ -936,8 +936,7 @@ class Medict {
         if (!cote || !p) return;
         p = Medict.pad(p, 4);
         // Biusanté, lien page
-        const href = 'https://www.biusante.parisdescartes.fr/histmed/medica/page?' + cote + '&p=' + p;
-
+        const href = 'https://numerabilis.u-pariscite.fr/s/numerabilis/ark:/13685/' + cote + '/' + p;
         let srcLo, srcHi;
         if (('archivelab' in window) && archivelab) {
             srcHi = 'https://iiif.archivelab.org/iiif/BIUSante_' + cote + '$' + (p - 1) + '/full/full/0/default.jpg';

@@ -253,9 +253,11 @@ class Medict
         if (!$entree) return; // ????
         $cote = $entree['volume_cote'];
         $cote = strtok($cote, '~'); // 37020d~index
+ 
         $url = 'https://numerabilis.u-paris.fr/medica/bibliotheque-numerique/resultats/index.php?do=page&amp;cote=' 
         . $cote 
         . '&amp;p=' . $entree['refimg'];
+        
 
         $block = '';
         if (!$facs) $block .= '<a class="entree" target="facs" draggable="false"' . ' href="'. $url . '">';
